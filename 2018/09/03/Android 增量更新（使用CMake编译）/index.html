@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"forgetall.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="前言近期公司的 App 版本迭代比较快，经常发新版本，但实际上就我自己来说，手机里的 App 不到不能用的时候我是不会更新的，我们前期的解决方案就是强制更新，不更新不让用，以前我们用户少的时候还能这么干，用户量上去还这么干，基本等于劝退那些不怎么愿意更新的用户。所以近期研究的技术点是 热修复 与 增量更新。热修复可以不用因为更改 Bug 而专门发布新版本，增量更新可以让用户在不得不更新的时候可以少">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android 增量更新（使用CMake编译）">
+<meta property="og:url" content="https://forgetall.github.io/2018/09/03/Android%20%E5%A2%9E%E9%87%8F%E6%9B%B4%E6%96%B0%EF%BC%88%E4%BD%BF%E7%94%A8CMake%E7%BC%96%E8%AF%91%EF%BC%89/index.html">
+<meta property="og:site_name" content="LJ的Blog">
+<meta property="og:description" content="前言近期公司的 App 版本迭代比较快，经常发新版本，但实际上就我自己来说，手机里的 App 不到不能用的时候我是不会更新的，我们前期的解决方案就是强制更新，不更新不让用，以前我们用户少的时候还能这么干，用户量上去还这么干，基本等于劝退那些不怎么愿意更新的用户。所以近期研究的技术点是 热修复 与 增量更新。热修复可以不用因为更改 Bug 而专门发布新版本，增量更新可以让用户在不得不更新的时候可以少">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://xiasuhuei321.com/images/blog/zengliang_project.png">
+<meta property="og:image" content="http://xiasuhuei321.com/images/blog/zengilang_screen.png">
+<meta property="article:published_time" content="2018-09-03T13:06:51.000Z">
+<meta property="article:modified_time" content="2018-09-04T14:28:04.000Z">
+<meta property="article:author" content="罗俊">
+<meta property="article:tag" content="Android">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://xiasuhuei321.com/images/blog/zengliang_project.png">
+
+<link rel="canonical" href="https://forgetall.github.io/2018/09/03/Android%20%E5%A2%9E%E9%87%8F%E6%9B%B4%E6%96%B0%EF%BC%88%E4%BD%BF%E7%94%A8CMake%E7%BC%96%E8%AF%91%EF%BC%89/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Android 增量更新（使用CMake编译） | LJ的Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">LJ的Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">学海无涯苦做舟</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2018/09/03/Android%20%E5%A2%9E%E9%87%8F%E6%9B%B4%E6%96%B0%EF%BC%88%E4%BD%BF%E7%94%A8CMake%E7%BC%96%E8%AF%91%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="罗俊">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LJ的Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android 增量更新（使用CMake编译）
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-09-03 21:06:51" itemprop="dateCreated datePublished" datetime="2018-09-03T21:06:51+08:00">2018-09-03</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2018-09-04 22:28:04" itemprop="dateModified" datetime="2018-09-04T22:28:04+08:00">2018-09-04</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>近期公司的 App 版本迭代比较快，经常发新版本，但实际上就我自己来说，手机里的 App 不到不能用的时候我是不会更新的，我们前期的解决方案就是强制更新，不更新不让用，以前我们用户少的时候还能这么干，用户量上去还这么干，基本等于劝退那些不怎么愿意更新的用户。所以近期研究的技术点是 热修复 与 增量更新。热修复可以不用因为更改 Bug 而专门发布新版本，增量更新可以让用户在不得不更新的时候可以少花一些流量。热更新最近的接入测试流程都过的差不多了，比我想象的要顺利一些，不过我接入的是 Tinker，操作起来还是挺麻烦的，同事去看 Sophix 了，Sophix 是无侵入的接入，感觉打包什么的操作应该会简单很多。回归正题，本文是参考了很多文章最后经过实践得出的，因为一些文章的时间比较久远，我在实践的时候也碰到了很多问题，查资料也不太好查，最后想了想还是用 CMake 去编译，最后跑通了整个流程。</p>
+<span id="more"></span>
+
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>增量更新实际上就是使用工具比对新老 apk，得出一个补丁，用户的是老版本的 apk，在下载完增量包之后与自身 apk 合成一个新的apk，然后再次安装（是的，需要重新安装，所以不是热修复，做不到无感）。整个过程实际上我们都是使用的现成的轮子，客户端需要做的就是：</p>
+<ul>
+<li>获得用户当前应用的 apk</li>
+<li>获取增量包</li>
+<li>将老 apk 与增量包合并生成新 apk</li>
+<li>合并完成后安装</li>
+</ul>
+<p>其中生成增量包与合并是难点，但是并不需要我们自己去实现，已经有工具替我们实现了。就是 bsdiff 和 bzip，当然我在看 <a target="_blank" rel="noopener" href="https://blog.csdn.net/lmj623565791/article/details/52761658">鸿洋大神</a> 的这篇文章的时候，bzip 下载已经凉了，那个页面我也实在没看懂在哪下，最后是在鸿洋大神的代码仓库里复制出来的。</p>
+<h2 id="生成增量包"><a href="#生成增量包" class="headerlink" title="生成增量包"></a>生成增量包</h2><p>首先去下载工具：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="http://www.daemonology.net/bsdiff/bsdiff-4.3.tar.gz">http://www.daemonology.net/bsdiff/bsdiff-4.3.tar.gz</a></li>
+</ul>
+<p>下载完之后解压，使用终端（我是 Mac）进入解压后的文件夹，执行：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> make</span></span><br></pre></td></tr></table></figure>
+
+<p>make 命令会读入所有的 Makefile 并执行，但是在执行目录下的 Makefile 会报错：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Makefile:13: *** missing separator.  Stop.</span><br></pre></td></tr></table></figure>
+
+<p>我搜到的解决方法是在倒数第一行和第三行加 TAB，我在网上搜到的资料说没有缩进会识别成条件判断符，有缩进会认为他是一个普通的 shell 脚本，当然到底是为什么，我这里并没有深追下去了。</p>
+<p>继续执行 make 命令，会生成一个 bsdiff 的文件，之后会报错，我们这里只需要这个，没有生成的那个是合并老版本与增量包的东西。我们这里并不需要，因为合成新包的步骤是在客户端完成的。这里生成 bsdiff 就暂时告一段落，之后我们会利用这个工具来生成增量包，接下来在项目中引入 bzip，用于合成新的 apk。</p>
+<h2 id="集成合并工具"><a href="#集成合并工具" class="headerlink" title="集成合并工具"></a>集成合并工具</h2><p>首先新建一个项目，勾上支持 Kotlin 和 C++，之后都选默认的，创建好项目之后是这样的：</p>
+<p><img src="http://xiasuhuei321.com/images/blog/zengliang_project.png" alt="目录"></p>
+<p>之前说了 bzip 这玩意我没弄懂怎么下源码，于是去鸿洋大神的 demo 里 copy 了一下，当然，这里我会放上我的 <a target="_blank" rel="noopener" href="https://github.com/ForgetAll/IncrementApk/tree/master">demo</a> 地址，毕竟你是在看我的文，用我的 demo 不过分。将之前下载 bsdiff 中的 bspatch.c 拷贝到项目的 cpp 文件夹中，再将整个 bzip 拷贝到 cpp 文件夹中，由于我们这里是使用 CMake 来编译，所以需要在自动生成的 CMakeLists.txt 中加入我们的配置，这里把我写的配置直接整个的放上来：</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># For more information about using CMake with Android Studio, read the</span></span><br><span class="line"><span class="comment"># documentation: https://d.android.com/studio/projects/add-native-code.html</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Sets the minimum version of CMake required to build the native library.</span></span><br><span class="line"></span><br><span class="line">cmake_minimum_required(VERSION 3.4.1)</span><br><span class="line"></span><br><span class="line">include_directories(src/main/cpp/bzip2/bzlib.h</span><br><span class="line">src/main/cpp/bzip2/bzlib_private.h</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Creates and names a library, sets it as either STATIC</span></span><br><span class="line"><span class="comment"># or SHARED, and provides the relative paths to its source code.</span></span><br><span class="line"><span class="comment"># You can define multiple libraries, and CMake builds them for you.</span></span><br><span class="line"><span class="comment"># Gradle automatically packages shared libraries with your APK.</span></span><br><span class="line"></span><br><span class="line">add_library( <span class="comment"># Sets the name of the library.</span></span><br><span class="line">             native-lib</span><br><span class="line"></span><br><span class="line">             <span class="comment"># Sets the library as a shared library.</span></span><br><span class="line">             SHARED</span><br><span class="line"></span><br><span class="line">             <span class="comment"># Provides a relative path to your source file(s).</span></span><br><span class="line">             src/main/cpp/native-lib.cpp</span><br><span class="line">             src/main/cpp/bspatch.c</span><br><span class="line">             src/main/cpp/bzip2/blocksort.c</span><br><span class="line">             src/main/cpp/bzip2/bzip2.c</span><br><span class="line">             src/main/cpp/bzip2/bzip2recover.c</span><br><span class="line">             src/main/cpp/bzip2/bzlib.c</span><br><span class="line">             src/main/cpp/bzip2/compress.c</span><br><span class="line">             src/main/cpp/bzip2/crctable.c</span><br><span class="line">             src/main/cpp/bzip2/decompress.c</span><br><span class="line">             src/main/cpp/bzip2/dlltest.c</span><br><span class="line">             src/main/cpp/bzip2/huffman.c</span><br><span class="line">             src/main/cpp/bzip2/mk251.c</span><br><span class="line">             src/main/cpp/bzip2/randtable.c</span><br><span class="line">             src/main/cpp/bzip2/spewG.c</span><br><span class="line">             src/main/cpp/bzip2/unzcrash.c)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Searches for a specified prebuilt library and stores the path as a</span></span><br><span class="line"><span class="comment"># variable. Because CMake includes system libraries in the search path by</span></span><br><span class="line"><span class="comment"># default, you only need to specify the name of the public NDK library</span></span><br><span class="line"><span class="comment"># you want to add. CMake verifies that the library exists before</span></span><br><span class="line"><span class="comment"># completing its build.</span></span><br><span class="line"></span><br><span class="line">find_library( <span class="comment"># Sets the name of the path variable.</span></span><br><span class="line">              log-lib</span><br><span class="line"></span><br><span class="line">              <span class="comment"># Specifies the name of the NDK library that</span></span><br><span class="line">              <span class="comment"># you want CMake to locate.</span></span><br><span class="line">              log )</span><br><span class="line"></span><br><span class="line"><span class="comment"># Specifies libraries CMake should link to your target library. You</span></span><br><span class="line"><span class="comment"># can link multiple libraries, such as libraries you define in this</span></span><br><span class="line"><span class="comment"># build script, prebuilt third-party libraries, or system libraries.</span></span><br><span class="line"></span><br><span class="line">target_link_libraries( <span class="comment"># Specifies the target library.</span></span><br><span class="line">                       native-lib</span><br><span class="line"></span><br><span class="line">                       <span class="comment"># Links the target library to the log library</span></span><br><span class="line">                       <span class="comment"># included in the NDK.</span></span><br><span class="line">                       $&#123;log-lib&#125; )</span><br></pre></td></tr></table></figure>
+
+<p>这里需要在 bspatch.c 中加入我们的一些东西：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">JNIEXPORT jint</span></span><br><span class="line"><span class="function">JNICALL <span class="title">Java_com_xiasuhuei321_incrementapk2_MainActivity_bspatch</span></span></span><br><span class="line"><span class="function">        <span class="params">(JNIEnv *env, jclass cls,</span></span></span><br><span class="line"><span class="params"><span class="function">         jstring old, jstring <span class="keyword">new</span>, jstring patch)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> argc = <span class="number">4</span>;</span><br><span class="line">    <span class="keyword">char</span> *argv[argc];</span><br><span class="line">    argv[<span class="number">0</span>] = <span class="string">&quot;bspatch&quot;</span>;</span><br><span class="line">    argv[<span class="number">1</span>] = (<span class="keyword">char</span> *) ((*env)-&gt;GetStringUTFChars(env, old, <span class="number">0</span>));</span><br><span class="line">    argv[<span class="number">2</span>] = (<span class="keyword">char</span> *) ((*env)-&gt;GetStringUTFChars(env, <span class="keyword">new</span>, <span class="number">0</span>));</span><br><span class="line">    argv[<span class="number">3</span>] = (<span class="keyword">char</span> *) ((*env)-&gt;GetStringUTFChars(env, patch, <span class="number">0</span>));</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> ret = patchMethod(argc, argv);</span><br><span class="line"></span><br><span class="line">    (*env)-&gt;ReleaseStringUTFChars(env, old, argv[<span class="number">1</span>]);</span><br><span class="line">    (*env)-&gt;ReleaseStringUTFChars(env, <span class="keyword">new</span>, argv[<span class="number">2</span>]);</span><br><span class="line">    (*env)-&gt;ReleaseStringUTFChars(env, patch, argv[<span class="number">3</span>]);</span><br><span class="line">    <span class="keyword">return</span> ret;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这里的 Java_com_xiasuhuei321_incrementapk2_MainActivity_bspatch 是有一定命名规律的，用过 jni 的同学应该知道这玩意可以通过 javah -d 的命令来为带有 native 的 class 文件生成 .h 的头文件。这里不深究，总是就是我在这个包底下的 MainActivity 里写了一个 native（kotin 中是 extern）方法叫 bspatch，方法里拿到了传入的三个参数，调用了 bspatch 的 patchMethod，最后释放了字符串资源。这里的方法名一定要写对，不然运行的时候会报错，大意是没有人实现你的 native 方法。接下来看 MainActivity 代码：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.xiasuhuei321.incrementapk2</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.Manifest</span><br><span class="line"><span class="keyword">import</span> android.content.Intent</span><br><span class="line"><span class="keyword">import</span> android.net.Uri</span><br><span class="line"><span class="keyword">import</span> android.os.Build</span><br><span class="line"><span class="keyword">import</span> android.os.Bundle</span><br><span class="line"><span class="keyword">import</span> android.os.Environment</span><br><span class="line"><span class="keyword">import</span> android.support.v4.content.FileProvider</span><br><span class="line"><span class="keyword">import</span> android.support.v7.app.AppCompatActivity</span><br><span class="line"><span class="keyword">import</span> com.tbruyelle.rxpermissions2.RxPermissions</span><br><span class="line"><span class="keyword">import</span> kotlinx.android.synthetic.main.activity_main.*</span><br><span class="line"><span class="keyword">import</span> java.io.File</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> : <span class="type">AppCompatActivity</span></span>() &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstanceState: <span class="type">Bundle</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState)</span><br><span class="line">        setContentView(R.layout.activity_main)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        RxPermissions(<span class="keyword">this</span>).request(Manifest.permission.READ_EXTERNAL_STORAGE,</span><br><span class="line">                Manifest.permission.WRITE_EXTERNAL_STORAGE)</span><br><span class="line">                .subscribe&#123;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="keyword">val</span> destApk = File(Environment.getExternalStorageDirectory(), <span class="string">&quot;dest.apk&quot;</span>)</span><br><span class="line">        <span class="keyword">val</span> patch = File(Environment.getExternalStorageDirectory(), <span class="string">&quot;xxx/PATCH.patch&quot;</span>)</span><br><span class="line"></span><br><span class="line">        patchApkBtn.setOnClickListener &#123;</span><br><span class="line">            Thread &#123;</span><br><span class="line">                bspatch(applicationInfo.sourceDir, destApk.absolutePath, patch.absolutePath)</span><br><span class="line">                runOnUiThread &#123; installApk(destApk) &#125;</span><br><span class="line">            &#125;.start()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * A native method that is implemented by the &#x27;native-lib&#x27; native library,</span></span><br><span class="line"><span class="comment">     * which is packaged with this application.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">external</span> <span class="function"><span class="keyword">fun</span> <span class="title">stringFromJNI</span><span class="params">()</span></span>: String</span><br><span class="line"></span><br><span class="line">    <span class="keyword">external</span> <span class="function"><span class="keyword">fun</span> <span class="title">bspatch</span><span class="params">(oldPth: <span class="type">String</span>, newPath: <span class="type">String</span>, path: <span class="type">String</span>)</span></span>: <span class="built_in">Int</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">companion</span> <span class="keyword">object</span> &#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Used to load the &#x27;native-lib&#x27; library on application startup.</span></span><br><span class="line">        <span class="keyword">init</span> &#123;</span><br><span class="line">            System.loadLibrary(<span class="string">&quot;native-lib&quot;</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">installApk</span><span class="params">(file: <span class="type">File</span>)</span></span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">val</span> f = file</span><br><span class="line"><span class="comment">//            val f = File(&quot;sdcard/remeet/apk/remeet.apk&quot;)</span></span><br><span class="line">            <span class="keyword">val</span> intent = Intent(Intent.ACTION_VIEW)</span><br><span class="line">            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK</span><br><span class="line">            <span class="keyword">if</span> (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.N) &#123;</span><br><span class="line">                <span class="keyword">val</span> apkUri = FileProvider.getUriForFile(<span class="keyword">this</span>, <span class="string">&quot;<span class="subst">$&#123;applicationInfo.packageName&#125;</span>.installapk.provider&quot;</span>, f)</span><br><span class="line">                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)</span><br><span class="line">                intent.setDataAndType(apkUri, <span class="string">&quot;application/vnd.android.package-archive&quot;</span>)</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                intent.setDataAndType(Uri.fromFile(f), <span class="string">&quot;application/vnd.android.package-archive&quot;</span>)</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            startActivity(intent)</span><br><span class="line">        &#125; <span class="keyword">catch</span> (e: Exception) &#123;</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>比较简单，界面一共就一个按钮和一个文字，文字显示版本（我自己乱填的），按钮点击会触发合并补丁的事件。当然，因为我自己的手机是8.0的，我要看效果是能简单适配一下了，各位如果代码跑不起来可以看看我的清单文件申请的权限，和对于7.0的适配。然后自己这里打两个不同的包，一个是 old 一个是 new ，之后进入 bsdiff 的目录，执行命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ./bsdiff old.apk new.apk PATCH.patch</span></span><br></pre></td></tr></table></figure>
+
+<p>之后将这个 PATCH.patch 用 adb push 命令推到自己在代码中指定的目录，就可以开始尝试合成补丁了~</p>
+<p>最后是跑起来了：</p>
+<p><img src="http://xiasuhuei321.com/images/blog/zengilang_screen.png" alt="跑起来了"></p>
+<p>当然，这只是一个 Demo，需要你自己去完善整个流程，我这里只是演示了合成补丁包并重新安装的部分。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"># Android</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/07/17/%E4%BD%BF%E7%94%A8%20DownloadManager%20%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E4%B8%8B%E8%BD%BD%20APK%20%E5%92%8C%E6%9B%B4%E6%96%B0%EF%BC%88%E9%80%82%E9%85%8D%E5%88%B0%208.0%EF%BC%89/" rel="prev" title="使用 DownloadManager 实现自动下载 APK 和更新（适配到8.0）">
+      <i class="fa fa-chevron-left"></i> 使用 DownloadManager 实现自动下载 APK 和更新（适配到8.0）
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/12/17/ObjectBox%E5%A1%AB%E5%9D%91/" rel="next" title="ObjectBox填坑">
+      ObjectBox填坑 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">2.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%9F%E6%88%90%E5%A2%9E%E9%87%8F%E5%8C%85"><span class="nav-number">3.</span> <span class="nav-text">生成增量包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9B%86%E6%88%90%E5%90%88%E5%B9%B6%E5%B7%A5%E5%85%B7"><span class="nav-number">4.</span> <span class="nav-text">集成合并工具</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">罗俊</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">73</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">罗俊</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"forgetall.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="前言我开发经验比较少，这公司也不算太靠谱，由于经验尚浅，很多代码有的时候也有不少毛毛糙糙的地方，没测试，那就自己撸起袖管上吧。本文小记一下我看别人的文所得和一些翻译。 创建有效的单元测试Building Effective Unit Tests 这个是原文地址，想看原文的可以自己看一下，下面是我自己的翻译&#x3D; &#x3D;，比较渣。 单元测试是在你的应用中基本的测试策略。通过创建和运行单元测试检验你的代码，你">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android测试">
+<meta property="og:url" content="https://forgetall.github.io/2017/02/05/Android%E6%B5%8B%E8%AF%95/index.html">
+<meta property="og:site_name" content="LJ的Blog">
+<meta property="og:description" content="前言我开发经验比较少，这公司也不算太靠谱，由于经验尚浅，很多代码有的时候也有不少毛毛糙糙的地方，没测试，那就自己撸起袖管上吧。本文小记一下我看别人的文所得和一些翻译。 创建有效的单元测试Building Effective Unit Tests 这个是原文地址，想看原文的可以自己看一下，下面是我自己的翻译&#x3D; &#x3D;，比较渣。 单元测试是在你的应用中基本的测试策略。通过创建和运行单元测试检验你的代码，你">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1976147-08033199247bb704.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1976147-1d39143f79c26f82.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1976147-6eafe501bcf0313c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1976147-8355e7ebd0959845.gif?imageMogr2/auto-orient/strip">
+<meta property="article:published_time" content="2017-02-05T07:08:31.000Z">
+<meta property="article:modified_time" content="2018-05-30T02:39:04.000Z">
+<meta property="article:author" content="罗俊">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="入门学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/1976147-08033199247bb704.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+<link rel="canonical" href="https://forgetall.github.io/2017/02/05/Android%E6%B5%8B%E8%AF%95/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Android测试 | LJ的Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">LJ的Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">学海无涯苦做舟</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2017/02/05/Android%E6%B5%8B%E8%AF%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="罗俊">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LJ的Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android测试
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-02-05 15:08:31" itemprop="dateCreated datePublished" datetime="2017-02-05T15:08:31+08:00">2017-02-05</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2018-05-30 10:39:04" itemprop="dateModified" datetime="2018-05-30T10:39:04+08:00">2018-05-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>我开发经验比较少，这公司也不算太靠谱，由于经验尚浅，很多代码有的时候也有不少毛毛糙糙的地方，没测试，那就自己撸起袖管上吧。本文小记一下我看别人的文所得和一些翻译。</p>
+<h2 id="创建有效的单元测试"><a href="#创建有效的单元测试" class="headerlink" title="创建有效的单元测试"></a>创建有效的单元测试</h2><p><a target="_blank" rel="noopener" href="https://developer.android.com/training/testing/unit-testing/index.html">Building Effective Unit Tests</a> 这个是原文地址，想看原文的可以自己看一下，下面是我自己的翻译= =，比较渣。</p>
+<p>单元测试是在你的应用中基本的测试策略。通过创建和运行单元测试检验你的代码，你可以很容易校验个别单元的逻辑是否正确。当你重构代码时，运行单元测试能帮助你快速的修复软件和复原。</p>
+<p>单元测试通常是反复测试尽可能小的代码单元（可以是一个方法，类或者组件）。你应该在你的app中的特定代码逻辑需要校验的时候创建单元测试。举个例子来说：如果你正在对一个类进行单元测试，你的测试可能会检查那个类是否处于一个正常的状态。通常被测试的代码单元是孤立的。你的测试仅仅影响和检测那个单元的变化。 <a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/Mock_object">mocking framework</a>可以被用来使你的单元从他的依赖上隔离。</p>
+<span id="more"></span>
+
+<p>注意：单元测试并不适合测试复杂的UI相互作用的事件。取而代之的是，你应该使用UI 测试框架，在 <a target="_blank" rel="noopener" href="https://developer.android.com/training/testing/ui-testing/index.html">Automating UI Tests</a> 中有描述。</p>
+<p>为了测试Android apps，你通常会创建这些种类的自动化单元测试：</p>
+<ul>
+<li>Local tests（本地测试）：单元测试只在你本地的机器上运行，这些测试在最短时间内被编译在Java虚拟机上运行。通过这个途径运行单元测试不必依赖Android框架或者和使用摸你对象填充有依赖关系。</li>
+<li>Instrumented tests（仪器？测试）：在Android设备或模拟器上运行单元测试。这些测试可使用仪器信息，比如为了app测试使用Context上下文。通过这个途径运行单元测试拥有Android的依赖不可以轻易的使用模拟对象。</li>
+</ul>
+<p>** <a target="_blank" rel="noopener" href="https://developer.android.com/training/testing/unit-testing/local-unit-tests.html">Building Local Unit Tests</a> **<br>学习如何创建运行在你本地机器上的单元测试</p>
+<p>** <a target="_blank" rel="noopener" href="https://developer.android.com/training/testing/unit-testing/instrumented-unit-tests.html">Building Instrumented Unit Tests</a> **<br>学习如何创建运行在Android设备或者模拟器上的单元测试</p>
+<h2 id="小例子"><a href="#小例子" class="headerlink" title="小例子"></a>小例子</h2><p>我在这写的两个小例子都是非常简单的，无法作为应用在项目中的参考，如果有你有这个需求，需要你自己去看这几个测试框架的api文档！</p>
+<h2 id="本地测试"><a href="#本地测试" class="headerlink" title="本地测试"></a>本地测试</h2><p>首先引入测试框架：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">dependencies &#123;</span><br><span class="line">    testCompile &#x27;junit:junit:4.12&#x27;</span><br><span class="line">    testCompile &#x27;org.mockito:mockito-core:1.10.19&#x27;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>JUnit是Java里最受欢迎也是应用最广泛的测试框架，而mockito是模拟测试框架。这二者有什么关系呢？我们写代码的时，各种类之间充满了依赖关系。当你测试一个类的时候，可能并不想测试他所依赖的类是否正常，因为你默认它是正常好用的。那么这个时候你就可以用Mockito框架，创建一个模拟对象，JUnit 4比之前好用了不少，只用添加各种注解就能完成简单的测试，看到这你一定很感兴趣了，那么让我们来看一段简单的代码：<br>首先在新建项目，在项目里代码文件夹下新建一个Calculator类：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * Created by xiasuhuei321 on 2017/2/4.</span><br><span class="line"> * author:luo</span><br><span class="line"> * e-mail:xiasuhuei321@163.com</span><br><span class="line"> */</span><br><span class="line"></span><br><span class="line">public class Calculator &#123;</span><br><span class="line"></span><br><span class="line">    public double sum(double a, double b)&#123;</span><br><span class="line">        return 0;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public double substract(double a, double b)&#123;</span><br><span class="line">        return 0;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public double divide(double a, double b)&#123;</span><br><span class="line">        return 0;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public double multiply(double a, double b)&#123;</span><br><span class="line">        return 0;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到我都是返回0，故意的，看看等会测试能不能测出来，接着在test的代码文件夹下新建CalculatorTest测试类：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">import org.junit.Before;</span><br><span class="line">import org.junit.Test;</span><br><span class="line"></span><br><span class="line">import static org.junit.Assert.*;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * Created by xiasuhuei321 on 2017/2/4.</span><br><span class="line"> * author:luo</span><br><span class="line"> * e-mail:xiasuhuei321@163.com</span><br><span class="line"> */</span><br><span class="line">public class CalculatorTest &#123;</span><br><span class="line"></span><br><span class="line">    private Calculator mCalculator;</span><br><span class="line"></span><br><span class="line">    @Before</span><br><span class="line">    public void setUp() throws Exception &#123;</span><br><span class="line">        this.mCalculator = new Calculator();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Test</span><br><span class="line">    public void sum() throws Exception &#123;</span><br><span class="line">        assertEquals(6d, mCalculator.sum(1d, 5d), 0);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Test</span><br><span class="line">    public void substract() throws Exception &#123;</span><br><span class="line">        assertEquals(1d, mCalculator.substract(5d, 4d), 0);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Test</span><br><span class="line">    public void divide() throws Exception &#123;</span><br><span class="line">        assertEquals(4d, mCalculator.divide(20d, 5d), 0);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Test</span><br><span class="line">    public void multiply() throws Exception &#123;</span><br><span class="line">        assertEquals(10d, mCalculator.multiply(2d, 5d), 0);</span><br><span class="line">        assertEquals(0d, mCalculator.multiply(0d, 100d),0);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面@Before意思是在 @Test注解的方法之前执行这个方法，可以用来初始化一些类。@Test自然就是测试方法了。</p>
+<p>接着右键点击测试类，选择Run：<br><img src="http://upload-images.jianshu.io/upload_images/1976147-08033199247bb704.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="运行"><br>]<br>结果显而易见没通过测试：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1976147-1d39143f79c26f82.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="没通过测试"><br>整个过程都没有将程序运行到Android设备上，和上面讲的一样，这就是在本地的JVM虚拟机上跑的，很方便。现在我们将Calculator类改为正确的逻辑：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Created by xiasuhuei321 on 2017/2/4.</span></span><br><span class="line"><span class="comment"> * author:luo</span></span><br><span class="line"><span class="comment"> * e-mail:xiasuhuei321@163.com</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Calculator</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">sum</span><span class="params">(<span class="keyword">double</span> a, <span class="keyword">double</span> b)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> a + b;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">substract</span><span class="params">(<span class="keyword">double</span> a, <span class="keyword">double</span> b)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> a - b;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">divide</span><span class="params">(<span class="keyword">double</span> a, <span class="keyword">double</span> b)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> a / b;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">multiply</span><span class="params">(<span class="keyword">double</span> a, <span class="keyword">double</span> b)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> a * b;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>再次运行刚写好的单元测试，看看结果：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1976147-6eafe501bcf0313c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="通过"></p>
+<p>这次通过了，可以发现在修改源代码之后，可以通过这个单元测试的代码来校验修改后的代码逻辑。这对于重构代码来说很有帮助。</p>
+<p>上面只是一个简单的例子，在实际代码中，可能我们通过构造方法创建一个对象的时候，还需要依赖另外一个对象，但是如果依赖的对象对我这个测试并没有什么影响，那么就可以用Mockito测试框架来创建一个模拟对象。下面的小例子只是为了说明一下创建模拟对象，就不去耗费脑细胞想应用场景了：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">import org.junit.Before;</span><br><span class="line">import org.junit.Test;</span><br><span class="line">import org.junit.runner.RunWith;</span><br><span class="line">import org.mockito.Mock;</span><br><span class="line">import org.mockito.MockitoAnnotations;</span><br><span class="line">import org.mockito.runners.MockitoJUnitRunner;</span><br><span class="line"></span><br><span class="line">import static org.junit.Assert.*;</span><br><span class="line">import static org.mockito.Mockito.*;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * Created by xiasuhuei321 on 2017/2/4.</span><br><span class="line"> * author:luo</span><br><span class="line"> * e-mail:xiasuhuei321@163.com</span><br><span class="line"> */</span><br><span class="line"></span><br><span class="line">@RunWith(MockitoJUnitRunner.class)</span><br><span class="line">public class MockTest &#123;</span><br><span class="line">    @Mock</span><br><span class="line">    Context mContext;</span><br><span class="line"></span><br><span class="line">    @Test</span><br><span class="line">    public void testAppName() &#123;</span><br><span class="line">        when(mContext.getString(R.string.app_name))</span><br><span class="line">                .thenReturn(&quot;JpushDemo&quot;);</span><br><span class="line">        assertEquals(&quot;名字不同！&quot;, &quot;JpushDemo&quot;, mContext.getString(R.string.app_name));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到我类里有一个@Mock注解的Context类引用，在测试方法里我通过这个Context拿到了一个值，然后对比这两个值是否一致。这里就不贴通过测试的图了，各位感兴趣可以自己去看api文档。</p>
+<h2 id="在物理设备上的测试"><a href="#在物理设备上的测试" class="headerlink" title="在物理设备上的测试"></a>在物理设备上的测试</h2><p>原话是Building Instrumented Unit Tests，上面介绍的是在本地JVM虚拟机上运行的检测单元逻辑的测试，这里的可以用来检测UI之类的逻辑，上一个网上看到的例子。</p>
+<p>首先是配置环境，我没怎么配置，可能是高版本的as已经自己加入了这个测试框架了，我只在app下的build.gradle里的android下加入了这句话：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">testInstrumentationRunner &quot;android.support.test.runner.AndroidJUnitRunner&quot;</span><br></pre></td></tr></table></figure>
+<p>xml布局：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">RelativeLayout</span> <span class="attr">xmlns:android</span>=<span class="string">&quot;http://schemas.android.com/apk/res/android&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:tools</span>=<span class="string">&quot;http://schemas.android.com/tools&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:id</span>=<span class="string">&quot;@+id/activity_main&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_width</span>=<span class="string">&quot;match_parent&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_height</span>=<span class="string">&quot;match_parent&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:paddingBottom</span>=<span class="string">&quot;@dimen/activity_vertical_margin&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:paddingLeft</span>=<span class="string">&quot;@dimen/activity_horizontal_margin&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:paddingRight</span>=<span class="string">&quot;@dimen/activity_horizontal_margin&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:paddingTop</span>=<span class="string">&quot;@dimen/activity_vertical_margin&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">tools:context</span>=<span class="string">&quot;com.xiasuhuei321.jpushdemo.MainActivity&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">TextView</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:id</span>=<span class="string">&quot;@+id/textView&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_width</span>=<span class="string">&quot;wrap_content&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_height</span>=<span class="string">&quot;wrap_content&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:text</span>=<span class="string">&quot;hello&quot;</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">EditText</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:id</span>=<span class="string">&quot;@+id/editText&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_width</span>=<span class="string">&quot;match_parent&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_height</span>=<span class="string">&quot;wrap_content&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_below</span>=<span class="string">&quot;@+id/textView&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:hint</span>=<span class="string">&quot;Enter your name here&quot;</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">Button</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_width</span>=<span class="string">&quot;match_parent&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_height</span>=<span class="string">&quot;wrap_content&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_below</span>=<span class="string">&quot;@+id/editText&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:onClick</span>=<span class="string">&quot;sayHello&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:text</span>=<span class="string">&quot;Say hello!&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">RelativeLayout</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>MainActivity:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.xiasuhuei321.jpushdemo;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.support.v7.app.AppCompatActivity;</span><br><span class="line"><span class="keyword">import</span> android.os.Bundle;</span><br><span class="line"><span class="keyword">import</span> android.view.View;</span><br><span class="line"><span class="keyword">import</span> android.widget.EditText;</span><br><span class="line"><span class="keyword">import</span> android.widget.TextView;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sayHello</span><span class="params">(View v)</span> </span>&#123;</span><br><span class="line">        TextView textView = (TextView) findViewById(R.id.textView);</span><br><span class="line">        EditText editText = (EditText) findViewById(R.id.editText);</span><br><span class="line">        textView.setText(<span class="string">&quot;Hello,&quot;</span> + editText.getText().toString() + <span class="string">&quot;!&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>测试代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.xiasuhuei321.jpushdemo;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.support.test.filters.LargeTest;</span><br><span class="line"><span class="keyword">import</span> android.support.test.rule.ActivityTestRule;</span><br><span class="line"><span class="keyword">import</span> android.support.test.runner.AndroidJUnit4;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.junit.Rule;</span><br><span class="line"><span class="keyword">import</span> org.junit.Test;</span><br><span class="line"><span class="keyword">import</span> org.junit.runner.RunWith;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> android.support.test.espresso.Espresso.onView;</span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> android.support.test.espresso.action.ViewActions.click;</span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> android.support.test.espresso.action.ViewActions.closeSoftKeyboard;</span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> android.support.test.espresso.action.ViewActions.typeText;</span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> android.support.test.espresso.assertion.ViewAssertions.matches;</span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> android.support.test.espresso.matcher.ViewMatchers.withId;</span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> android.support.test.espresso.matcher.ViewMatchers.withText;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Created by xiasuhuei321 on 2017/2/4.</span></span><br><span class="line"><span class="comment"> * author:luo</span></span><br><span class="line"><span class="comment"> * e-mail:xiasuhuei321@163.com</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@RunWith(AndroidJUnit4.class)</span></span><br><span class="line"><span class="meta">@LargeTest</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivityInstrumentationTest</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String STRING_TO_BE_TYPED = <span class="string">&quot;Peter&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Rule</span></span><br><span class="line">    <span class="keyword">public</span> ActivityTestRule&lt;MainActivity&gt; mActivityRule = <span class="keyword">new</span> ActivityTestRule&lt;&gt;(MainActivity.class);</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sayHello</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        onView(withId(R.id.editText))</span><br><span class="line">                .perform(typeText(STRING_TO_BE_TYPED),</span><br><span class="line">                        closeSoftKeyboard());</span><br><span class="line"></span><br><span class="line">        onView(withText(<span class="string">&quot;Say hello!&quot;</span>)).perform(click());</span><br><span class="line"></span><br><span class="line">        String expectedText = <span class="string">&quot;Hello,&quot;</span> + STRING_TO_BE_TYPED + <span class="string">&quot;!&quot;</span>;</span><br><span class="line">        onView(withId(R.id.textView))</span><br><span class="line">                .check(matches(withText(expectedText)));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>看一下运行的效果图：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1976147-8355e7ebd0959845.gif?imageMogr2/auto-orient/strip" alt="6.gif"></p>
+<p>最后放下几个测试框架的api文档地址：<br>JUnit：<a target="_blank" rel="noopener" href="http://junit.sourceforge.net/javadoc/">http://junit.sourceforge.net/javadoc/</a></p>
+<p>Mockito：<a target="_blank" rel="noopener" href="http://static.javadoc.io/org.mockito/mockito-core/2.7.1/overview-summary.html">http://static.javadoc.io/org.mockito/mockito-core/2.7.1/overview-summary.html</a></p>
+<p>Espresso（UI自动测试框架）：<a target="_blank" rel="noopener" href="https://google.github.io/android-testing-support-library/docs/espresso/index.html">https://google.github.io/android-testing-support-library/docs/espresso/index.html</a></p>
+<p>这几个例子不是很详细，因为我也是在摸索。。。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"># Android</a>
+              <a href="/tags/%E5%85%A5%E9%97%A8%E5%AD%A6%E4%B9%A0/" rel="tag"># 入门学习</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2017/01/20/Git%E5%AD%A6%E4%B9%A0%E5%B0%8F%E8%AE%B0/" rel="prev" title="Git学习小记">
+      <i class="fa fa-chevron-left"></i> Git学习小记
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/02/19/Google%E5%AE%98%E6%96%B9MVP%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/" rel="next" title="Google官方MVP示例代码阅读笔记">
+      Google官方MVP示例代码阅读笔记 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E6%9C%89%E6%95%88%E7%9A%84%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95"><span class="nav-number">2.</span> <span class="nav-text">创建有效的单元测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%8F%E4%BE%8B%E5%AD%90"><span class="nav-number">3.</span> <span class="nav-text">小例子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%AC%E5%9C%B0%E6%B5%8B%E8%AF%95"><span class="nav-number">4.</span> <span class="nav-text">本地测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%A8%E7%89%A9%E7%90%86%E8%AE%BE%E5%A4%87%E4%B8%8A%E7%9A%84%E6%B5%8B%E8%AF%95"><span class="nav-number">5.</span> <span class="nav-text">在物理设备上的测试</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">罗俊</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">73</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">罗俊</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

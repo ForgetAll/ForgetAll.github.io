@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"forgetall.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="写在前面本文是阅读了《图解HTTP》一文同时本周也在一个小团体内进行了一些HTTP协议的讨论，感觉对于HTTP协议的理解比以前又加深了不少。 历史以下材料选自《图解HTTP》： 在学习Http协议之前首先看一下他的历史，也许能解答我们不少的问题。 1989年3月，互联网还只属于少数人。在这一互联网的黎明期，HTTP诞生了。CERN（欧洲核子研究组织）的蒂姆·伯纳斯-李（Tim BernersLee">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HTTP协议小结">
+<meta property="og:url" content="https://forgetall.github.io/2016/11/27/HTTP%E5%8D%8F%E8%AE%AE%E5%B0%8F%E7%BB%93/index.html">
+<meta property="og:site_name" content="LJ的Blog">
+<meta property="og:description" content="写在前面本文是阅读了《图解HTTP》一文同时本周也在一个小团体内进行了一些HTTP协议的讨论，感觉对于HTTP协议的理解比以前又加深了不少。 历史以下材料选自《图解HTTP》： 在学习Http协议之前首先看一下他的历史，也许能解答我们不少的问题。 1989年3月，互联网还只属于少数人。在这一互联网的黎明期，HTTP诞生了。CERN（欧洲核子研究组织）的蒂姆·伯纳斯-李（Tim BernersLee">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1976147-aac6bbacbec17bee.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1976147-1b3625b421e0dee9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1976147-26c32eb479ead47f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1976147-c99926dcb3afe9fd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1976147-8c21e6ad6bd46f2b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1976147-17fccbc4a3d01537.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1976147-f5420062107382c2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="article:published_time" content="2016-11-26T17:44:24.000Z">
+<meta property="article:modified_time" content="2018-05-30T02:39:42.000Z">
+<meta property="article:author" content="罗俊">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="协议">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/1976147-aac6bbacbec17bee.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+<link rel="canonical" href="https://forgetall.github.io/2016/11/27/HTTP%E5%8D%8F%E8%AE%AE%E5%B0%8F%E7%BB%93/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>HTTP协议小结 | LJ的Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">LJ的Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">学海无涯苦做舟</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2016/11/27/HTTP%E5%8D%8F%E8%AE%AE%E5%B0%8F%E7%BB%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="罗俊">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LJ的Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          HTTP协议小结
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2016-11-27 01:44:24" itemprop="dateCreated datePublished" datetime="2016-11-27T01:44:24+08:00">2016-11-27</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2018-05-30 10:39:42" itemprop="dateModified" datetime="2018-05-30T10:39:42+08:00">2018-05-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>本文是阅读了《图解HTTP》一文同时本周也在一个小团体内进行了一些HTTP协议的讨论，感觉对于HTTP协议的理解比以前又加深了不少。</p>
+<h2 id="历史"><a href="#历史" class="headerlink" title="历史"></a>历史</h2><p>以下材料选自《图解HTTP》：</p>
+<p>在学习Http协议之前首先看一下他的历史，也许能解答我们不少的问题。</p>
+<p>1989年3月，互联网还只属于少数人。在这一互联网的黎明期，HTTP诞生了。CERN（欧洲核子研究组织）的蒂姆·伯纳斯-李（Tim BernersLee）博士提出了一种能让远隔两地的研究者们共享知识的设想。</p>
+<span id="more"></span>
+
+<p>最初设想的基本理念是：借助多文档之间的相互关联形成的超文本（Hyper Text），连成可相互参阅的WWW（World Wide Web，万维网）。WWW这一名称，是Web浏览器用来浏览超文本的客户端应用程序时的名称。现在则用来表示这一系列的集合，也可简称为Web</p>
+<ul>
+<li><p>HTTP/0.9<br>HTTP于1990年问世。那时的HTTP并没有作为正式的标准被建立。现在的HTTP其实含有HTTP1.0之前版本的意思，因此被称为HTTP/0.9。</p>
+</li>
+<li><p>HTTP/1.0<br>HTTP正式作为标准被公布是在1996年的5月，版本被命名为HTTP/1.0，并记载于RFC1945。虽说是初期标准，但该协议标准至今仍被广泛使用在服务器端。</p>
+</li>
+<li><p>HTTP/1.1<br>1997年1月公布的HTTP/1.1是目前主流的HTTP协议版本。当初的标准是RFC2068，之后发布的修订版RFC2616就是当前的最新版本。</p>
+</li>
+</ul>
+<h3 id="HTTP协议的根基"><a href="#HTTP协议的根基" class="headerlink" title="HTTP协议的根基"></a>HTTP协议的根基</h3><p>在了解HTTP协议之前，首先对整个计算机网络协议做一个大致的了解。首先要提到的是ISO指定的OSI七层模型，但是这个参考模型过于庞大、复杂。与此相对的是技术人员自己开发的TCP/IP协议族获得了更广泛的应用。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1976147-aac6bbacbec17bee.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="TCP/IP参考模型"></p>
+<p>对于我们应用端程序员来说，接触最多的还是应用层的协议，HTTP协议也是属于这一层的。但是HTTP协议是基于传输层协议的，传输层的协议是TCP和UDP协议，使用TCP协议连接会经历三次握手，而UDP不会。HTTP协议是基于可靠的TCP协议的，关于TCP/IP我们需要了解的东西暂时就到这了。更多的可以自己去看《TCP/IP详解 卷1》。最初HTTP协议的出现时为了解决WEB间数据问题的，时至今日，因为他简单的特性已经被用于各种场景了（比如咱Android和IOS，虽然以后可能会被https取代。。)，所以在具体了解HTTP协议的时候，你可能会发现很多东西是你平时用不上的，这都是很正常的。</p>
+<h3 id="HTTP首部"><a href="#HTTP首部" class="headerlink" title="HTTP首部"></a>HTTP首部</h3><p>HTTP协议的请求响应报文中必定包含HTTP首部，只是我们平时在使用Web的过程中感受不到它。<br>HTTP报文的结构：<br>报文首部 + 空行 + 报文主体</p>
+<p>HTTP请求报文<br>在请求中，HTTP报文由方法、URI、HTTP版本、HTTP首部字段等部分构成。<br>报文首部构成：请求行 + 请求首部字段 + 通用首部字段 + 实体首部字段 + 其他<br>其中：请求首部字段+通用首部字段+实体首部字段就是HTTP首部字段。</p>
+<p>让我们通过一个简单的请求看一下：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1976147-1b3625b421e0dee9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="简书"></p>
+<p>首先我在浏览器输入的=&gt;jianshu.com<br>上面的General可以看到一个Status Code：301，这个状态码代表的意思就是永久性重定向。该状态码表示请求的资源已经被分配了新的URI，希望用户（本次）能使用新的URI访问，那为啥呢？因为我输的是jianshu.com，但是实际上简书的域名是<a target="_blank" rel="noopener" href="http://www.jianshu.com/">www.jianshu.com</a></p>
+<p>另外在HTTP协议中状态码是一个比较重要的东西，我们通常需要根据状态码来得到一些基本的信息，比如说本次请求是否成功。那么简单的罗列一下HTTP协议中的一些状态码：</p>
+<p>1XX        信息性状态码            接收的请求正在处理<br>2XX        成功状态码                请求正常处理完毕<br>3XX        重定向状态码            需要进行附加操作已完成请求<br>4XX        客户端错误状态码     服务器无法处理请求<br>5XX        服务器错误状态         服务器处理请求出错</p>
+<p>以上是对状态码的一些简介，如果你想要了解更详细的，可以自行google。</p>
+<p>HTTP首部字段结构<br>HTTP首部字段是由首部字段名和字段值构成的，中间用冒号“：”分割。</p>
+<p>首部字段名：字段值<br>例如，在HTTP首部中以Content-Type这个字段来表示报文主体的对象类型。<br>Content-Type:text/html<br>就以上述示例来看，首部字段名为Content-Type，字符串text/html是字段值。</p>
+<p>另外，字段值对应单个HTTP首部字段可以有多个值，入下所示<br>Keep-Alive:timeout=15,max=100</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1976147-26c32eb479ead47f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="HTTP"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1976147-c99926dcb3afe9fd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="HTTP"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1976147-8c21e6ad6bd46f2b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="HTTP"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1976147-17fccbc4a3d01537.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="HTTP"></p>
+<p>除了以上HTTP/1.1协议（RFC2616）中规定的47种首部字段，还有一些非正式的首部字段，这些字段被统一归纳在RFC4229 HTTP Header Field Registrations中。常用的Cookie、SetCookie和Content-Disposition等。</p>
+<p>看了以上那么多首部字段，是不是有些眼花缭乱？其实根本没有那么复杂……对于我们android开发者来说，在平时的应用场景中只要知道Content-Type和Cookie就能应付大部分场景了。首先Cookie这玩意一般是用来验证用户身份的。众所周知HTTP协议是一个无状态协议，是不能记住用户的。Cookie应运而生，而在现在，一般来说在服务器端会将用户记录入一个session，而在你登录的请求中，服务器会返回一个cookie，这时候就需要我们去拿到这个cookie并在每一次请求中都加入了。通常这个cookie是一个session id，当然了，如果你们服务端的大兄弟返一个token给你，让你加在请求头里，那也随他开心，他要咱怎么做，咱就配合就成了。Content-Type是指明请求实体的媒体类型，具体的值可以在用到的时候自行去查找。</p>
+<h3 id="简单的请求"><a href="#简单的请求" class="headerlink" title="简单的请求"></a>简单的请求</h3><p>接下来使用Okhttp来进行一些简单的请求：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//GET请求</span></span><br><span class="line">Request getRequest = <span class="keyword">new</span> Request.Builder()</span><br><span class="line">        .url(<span class="string">&quot;https://www.baidu.com&quot;</span>)</span><br><span class="line">        .build();</span><br><span class="line">Call call = mOkhttpClient.newCall(getRequest);</span><br><span class="line">call.enqueue(<span class="keyword">new</span> Callback() &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onFailure</span><span class="params">(Call call, IOException e)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onResponse</span><span class="params">(Call call, Response response)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        System.out.println(response.body().string());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>首先这是一个最简单的GET请求，首先创建一个请求Request，再创建一个Call，最后将这个请求调度这个call，最终你可以在onResponse这个回调里处理响应报文。这里有一个小地方值得注意，不要重复使用response.body().string()，当然如果你有需要，可以先将他赋给一个String的引用，不然第二次使用它的时候可能为空。这一点在我使用的时候还是这样，各位看官对于为什么这样感兴趣的话可以去搜搜。</p>
+<p>再来一个普通的表单请求：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">    <span class="comment">//表单请求</span></span><br><span class="line">    FormBody formBody = <span class="keyword">new</span> FormBody.Builder()</span><br><span class="line">            .add(<span class="string">&quot;name&quot;</span>,<span class="string">&quot;18255697137&quot;</span>)</span><br><span class="line">            .add(<span class="string">&quot;pass&quot;</span>,<span class="string">&quot;123&quot;</span>)</span><br><span class="line">            .build();</span><br><span class="line"></span><br><span class="line">    Request postFormRequest = <span class="keyword">new</span> Request.Builder()</span><br><span class="line">            .url(...)</span><br><span class="line">            .post(formBody)</span><br><span class="line">            .build();</span><br><span class="line"></span><br><span class="line">    Call postFormCall = mOkhttpClient.newCall(postFormRequest);</span><br><span class="line">    postFormCall.enqueue(<span class="keyword">new</span> Callback() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onFailure</span><span class="params">(Call call, IOException e)</span> </span>&#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onResponse</span><span class="params">(Call call, Response response)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">            String str = response.body().string();</span><br><span class="line">            System.out.println(str);</span><br><span class="line">            testText.setText(str);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>与上面的GET请求对比，可以看出多了构建请求实体的步骤，这里我模拟登陆的场景，提交明文的账号密码。先说说我对于这种构建请求的看法：</p>
+<ul>
+<li>步骤很清晰，很HTTP</li>
+<li>用起来着实麻烦</li>
+</ul>
+<p>对于Okhttp进行封装的库我用过两个，一个是OkhttpUtils，是鸿洋大神的作品，另一个就是Square的Retrofit了。OkhttpUtils好用是挺好用的，链式api，构建一个HTTP请求非常简单，但是对于RxJava和响应与实体转换的支持并不是很好，所以我个人更倾向于Retrofit。</p>
+<p>那么用Retrofit+RxJava构建一个表单请求会是怎样的呢？</p>
+<p>首先定义一个ApiStore接口，里面包含了一个register方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ApiStore</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 注册</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@FormUrlEncoded</span></span><br><span class="line">    <span class="meta">@POST(&quot;api.php?action=register&quot;)</span></span><br><span class="line">    <span class="function">Observable&lt;BaseResponse&gt; <span class="title">register</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">            <span class="meta">@Field(&quot;name&quot;)</span>String username</span></span></span><br><span class="line"><span class="params"><span class="function">            ,<span class="meta">@Field(&quot;pass&quot;)</span>String password)</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">     </span><br></pre></td></tr></table></figure>
+<p>定义一个接收数据的类型：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BaseResponse</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> code;</span><br><span class="line">    String message;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;the code is---&gt;&quot;</span> + code + <span class="string">&quot;\n&quot;</span> +</span><br><span class="line">                <span class="string">&quot;the message is---&gt;&quot;</span> + message;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>发送请求：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">TextView testText = (TextView) findViewById(R.id.test);</span><br><span class="line">Retrofit retrofit = <span class="keyword">new</span> Retrofit.Builder()</span><br><span class="line">        .baseUrl(BASEURL)</span><br><span class="line">        .addConverterFactory(GsonConverterFactory.create())</span><br><span class="line">        .addCallAdapterFactory(RxJavaCallAdapterFactory.create())</span><br><span class="line">        .build();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">ApiStore apiStore = retrofit.create(ApiStore.class);</span><br><span class="line">apiStore.register(<span class="string">&quot;182*******7&quot;</span>,<span class="string">&quot;123&quot;</span>)</span><br><span class="line">        .subscribeOn(Schedulers.io())</span><br><span class="line">        .map(BaseResponse::toString)</span><br><span class="line">        .observeOn(AndroidSchedulers.mainThread())</span><br><span class="line">        .subscribe(testText::setText,Throwable::printStackTrace);</span><br></pre></td></tr></table></figure>
+<p>效果图：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1976147-f5420062107382c2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="效果图"><br>可能你看了我对于Retrofit的使用，感觉这不比Okhttp的使用还要麻烦么。。。其实不是的，一是现在演示的都是很基础简单的东西，一是我也是刚上手Retrofit，应该还可以进一步的封装。</p>
+<p>关于Okhttp的使用暂时就到这，本文并非专门总结Okhttp使用方法的，只是顺带一提。今天在讨论完HTTP的一些东西之后，突然又聊了一些HTTP安全方面的东西。众所周知，HTTP是明文传输的，因为在以前通常请求的都是一些资源文件，没有什么加密的必要。但是现在用在移动客户端，这还是挺要命的。有的小伙伴就说了，他们那用MD5……</p>
+<p>首先我们想清楚MD5是干什么的，MD5即Message-Digest Algorithm 5（信息-摘要算法5），用于确保信息传输完整一致。MD5并不是一个加密算法，所以你用MD5处理数据传到服务端是没什么卵用的，只不过是把人能看懂的字符弄成人理解不了的字符串而已。这有啥，我模拟你登录的时候，我直接把你MD5处理过的字符串加上来不就成了，你服务器认这个不就OK?</p>
+<p>所以在传输重要数据时可以考虑使用https或者非对称加密，为毛是非对称加密呢。。。因为如果是对称加密，那么客户端会留有一个公钥，这有点不靠谱。。。客户端的安全保障。。。当然你可以把密钥放到so里面，但是我没做过，不知道这样到底安不安全。。。</p>
+<p>接下来是关于GET和POST这两种请求的区别：<br><a target="_blank" rel="noopener" href="http://mp.weixin.qq.com/s?__biz=MzI3NzIzMzg3Mw==&mid=100000054&idx=1&sn=71f6c214f3833d9ca20b9f7dcd9d33e4#rd">来自WebTechGarden</a></p>
+<ul>
+<li>GET请求在URL中传送的参数是有长度限制的，而POST没有。</li>
+<li>GET参数通过URL传递，POST放在Request body中</li>
+<li>GET比POST更不安全，因为参数直接暴露在URL上，所以不能用来传递敏感信息。</li>
+</ul>
+<p>以上的回答可能是你见的最多的答案了，可是那篇文的作者给出了从另一个角度得出的结论：GET和POST本质上没有区别。<br>GET和POST是HTTP协议中两种发送请求的方法，而HTTP协议是基于TCP/IP关于数据如何在万维网中如何通信的协议。如果你要给GET加上request body，给POST带上url参数，技术上是完全行得通的。</p>
+<p>更多的内容自行戳上面的链接，我这只是给个引子~</p>
+<p>本次的HTTP小结就暂时告一段落~</p>
+<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><ul>
+<li>《图解HTTP》</li>
+<li>Square Okhttp Sample：<a target="_blank" rel="noopener" href="https://github.com/square/okhttp">https://github.com/square/okhttp</a></li>
+<li>square Retrofit Sample：<a target="_blank" rel="noopener" href="https://github.com/square/retrofit">https://github.com/square/retrofit</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"># Android</a>
+              <a href="/tags/%E5%8D%8F%E8%AE%AE/" rel="tag"># 协议</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2016/11/21/%E6%8E%A5%E5%8F%A3%E5%B0%8F%E7%BB%93/" rel="prev" title="接口小结">
+      <i class="fa fa-chevron-left"></i> 接口小结
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2016/12/10/%E5%8F%8D%E5%B0%84/" rel="next" title="反射">
+      反射 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2"><span class="nav-number">1.</span> <span class="nav-text">写在前面</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8E%86%E5%8F%B2"><span class="nav-number">2.</span> <span class="nav-text">历史</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#HTTP%E5%8D%8F%E8%AE%AE%E7%9A%84%E6%A0%B9%E5%9F%BA"><span class="nav-number">2.1.</span> <span class="nav-text">HTTP协议的根基</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HTTP%E9%A6%96%E9%83%A8"><span class="nav-number">2.2.</span> <span class="nav-text">HTTP首部</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E7%9A%84%E8%AF%B7%E6%B1%82"><span class="nav-number">2.3.</span> <span class="nav-text">简单的请求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">2.4.</span> <span class="nav-text">参考资料</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">罗俊</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">73</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">罗俊</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

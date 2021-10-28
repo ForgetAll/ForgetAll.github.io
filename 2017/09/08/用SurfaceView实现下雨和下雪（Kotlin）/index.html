@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"forgetall.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="写在前面最近打算做一波东西巩固一下自己近期所学所得。话不多说，先看一下最终完成的效果图：  这里比较懒……第二个图片中还是降雨……不过这不是关键点……">
+<meta property="og:type" content="article">
+<meta property="og:title" content="用SurfaceView实现下雨和下雪（Kotlin）">
+<meta property="og:url" content="https://forgetall.github.io/2017/09/08/%E7%94%A8SurfaceView%E5%AE%9E%E7%8E%B0%E4%B8%8B%E9%9B%A8%E5%92%8C%E4%B8%8B%E9%9B%AA%EF%BC%88Kotlin%EF%BC%89/index.html">
+<meta property="og:site_name" content="LJ的Blog">
+<meta property="og:description" content="写在前面最近打算做一波东西巩固一下自己近期所学所得。话不多说，先看一下最终完成的效果图：  这里比较懒……第二个图片中还是降雨……不过这不是关键点……">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1976147-265cf400679f4b6c.gif?imageMogr2/auto-orient/strip">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1976147-34137411bb9316fd.gif?imageMogr2/auto-orient/strip">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1976147-55208e1a1f5b71c1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1976147-a48d7db586a5fd1e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="article:published_time" content="2017-09-08T10:26:17.000Z">
+<meta property="article:modified_time" content="2018-05-30T02:36:12.000Z">
+<meta property="article:author" content="罗俊">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="Kotlin">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/1976147-265cf400679f4b6c.gif?imageMogr2/auto-orient/strip">
+
+<link rel="canonical" href="https://forgetall.github.io/2017/09/08/%E7%94%A8SurfaceView%E5%AE%9E%E7%8E%B0%E4%B8%8B%E9%9B%A8%E5%92%8C%E4%B8%8B%E9%9B%AA%EF%BC%88Kotlin%EF%BC%89/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>用SurfaceView实现下雨和下雪（Kotlin） | LJ的Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">LJ的Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">学海无涯苦做舟</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2017/09/08/%E7%94%A8SurfaceView%E5%AE%9E%E7%8E%B0%E4%B8%8B%E9%9B%A8%E5%92%8C%E4%B8%8B%E9%9B%AA%EF%BC%88Kotlin%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="罗俊">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LJ的Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          用SurfaceView实现下雨和下雪（Kotlin）
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-09-08 18:26:17" itemprop="dateCreated datePublished" datetime="2017-09-08T18:26:17+08:00">2017-09-08</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2018-05-30 10:36:12" itemprop="dateModified" datetime="2018-05-30T10:36:12+08:00">2018-05-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>最近打算做一波东西巩固一下自己近期所学所得。话不多说，先看一下最终完成的效果图：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1976147-265cf400679f4b6c.gif?imageMogr2/auto-orient/strip" alt="下雨.gif"></p>
+<p>这里比较懒……第二个图片中还是降雨……不过这不是关键点……<br><img src="http://upload-images.jianshu.io/upload_images/1976147-34137411bb9316fd.gif?imageMogr2/auto-orient/strip" alt="下雪.gif"></p>
+<span id="more"></span>
+<p>录制的mp4，转成了gif。第一个gif设置了帧率，所以看起来可能掉帧比较严重，但是实际上并不会，因为这里我也注意了1s要绘制60帧的问题。阅读本文需要一些基本的<code>View</code>知识和会一些基础Kotlin语法。说实话，就知识点来说，跟Kotlin是没多大关系的，只要懂基本的语法就可以了。</p>
+<h2 id="理清思路"><a href="#理清思路" class="headerlink" title="理清思路"></a>理清思路</h2><p>在动手前先要理一下思路，从以下几个方面来分析一下该采用什么方案来实现这个效果：</p>
+<ul>
+<li><p>工作线程：首先要想到的是：这个下雨的效果需要通过不停的绘制来实现，如果在主线程做这个操作，很有可能会阻塞主线程，导致ANR或者异常卡顿。所以需要一个能在子线程进行绘制的View，毫无疑问SurfaceView可以满足这个需求。</p>
+</li>
+<li><p>如何实现：分析一下一颗雨滴的实现。首先，简单的效果其实可以用画线的方式代替。并不是每个人都有写轮眼，动态视力那么好的，一旦动起来谁还知道他是条线还是雨滴……当然了，Canvas绘制的API有很多，并不一定非要用这种方式来实现。所以在在设计类的时候我们将draw的方法设置成可以让子类复写就可以了，你不满意我的实现？没问题，我给你改的自由~ </p>
+</li>
+<li><p>下落的实现：让雨滴动起来，有两种方式，一种是纯按坐标来绘制，另外一种是利用属性动画，自己重写估值器，动态改变y值。最终我还是采用了前一种方案，后一种属性动画的方案我为什么放弃了呢？原因是：这里的绘制的方式是靠外部不断的触发绘制事件来实现动态绘制的，很显然第一种方式更加符合这里的情况。</p>
+</li>
+</ul>
+<p>以上就是我初期的一些关于实现的思考了，接下来是代码实现分析。</p>
+<h2 id="代码实现分析"><a href="#代码实现分析" class="headerlink" title="代码实现分析"></a>代码实现分析</h2><p>先放代码结构图：<br><img src="http://upload-images.jianshu.io/upload_images/1976147-55208e1a1f5b71c1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="代码结构"><br>WeatherShape所有天气的父类，Rain和Snow是两个具体实现类。<br>看一下父类的代码：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.xiasuhuei321.gank_kotlin.customview.weather</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.graphics.Canvas</span><br><span class="line"><span class="keyword">import</span> android.graphics.Paint</span><br><span class="line"><span class="keyword">import</span> android.graphics.PointF</span><br><span class="line"><span class="keyword">import</span> com.xiasuhuei321.gank_kotlin.context</span><br><span class="line"><span class="keyword">import</span> com.xiasuhuei321.gank_kotlin.extension.getScreenWidth</span><br><span class="line"><span class="keyword">import</span> java.util.*</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Created by xiasuhuei321 on 2017/9/5.</span></span><br><span class="line"><span class="comment"> * author:luo</span></span><br><span class="line"><span class="comment"> * e-mail:xiasuhuei321@163.com</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * desc: All shape&#x27;s parent class.It describes a shape will have</span></span><br><span class="line"><span class="comment"> * what feature.It&#x27;s draw flows are:</span></span><br><span class="line"><span class="comment"> * 1.Outside the class init some value such as the start and the</span></span><br><span class="line"><span class="comment"> * end point.</span></span><br><span class="line"><span class="comment"> * 2.Invoke draw(Canvas) method, in this method, there are still</span></span><br><span class="line"><span class="comment"> * two flows:</span></span><br><span class="line"><span class="comment"> * 1) Get random value to init paint, this will affect the shape</span></span><br><span class="line"><span class="comment"> * draw style.</span></span><br><span class="line"><span class="comment"> * 2) When the shape is not used, invoke init method, and when it</span></span><br><span class="line"><span class="comment"> * is not used invoke drawWhenInUse(Canvas) method. It should be</span></span><br><span class="line"><span class="comment"> * override by user and to implement draw itself.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">WeatherShape</span></span>(<span class="keyword">val</span> start: PointF, <span class="keyword">val</span> end: PointF) &#123;</span><br><span class="line">    <span class="keyword">open</span> <span class="keyword">var</span> TAG = <span class="string">&quot;WeatherShape&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 是否是正在被使用的状态</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">var</span> isInUse = <span class="literal">false</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 是否是随机刷新的Shape</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">var</span> isRandom = <span class="literal">false</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 下落的速度，特指垂直方向，子类可以实现自己水平方向的速度</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">var</span> speed = <span class="number">0.05f</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * shape的宽度</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">var</span> width = <span class="number">5f</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> shapeAlpha = <span class="number">100</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> paint = Paint().apply &#123;</span><br><span class="line">        strokeWidth = width</span><br><span class="line">        isAntiAlias = <span class="literal">true</span></span><br><span class="line">        alpha = alpha</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 总共下落的时间</span></span><br><span class="line">    <span class="keyword">var</span> lastTime = <span class="number">0L</span></span><br><span class="line">    <span class="comment">// 原始x坐标位置</span></span><br><span class="line">    <span class="keyword">var</span> originX = <span class="number">0f</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 根据自己的规则计算加速度，如果是匀速直接 return 0</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">abstract</span> <span class="function"><span class="keyword">fun</span> <span class="title">getAcceleration</span><span class="params">()</span></span>: <span class="built_in">Float</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 绘制自身，这里在Shape是非使用的时候进行一些初始化操作</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">open</span> <span class="function"><span class="keyword">fun</span> <span class="title">draw</span><span class="params">(canvas: <span class="type">Canvas</span>)</span></span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (!isInUse) &#123;</span><br><span class="line">            lastTime += randomPre()</span><br><span class="line">            initStyle()</span><br><span class="line">            isInUse = <span class="literal">true</span></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            drawWhenInUse(canvas)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Shape在使用的时候调用此方法</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">abstract</span> <span class="function"><span class="keyword">fun</span> <span class="title">drawWhenInUse</span><span class="params">(canvas: <span class="type">Canvas</span>)</span></span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 初始化Shape风格</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">open</span> <span class="function"><span class="keyword">fun</span> <span class="title">initStyle</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">val</span> random = Random()</span><br><span class="line">        <span class="comment">// 获取随机透明度</span></span><br><span class="line">        shapeAlpha = random.nextInt(<span class="number">155</span>) + <span class="number">50</span></span><br><span class="line">        <span class="comment">// 获得起点x偏移</span></span><br><span class="line">        <span class="keyword">val</span> translateX = random.nextInt(<span class="number">10</span>).toFloat() + <span class="number">5</span></span><br><span class="line">        <span class="keyword">if</span> (!isRandom) &#123;</span><br><span class="line">            start.x = translateX + originX</span><br><span class="line">            end.x = translateX + originX</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 如果是随机Shape，将x坐标随机范围扩大到整个屏幕的宽度</span></span><br><span class="line">            <span class="keyword">val</span> randomWidth = random.nextInt(context.getScreenWidth())</span><br><span class="line">            start.x = randomWidth.toFloat()</span><br><span class="line">            end.x = randomWidth.toFloat()</span><br><span class="line">        &#125;</span><br><span class="line">        speed = randomSpeed(random)</span><br><span class="line">        <span class="comment">// 初始化length的工作留给之后对应的子类去实现</span></span><br><span class="line">        <span class="comment">// 初始化color也留给子类去实现</span></span><br><span class="line">        paint.apply &#123;</span><br><span class="line">            alpha = shapeAlpha</span><br><span class="line">            strokeWidth = width</span><br><span class="line">            isAntiAlias = <span class="literal">true</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 如果有什么想要做的，刚好可以在追加上完成，就使用这个函数</span></span><br><span class="line">        wtc(random)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Empty body, this will be invoke in initStyle</span></span><br><span class="line"><span class="comment">     * method.If current initStyle method can satisfy your need</span></span><br><span class="line"><span class="comment">     * but you still add something, by override this method</span></span><br><span class="line"><span class="comment">     * will be a good idea to solve the problem.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">open</span> <span class="function"><span class="keyword">fun</span> <span class="title">wtc</span><span class="params">(random:<span class="type">Random</span>)</span></span>: <span class="built_in">Unit</span> &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">abstract</span> <span class="function"><span class="keyword">fun</span> <span class="title">randomSpeed</span><span class="params">(random: <span class="type">Random</span>)</span></span>: <span class="built_in">Float</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取一个随机的提前量，让shape在竖屏上有一个初始的偏移</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">open</span> <span class="function"><span class="keyword">fun</span> <span class="title">randomPre</span><span class="params">()</span></span>: <span class="built_in">Long</span> &#123;</span><br><span class="line">        <span class="keyword">val</span> random = Random()</span><br><span class="line">        <span class="keyword">val</span> pre = random.nextInt(<span class="number">1000</span>).toLong()</span><br><span class="line">        <span class="keyword">return</span> pre</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>说起这个代码，恩，还是经历过一番重构的……周六去找同学玩的路上顺便重构了一下，将一些可以放到基类中的操作都抽取到了基类中。这样虽然灵活不足，但是子类可以很方便的通过继承实现一个需要类似功能的东西，就比如这里的下雨和下雪。顺便吐槽一下……我注释的风格不太好，中英混搭……如果你仔细观察，可以看到gif中的雨点或者雪花形态可能都有一些些的不一样，是的，每一滴雨和雪花，都经过了一些随机的转变。</p>
+<p>里面比较重要的两个属性是isInUse和isRandom，本来想用一个容器来作为Shape的管理类，统一管理，但是这样肯定会让使用和复用的流程更加复杂。最后还是决定用简单一点的方法，Shape内部保存一个使用状态和是否是随机的。isRandoma表示这个Shape是否是随机的，随机在目前的代码中会体现在Shape的x坐标上。如果随机标识是true，那么x坐标将是0 ~ ScreenWidth中的任意值。那么不是随机的呢？在我的实现中，同一类Shape将会被分为两类，一类常量组。会拥有相对固定的x值，但是也会有10~15px的随机偏移。另一类就是随机组，x值全屏自己随机，这样就尽量让屏幕各处都有雨滴（雪花）但会有疏密之别。initStyle就是这一随机的过程，有兴趣可以看看实现~</p>
+<p>start和end是Shape的左上角点和右下角点，如果你对于Cavans的api有了解，就应该知道通过对start和end的转换和计算，可以绘制出大部分的形状。</p>
+<p>接下来看一下具体实现的Snow类：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.xiasuhuei321.gank_kotlin.customview.weather</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.graphics.*</span><br><span class="line"><span class="keyword">import</span> com.xiasuhuei321.gank_kotlin.context</span><br><span class="line"><span class="keyword">import</span> com.xiasuhuei321.gank_kotlin.extension.getScreenHeight</span><br><span class="line"><span class="keyword">import</span> java.util.*</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Created by xiasuhuei321 on 2017/9/5.</span></span><br><span class="line"><span class="comment"> * author:luo</span></span><br><span class="line"><span class="comment"> * e-mail:xiasuhuei321@163.com</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Snow</span></span>(start: PointF, end: PointF) : WeatherShape(start, end) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 圆心，用户可以改变这个值</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">var</span> center = calcCenter()</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 半径</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">var</span> radius = <span class="number">10f</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">getAcceleration</span><span class="params">()</span></span>: <span class="built_in">Float</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0f</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">drawWhenInUse</span><span class="params">(canvas: <span class="type">Canvas</span>)</span></span> &#123;</span><br><span class="line">        <span class="comment">// 通过圆心与半径确定圆的位置及大小</span></span><br><span class="line">        <span class="keyword">val</span> distance = speed * lastTime</span><br><span class="line">        center.y += distance</span><br><span class="line">        start.y += distance</span><br><span class="line">        end.y += distance</span><br><span class="line">        lastTime += <span class="number">16</span></span><br><span class="line">        canvas.drawCircle(center.x, center.y, radius, paint)</span><br><span class="line">        <span class="keyword">if</span> (end.y &gt; context.getScreenHeight()) clear()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">calcCenter</span><span class="params">()</span></span>: PointF &#123;</span><br><span class="line">        <span class="keyword">val</span> center = PointF(<span class="number">0f</span>, <span class="number">0f</span>)</span><br><span class="line">        center.x = (start.x + end.x) / <span class="number">2f</span></span><br><span class="line">        center.y = (start.y + end.y) / <span class="number">2f</span></span><br><span class="line">        <span class="keyword">return</span> center</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">randomSpeed</span><span class="params">(random: <span class="type">Random</span>)</span></span>: <span class="built_in">Float</span> &#123;</span><br><span class="line">        <span class="comment">// 获取随机速度0.005 ~ 0.01</span></span><br><span class="line">        <span class="keyword">return</span> (random.nextInt(<span class="number">5</span>) + <span class="number">5</span>) / <span class="number">1000f</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">wtc</span><span class="params">(random: <span class="type">Random</span>)</span></span> &#123;</span><br><span class="line">        <span class="comment">// 设置颜色渐变</span></span><br><span class="line">        <span class="keyword">val</span> shader = RadialGradient(center.x, center.y, radius,</span><br><span class="line">                Color.parseColor(<span class="string">&quot;#FFFFFF&quot;</span>), Color.parseColor(<span class="string">&quot;#D1D1D1&quot;</span>),</span><br><span class="line">                Shader.TileMode.CLAMP)</span><br><span class="line">        <span class="comment">// 外部设置的起始点其实并不对，先计算出半径</span></span><br><span class="line">        radius = random.nextInt(<span class="number">10</span>) + <span class="number">15f</span></span><br><span class="line">        <span class="comment">// 根据半径计算start end</span></span><br><span class="line">        end.x = start.x + radius</span><br><span class="line">        end.y = start.y + radius</span><br><span class="line">        <span class="comment">// 计算圆心</span></span><br><span class="line">        calcCenter()</span><br><span class="line"></span><br><span class="line">        paint.apply &#123;</span><br><span class="line">            setShader(shader)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">clear</span><span class="params">()</span></span> &#123;</span><br><span class="line">        isInUse = <span class="literal">false</span></span><br><span class="line">        lastTime = <span class="number">0</span></span><br><span class="line">        start.y = -radius * <span class="number">2</span></span><br><span class="line">        end.y = <span class="number">0f</span></span><br><span class="line"></span><br><span class="line">        center = calcCenter()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个类只要理解了圆心的计算和绘制，基本也就没什么东西了。首先排除干扰项，getAcceleration这玩意在设计之初是用来通过加速度计算路程的，后来发现……算了，还是匀速吧……于是都return 0f了。这里wtc()函数和drawWhenInUse可能会看的你一脸懵逼，什么函数名，drawWhenInUse倒是见名知意，这wtc()是什么玩意？这里wtc是相当于一种追加初始化，完全状态的函数名应该是wantToChange()。这些个函数调用流程是这样的：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1976147-a48d7db586a5fd1e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="流程图"></p>
+<p>其中draw(canvas)是父类的方法，对供外部调用的方法，在isInUse标识位为false时对Shape进行初始化操作，具体的就是调用initStyle()方法，而wtc()则会在initStyle()方法的最后调用。如果你有什么想要追加的初始化，可以通过这个函数实现。而drawWhenInUse(canvas)方法则是需要实现动态绘制的函数了。我这里就是在wtc()函数中进行了一些初始化操作，并且根据圆的特性重新计算了start、end和圆心。</p>
+<p>接下来，就看看我们到底是怎么把这些充满个性（口胡）的雪绘制到屏幕上：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.xiasuhuei321.gank_kotlin.customview.weather</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.content.Context</span><br><span class="line"><span class="keyword">import</span> android.graphics.Canvas</span><br><span class="line"><span class="keyword">import</span> android.graphics.Color</span><br><span class="line"><span class="keyword">import</span> android.graphics.PixelFormat</span><br><span class="line"><span class="keyword">import</span> android.graphics.PorterDuff</span><br><span class="line"><span class="keyword">import</span> android.util.AttributeSet</span><br><span class="line"><span class="keyword">import</span> android.view.SurfaceHolder</span><br><span class="line"><span class="keyword">import</span> android.view.SurfaceView</span><br><span class="line"><span class="keyword">import</span> com.xiasuhuei321.gank_kotlin.extension.LogUtil</span><br><span class="line"><span class="keyword">import</span> java.lang.Exception</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Created by xiasuhuei321 on 2017/9/5.</span></span><br><span class="line"><span class="comment"> * author:luo</span></span><br><span class="line"><span class="comment"> * e-mail:xiasuhuei321@163.com</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">WeatherView</span></span>(context: Context, attributeSet: AttributeSet?, defaultStyle: <span class="built_in">Int</span>) :</span><br><span class="line">        SurfaceView(context, attributeSet, defaultStyle), SurfaceHolder.Callback &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">val</span> TAG = <span class="string">&quot;WeatherView&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">constructor</span>(context: Context, attributeSet: AttributeSet?) : <span class="keyword">this</span>(context, attributeSet, <span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">constructor</span>(context: Context) : <span class="keyword">this</span>(context, <span class="literal">null</span>, <span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 低级并发，Kotlin中支持的不是很好，所以用一下黑科技</span></span><br><span class="line">    <span class="keyword">val</span> lock = Object()</span><br><span class="line">    <span class="keyword">var</span> type = Weather.RAIN</span><br><span class="line">    <span class="keyword">var</span> weatherShapePool = WeatherShapePool()</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Volatile</span> <span class="keyword">var</span> canRun = <span class="literal">false</span></span><br><span class="line">    <span class="meta">@Volatile</span> <span class="keyword">var</span> threadQuit = <span class="literal">false</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> thread = Thread &#123;</span><br><span class="line">        <span class="keyword">while</span> (!threadQuit) &#123;</span><br><span class="line">            <span class="keyword">if</span> (!canRun) &#123;</span><br><span class="line">                synchronized(lock) &#123;</span><br><span class="line">                    <span class="keyword">try</span> &#123;</span><br><span class="line">                        LogUtil.i(TAG, <span class="string">&quot;条件尚不充足，阻塞中...&quot;</span>)</span><br><span class="line">                        lock.wait()</span><br><span class="line">                    &#125; <span class="keyword">catch</span> (e: Exception) &#123;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">val</span> startTime = System.currentTimeMillis()</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="comment">// 正式开始表演</span></span><br><span class="line">                <span class="keyword">val</span> canvas = holder.lockCanvas()</span><br><span class="line">                <span class="keyword">if</span> (canvas != <span class="literal">null</span>) &#123;</span><br><span class="line">                    canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)</span><br><span class="line">                    draw(canvas, type, startTime)</span><br><span class="line">                &#125;</span><br><span class="line">                holder.unlockCanvasAndPost(canvas)</span><br><span class="line">                <span class="keyword">val</span> drawTime = System.currentTimeMillis() - startTime</span><br><span class="line">                <span class="comment">// 平均16ms一帧才能有顺畅的感觉</span></span><br><span class="line">                <span class="keyword">if</span> (drawTime &lt; <span class="number">16</span>) &#123;</span><br><span class="line">                    Thread.sleep(<span class="number">16</span> - drawTime)</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">catch</span> (e: Exception) &#123;</span><br><span class="line"><span class="comment">//                e.printStackTrace()</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;.apply &#123; name = <span class="string">&quot;WeatherThread&quot;</span> &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">surfaceChanged</span><span class="params">(holder: <span class="type">SurfaceHolder</span>?, format: <span class="type">Int</span>, width: <span class="type">Int</span>, height: <span class="type">Int</span>)</span></span> &#123;</span><br><span class="line">        <span class="comment">// surface发生了变化</span></span><br><span class="line"><span class="comment">//        canRun = true</span></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">surfaceDestroyed</span><span class="params">(holder: <span class="type">SurfaceHolder</span>?)</span></span> &#123;</span><br><span class="line">        <span class="comment">// 在这里释放资源</span></span><br><span class="line">        canRun = <span class="literal">false</span></span><br><span class="line">        LogUtil.i(TAG, <span class="string">&quot;surfaceDestroyed&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">surfaceCreated</span><span class="params">(holder: <span class="type">SurfaceHolder</span>?)</span></span> &#123;</span><br><span class="line">        threadQuit = <span class="literal">false</span></span><br><span class="line">        canRun = <span class="literal">true</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// 如果没有执行wait的话，这里notify会抛异常</span></span><br><span class="line">            synchronized(lock) &#123;</span><br><span class="line">                lock.notify()</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (e: Exception) &#123;</span><br><span class="line">            e.printStackTrace()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">init</span> &#123;</span><br><span class="line">        LogUtil.i(TAG, <span class="string">&quot;init开始&quot;</span>)</span><br><span class="line">        holder.addCallback(<span class="keyword">this</span>)</span><br><span class="line">        holder.setFormat(PixelFormat.RGBA_8888)</span><br><span class="line"><span class="comment">//        initData()</span></span><br><span class="line">        setZOrderOnTop(<span class="literal">true</span>)</span><br><span class="line"><span class="comment">//        setZOrderMediaOverlay(true)</span></span><br><span class="line">        thread.start()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">draw</span><span class="params">(canvas: <span class="type">Canvas</span>, type: <span class="type">Weather</span>, startTime: <span class="type">Long</span>)</span></span> &#123;</span><br><span class="line">        <span class="comment">// type什么的先放一边，先实现一个</span></span><br><span class="line">        weatherShapePool.drawSnow(canvas)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">enum</span> <span class="class"><span class="keyword">class</span> <span class="title">Weather</span> </span>&#123;</span><br><span class="line">        RAIN,</span><br><span class="line">        SNOW</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">onDestroy</span><span class="params">()</span></span> &#123;</span><br><span class="line">        threadQuit = <span class="literal">true</span></span><br><span class="line">        canRun = <span class="literal">true</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            synchronized(lock) &#123;</span><br><span class="line">                lock.notify()</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (e: Exception) &#123;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>init{}是kotlin中提供给我们用于初始化的代码块，在init进行了一些初始化操作并让线程start了。看一下线程中执行的代码，首先会判断一个叫做canRun的标识，这个标识会在surface被创建的时候置为true，否则将会通过一个对象让这个线程等待。而在surface被创建后，则会调用notify方法让线程重新开始工作。之后是进行绘制的工作，绘制前后会有一个计时的动作，计算时间是否小于16ms，如果不足，则让thread sleep 补足插值。因为16ms一帧的绘制速度就足够了，不需要绘制太快浪费资源。</p>
+<p>这里可以看到我创建了一个Java的Object对象，主要是因为Kotlin本身对于一些并发原语支持的并不好。Kotlin中任何对象都是继承与Any，Any并没有wait、notify等方法，所以这里用了黑科技……创建了Java对象……</p>
+<p>代码中关键代码绘制调用了WeatherShapePool的drawRain(canvas)方法，最后在看一下这个类：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.xiasuhuei321.gank_kotlin.customview.weather</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.graphics.Canvas</span><br><span class="line"><span class="keyword">import</span> android.graphics.PointF</span><br><span class="line"><span class="keyword">import</span> com.xiasuhuei321.gank_kotlin.context</span><br><span class="line"><span class="keyword">import</span> com.xiasuhuei321.gank_kotlin.extension.getScreenWidth</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Created by xiasuhuei321 on 2017/9/7.</span></span><br><span class="line"><span class="comment"> * author:luo</span></span><br><span class="line"><span class="comment"> * e-mail:xiasuhuei321@163.com</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">WeatherShapePool</span> </span>&#123;</span><br><span class="line">    <span class="keyword">val</span> constantRain = ArrayList&lt;Rain&gt;()</span><br><span class="line">    <span class="keyword">val</span> randomRain = ArrayList&lt;Rain&gt;()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> constantSnow = ArrayList&lt;Snow&gt;()</span><br><span class="line">    <span class="keyword">val</span> randomSnow = ArrayList&lt;Snow&gt;()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">init</span> &#123;</span><br><span class="line">        <span class="comment">// 初始化</span></span><br><span class="line">        initData()</span><br><span class="line">        initSnow()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">initData</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">val</span> space = context.getScreenWidth() / <span class="number">20</span></span><br><span class="line">        <span class="keyword">var</span> currentSpace = <span class="number">0f</span></span><br><span class="line">        <span class="comment">// 将其均匀的分布在屏幕x方向上</span></span><br><span class="line">        <span class="keyword">for</span> (i <span class="keyword">in</span> <span class="number">0.</span><span class="number">.19</span>) &#123;</span><br><span class="line">            <span class="keyword">val</span> rain = Rain(PointF(currentSpace, <span class="number">0f</span>), PointF(currentSpace, <span class="number">0f</span>))</span><br><span class="line">            rain.originLength = <span class="number">20f</span></span><br><span class="line">            rain.originX = currentSpace</span><br><span class="line">            constantRain.add(rain)</span><br><span class="line">            currentSpace += space</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (j <span class="keyword">in</span> <span class="number">0.</span><span class="number">.9</span>) &#123;</span><br><span class="line">            <span class="keyword">val</span> rain = Rain(PointF(<span class="number">0f</span>, <span class="number">0f</span>), PointF(<span class="number">0f</span>, <span class="number">0f</span>))</span><br><span class="line">            rain.isRandom = <span class="literal">true</span></span><br><span class="line">            rain.originLength = <span class="number">20f</span></span><br><span class="line">            randomRain.add(rain)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">drawRain</span><span class="params">(canvas: <span class="type">Canvas</span>)</span></span> &#123;</span><br><span class="line">        <span class="keyword">for</span> (r <span class="keyword">in</span> constantRain) &#123;</span><br><span class="line">            r.draw(canvas)</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (r <span class="keyword">in</span> randomRain) &#123;</span><br><span class="line">            r.draw(canvas)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">initSnow</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">val</span> space = context.getScreenWidth() / <span class="number">20</span></span><br><span class="line">        <span class="keyword">var</span> currentSpace = <span class="number">0f</span></span><br><span class="line">        <span class="comment">// 将其均匀的分布在屏幕x方向上</span></span><br><span class="line">        <span class="keyword">for</span> (i <span class="keyword">in</span> <span class="number">0.</span><span class="number">.19</span>) &#123;</span><br><span class="line">            <span class="keyword">val</span> snow = Snow(PointF(currentSpace, <span class="number">0f</span>), PointF(currentSpace, <span class="number">0f</span>))</span><br><span class="line">            snow.originX = currentSpace</span><br><span class="line">            snow.radius = <span class="number">20f</span></span><br><span class="line">            constantSnow.add(snow)</span><br><span class="line">            currentSpace += space</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (j <span class="keyword">in</span> <span class="number">0.</span><span class="number">.19</span>) &#123;</span><br><span class="line">            <span class="keyword">val</span> snow = Snow(PointF(<span class="number">0f</span>, <span class="number">0f</span>), PointF(<span class="number">0f</span>, <span class="number">0f</span>))</span><br><span class="line">            snow.isRandom = <span class="literal">true</span></span><br><span class="line">            snow.radius = <span class="number">20f</span></span><br><span class="line">            randomSnow.add(snow)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">drawSnow</span><span class="params">(canvas: <span class="type">Canvas</span>)</span></span>&#123;</span><br><span class="line">        <span class="keyword">for</span>(r <span class="keyword">in</span> constantSnow)&#123;</span><br><span class="line">            r.draw(canvas)</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (r <span class="keyword">in</span> randomSnow)&#123;</span><br><span class="line">            r.draw(canvas)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个类还是比较简单的，只是一个单纯的容器，至于叫Pool……因为刚开始自己想的是自己管理回收复用之类的，所以起了个名叫Pool，后来感觉这玩意好像不用实现的这么复杂……</p>
+<p>总之，这玩意，会者不难，我的代码也非尽善尽美，如果我有任何纰漏或者你有什么好的意见，都可以提出，邮件或者是在文章下评论最佳。</p>
+<p>项目地址：<a target="_blank" rel="noopener" href="https://github.com/ForgetAll/GankKotlin">https://github.com/ForgetAll/GankKotlin</a></p>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>后面我发现我的代码虽然实现了这个功能，但是setZOrderOnTop(true)这样的代码会有副作用，影响到了后续其他的Activity的交互。之后试了很多网上的方法，但是都不行。后来又想到了 PorterDuff.Mode.DST_OVER ，这种绘制虽然可以实现上面的效果，但是效率非常低，雨下的异常的卡顿，可能是计算量比较大？不管这个，后来看到了别人的实现，自己绘制surfaceview的背景，而之后的view作为surfaceview之上的遮盖物，不设置背景，这样也能实现之前的效果，并且不影响交互，关键是还不卡。放上解决代码：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">val</span> skyBackgroud = GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, RAIN_D)</span><br><span class="line"><span class="comment">// 感谢 mixiaoxiao 大神的实现思路</span></span><br><span class="line">skyBackgroud.setBounds(<span class="number">0</span>, <span class="number">0</span>, measuredWidth, measuredHeight)</span><br><span class="line">skyBackgroud.draw(canvas)</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"># Android</a>
+              <a href="/tags/Kotlin/" rel="tag"># Kotlin</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2017/09/03/Kotlin%E7%9A%84LogUtil/" rel="prev" title="Kotlin的LogUtil">
+      <i class="fa fa-chevron-left"></i> Kotlin的LogUtil
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/09/21/MQTT%E5%8D%8F%E8%AE%AE%E5%AD%A6%E4%B9%A0%E4%B8%8E%E5%9C%A8Java%EF%BC%88Android%E9%80%9A%E7%94%A8%EF%BC%89%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8/" rel="next" title="MQTT协议学习与在Java（Android通用）中的使用">
+      MQTT协议学习与在Java（Android通用）中的使用 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2"><span class="nav-number">1.</span> <span class="nav-text">写在前面</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%90%86%E6%B8%85%E6%80%9D%E8%B7%AF"><span class="nav-number">2.</span> <span class="nav-text">理清思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0%E5%88%86%E6%9E%90"><span class="nav-number">3.</span> <span class="nav-text">代码实现分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%8E%E8%AE%B0"><span class="nav-number">4.</span> <span class="nav-text">后记</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">罗俊</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">73</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">罗俊</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
