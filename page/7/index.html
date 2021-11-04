@@ -147,6 +147,90 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2016/10/02/Android%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2%E6%B5%85%E6%9E%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="LJ">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LJ的Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2016/10/02/Android%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2%E6%B5%85%E6%9E%90/" class="post-title-link" itemprop="url">Android内存泄露浅析</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2016-10-02 11:15:31" itemprop="dateCreated datePublished" datetime="2016-10-02T11:15:31+08:00">2016-10-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2018-05-30 10:40:18" itemprop="dateModified" datetime="2018-05-30T10:40:18+08:00">2018-05-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>前段时间写了一篇<a target="_blank" rel="noopener" href="http://www.jianshu.com/p/6d42bf4efe16">MVP初尝试</a>，由于当时只是刚接触，只是简单的实现，还有很多问题没想明白。关于内存泄露这事是本文着重要谈的一点，同时本文是我在看了很多关于Java和Android内存泄露分析的文章之后的所得。</p>
+<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>在了解MVP引起的内存泄露问题之前，我们首先要理解在Android中内存泄露是啥玩意？简单的讲内存泄漏就是** 本该被释放内存的对象没有被释放 *<em>。最近也和同学<a target="_blank" rel="noopener" href="http://www.jianshu.com/users/86f25f8b198b/latest_articles">@iamxiarui</a>就内存泄露这个问题进行了一些讨论，最后发现要搞清楚这个东西，还要从Java层上找原因。学习Android的同学都应该知道，Java这门语言有一个垃圾回收器，一般来说我们是无需关心内存回收的问题。但是玩过LOL或者DOTA的同学都知道，一个猪队友和一个神对手究竟哪个威胁更大一些，我们不能当GC的</em>队友，所以多了解一些这玩意吧。</p>
+<p>在C++中会有析构函数这个概念，在C++中销毁对象必须用到这个函数，如此说来C++中是可以手动释放内存的。你可能会说Java中不也有finalize()方法吗？是的，是有这东西，让我们来看看这玩意。</p>
+<h4 id="finalize"><a href="#finalize" class="headerlink" title="finalize()"></a>finalize()</h4>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2016/10/02/Android%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2%E6%B5%85%E6%9E%90/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2016/09/24/%E6%89%8B%E6%8A%8A%E6%89%8B%E6%95%99%E4%BD%A0%E6%89%93%E9%80%A0%E6%94%AF%E6%8C%81%E6%89%8B%E5%8A%BF%E6%94%BE%E5%A4%A7%E7%BC%A9%E5%B0%8F%E7%9A%84ImageView/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -906,89 +990,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2016/08/09/Okhttp3-addHeader%E5%B0%8F%E5%9D%91%E8%AE%B0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="LJ">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="LJ的Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2016/08/09/Okhttp3-addHeader%E5%B0%8F%E5%9D%91%E8%AE%B0/" class="post-title-link" itemprop="url">Okhttp3-addHeader小坑记</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2016-08-09 16:10:17" itemprop="dateCreated datePublished" datetime="2016-08-09T16:10:17+08:00">2016-08-09</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2018-05-30 10:27:25" itemprop="dateModified" datetime="2018-05-30T10:27:25+08:00">2018-05-30</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>##写在前面<br>最近感觉自己看了不少东西，不过在上班所以并没有很多的时间来写东西。我有一些半成品不过都不想发出来，毕竟缺少一点自己的东西在里面。好了日常唠嗑(1/1)。</p>
-<p>##背景<br>前面也说了最近在上班，接触到的项目里用的都是被抛弃的httpclient，说实话这小项目我觉得我是有能力重构的。所以最近着手重构，重构之前首先选定要拿什么做。经过慎重的思考之后决定:项目尽量采用MVC的模式做，网络请求用okhttp(用hongyang封装的okhttp-utils)，图片的处理和加载想采用glide，但是目前来看还有一些问题。好了背景介绍到这，下面说坑。</p>
-<p>##坑<br>既然采用Okhttp来重写网络请求，我当然得挑几个出来跑一下试试。这一试问题就出来了，见下图:</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2016/08/09/Okhttp3-addHeader%E5%B0%8F%E5%9D%91%E8%AE%B0/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1058,18 +1059,18 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">74</span>
+          <span class="site-state-item-count">75</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
-        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
-        <span class="site-state-item-count">33</span>
+        <span class="site-state-item-count">34</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
