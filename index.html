@@ -172,7 +172,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2021-11-04 22:55:24 / 修改时间：20:10:25" itemprop="dateCreated datePublished" datetime="2021-11-04T22:55:24+08:00">2021-11-04</time>
+              <time title="创建时间：2021-11-04 22:55:24 / 修改时间：20:11:18" itemprop="dateCreated datePublished" datetime="2021-11-04T22:55:24+08:00">2021-11-04</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -208,67 +208,14 @@
 <li><p>进入容器执行 shell 命令：kubectl -n jspp exec pod -it sh</p>
 </li>
 </ul>
-<h3 id="Vim-快捷键"><a href="#Vim-快捷键" class="headerlink" title="Vim 快捷键"></a>Vim 快捷键</h3><ul>
-<li>vim 替换：%s/被替换字符/替换字符/g（不加 g 只替换每行第一个）</li>
-<li>从当前行向上移动 n 行：n k</li>
-<li>从当前行向下移动 n 行：n j</li>
-<li>代替光标下的字母：r + 字母</li>
-<li>代替多个字母：R + 输入 + ESC</li>
-<li>选中删除并进入插入模式：c+e，到单词结尾，cw，cb 到单词开头，ciw 删掉单词并进入插入模式</li>
-<li>ctrl + D 提示命令</li>
-</ul>
-<h3 id="Space-Vim-快捷键"><a href="#Space-Vim-快捷键" class="headerlink" title="Space-Vim 快捷键"></a>Space-Vim 快捷键</h3><ul>
-<li>space t n：显示/隐藏行号</li>
-<li>s g：垂直分屏</li>
-<li>s o：关闭其他窗口</li>
-<li>s Q：关闭当前窗口</li>
-<li>F2 打开语法树</li>
-<li>F3 打开文件树</li>
-<li>space 1：跳转到窗口1</li>
-<li>space s a d：使用 ag 进行搜索（基于打开文件时的位置）</li>
-<li>space s a p：使用 ag 进行搜索（整个项目目录）</li>
-<li>space ‘：打开 shell 窗口</li>
-</ul>
-<h3 id="Go-相关"><a href="#Go-相关" class="headerlink" title="Go 相关"></a>Go 相关</h3><ul>
-<li>查看生成的汇编代码：go tool compile -S file.go</li>
-<li>检测是否有并发问题：go run -race file.go</li>
-<li>编译期检查锁问题：go vet xx.go</li>
-</ul>
-<p>pprof 工具：<a target="_blank" rel="noopener" href="https://golang2.eddycjy.com/posts/ch6/01-pprof-1/">相关使用教程</a></p>
-<ul>
-<li><p>分析应用程序的内存临时分配情况:</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go tool pprof -alloc_objects http://localhost:9876/debug/pprof/heap</span><br></pre></td></tr></table></figure></li>
-<li><p>生成文字报告：pprof -top [main_binary] profile.pb.gz</p>
-</li>
-<li><p>生成 svg，在浏览器中打开：pprof -web [main_binary] profile.pb.gz</p>
-</li>
-</ul>
-<h3 id="Docker"><a href="#Docker" class="headerlink" title="Docker"></a>Docker</h3><ul>
-<li>构建 docker image：docker build -t alpinevim/latest -f AlpineWithVim ./<ul>
-<li>-t 指定 repository 和 tag -f 指定 build 的 DockerFile</li>
-</ul>
-</li>
-<li>查看 docker image 列表：docker images</li>
-<li>删除 image：docker rmi imageId</li>
-<li>查看容器是否运行：docker ps -a</li>
-<li>本机所有正在运行的容器：docker container ls</li>
-<li>终止容器运行：docker container kill [containerID]</li>
-</ul>
-<h3 id="Git"><a href="#Git" class="headerlink" title="Git"></a>Git</h3><ul>
-<li>查看某次 commit 提交内容：git show commit id</li>
-<li>rebase：git rebase start end</li>
-<li>查看某个文件的提交记录： git log filename</li>
-<li>查看某个文件的变更内容：git difftool cmid1 cmid2 filename</li>
-<li>查看两个分支文件内容差异：git diff branch1 branch2 filepath</li>
-<li>查看别的分支文件：git show branch:file</li>
-</ul>
-<h3 id="Mongo"><a href="#Mongo" class="headerlink" title="Mongo"></a>Mongo</h3><ul>
-<li>排序：sort() 1 升序，-1 降序</li>
-<li>创建索引：createIndex 1：升序 ，-1：降序</li>
-<li>删除索引：dropIndex(“name”)</li>
-<li>查询指定字段：find({查询条件},{field: 1})，1 表示查询此字段，0 表示不查询该字段</li>
-</ul>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/11/04/%E7%94%A8%E5%88%B0%E7%9A%84%E5%91%BD%E4%BB%A4%EF%BC%8C%E9%98%B2%E5%BF%98/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
