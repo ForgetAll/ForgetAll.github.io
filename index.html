@@ -148,6 +148,96 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2021/11/14/Go%20%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%EF%BC%88%E7%BF%BB%E8%AF%91%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="LJ">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LJ的Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/11/14/Go%20%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%EF%BC%88%E7%BF%BB%E8%AF%91%EF%BC%89/" class="post-title-link" itemprop="url">Go 内存模型（翻译）</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-11-14 11:46:57 / 修改时间：16:40:15" itemprop="dateCreated datePublished" datetime="2021-11-14T11:46:57+08:00">2021-11-14</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/go/" itemprop="url" rel="index"><span itemprop="name">go</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/go/%E7%BF%BB%E8%AF%91/" itemprop="url" rel="index"><span itemprop="name">翻译</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>原文：<a target="_blank" rel="noopener" href="https://golang.org/ref/mem">The Go Memory Model</a></p>
+<p>约定：</p>
+<ul>
+<li>普通的小括号是我认为原文应该要加入括号中翻译的，属于原文的一部分，也有部分我觉得可能翻译的不够准确会放入英文原文</li>
+<li>小括号中带 ta（translator add） 的表示译者认为应该添加可以帮助更好的理解的</li>
+<li>某些单词可能不翻译更有原来的味道，比如 channel，也没必要一定要翻译成中文通道</li>
+</ul>
+<h3 id="The-Go-Memory-Model"><a href="#The-Go-Memory-Model" class="headerlink" title="The Go Memory Model"></a>The Go Memory Model</h3><h4 id="2014年3月的版本"><a href="#2014年3月的版本" class="headerlink" title="2014年3月的版本"></a>2014年3月的版本</h4><h4 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h4><p>Go 内存模型指定了以下情形可以被保证：在一个协程中读取一个变量可以观察到由不同协程写入同一个变量所产生的值。</p>
+<h4 id="建议"><a href="#建议" class="headerlink" title="建议"></a>建议</h4><p>由多个协程同时修改数据的程序必须串行（ta：serialize，个人理解应该是串行而不是序列化）这种访问。</p>
+<p>为了串行访问，使用 channel 操作或者其他同步原语（例如在 sync 和 sync/atomic 包中的）保护数据。</p>
+<p>如果您为了理解您的程序行为（ta: 协程并发行为）一定要阅读此文档的剩余部分，那您真的是太明智了。</p>
+<p>不要耍小聪明（Don’t be clever）。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/11/14/Go%20%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%EF%BC%88%E7%BF%BB%E8%AF%91%EF%BC%89/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2021/11/04/%E7%94%A8%E5%88%B0%E7%9A%84%E5%91%BD%E4%BB%A4%EF%BC%8C%E9%98%B2%E5%BF%98/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -179,7 +269,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-11-12 11:11:13" itemprop="dateModified" datetime="2021-11-12T11:11:13+08:00">2021-11-12</time>
+                <time title="修改时间：2021-11-12 18:00:39" itemprop="dateModified" datetime="2021-11-12T18:00:39+08:00">2021-11-12</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -834,96 +924,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2018/06/06/%E6%B1%89%E8%AF%BA%E5%A1%94%E9%97%AE%E9%A2%98/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-      <meta itemprop="name" content="LJ">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="LJ的Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2018/06/06/%E6%B1%89%E8%AF%BA%E5%A1%94%E9%97%AE%E9%A2%98/" class="post-title-link" itemprop="url">汉诺塔问题</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2018-06-06 20:06:21" itemprop="dateCreated datePublished" datetime="2018-06-06T20:06:21+08:00">2018-06-06</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2018-06-07 14:54:34" itemprop="dateModified" datetime="2018-06-07T14:54:34+08:00">2018-06-07</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">算法</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>汉诺塔问题描述：<br>汉诺塔：汉诺塔（又称河内塔）问题是源于印度一个古老传说的益智玩具。大梵天创造世界的时候做了三根金刚石柱子，在一根柱子上从下往上按照大小顺序摞着64片黄金圆盘。大梵天命令婆罗门把圆盘从下面开始按大小顺序重新摆放在另一根柱子上。并且规定，在小圆盘上不能放大圆盘，在三根柱子之间一次只能移动一个圆盘。</p>
-<p>关于这个问题，简单的分析一个3层的例子，有a、b、c三根柱子，其中a柱子放着三个盘子1，2，3，c是盘子移动的目的地，b是用来辅助移动的柱子：</p>
-<ul>
-<li>将 1 从 a 柱子移动到 c</li>
-<li>将 2 从 a 柱子移动到 b</li>
-<li>将 1 从 c 柱子移动到 b</li>
-<li>将 3 从 a 柱子移动到 c</li>
-<li>将 1 从 b 柱子移动到 a</li>
-<li>将 2 从 b 柱子移动到 c</li>
-<li>将 1 从 a 柱子移动到 c
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2018/06/06/%E6%B1%89%E8%AF%BA%E5%A1%94%E9%97%AE%E9%A2%98/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -995,18 +995,18 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">75</span>
+          <span class="site-state-item-count">76</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
-        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-count">15</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
-        <span class="site-state-item-count">34</span>
+        <span class="site-state-item-count">35</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
