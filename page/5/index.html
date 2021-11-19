@@ -148,6 +148,90 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2017/06/12/CountDownTimer%E5%B0%8F%E5%9D%91/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="LJ">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LJ的Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2017/06/12/CountDownTimer%E5%B0%8F%E5%9D%91/" class="post-title-link" itemprop="url">CountDownTimer小坑</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-06-12 18:22:14" itemprop="dateCreated datePublished" datetime="2017-06-12T18:22:14+08:00">2017-06-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2018-05-30 10:26:21" itemprop="dateModified" datetime="2018-05-30T10:26:21+08:00">2018-05-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>最近在研究和Socket相关的一些东西，Java中的Socket还是比较易用的，但是比较坑爹的就是有时候Socket不管怎么发送，Server都接收不到，代码也没有任何反馈，这样就需要一个机制确认Socket的状态。方法有很多种，我这里采用了心跳，超时计时选用了CountDownTimer，原来也用过，也知道他内部使用Handler实现的，感觉能用还算靠谱吧。然后问题就出在把本地代码融到项目之后。</p>
+<p>本地代码，经过我自己测试都没有什么问题，心跳也能实现。但是在融入项目之后，发现启动了两个tcp client 只有一个正常启动了！</p>
+<p>经过断点debug之后，我发现在第二个client初始化的CountDownTimer的时候挂了，跟随初始化代码一路点进去，发现是Handler初始化的时候挂掉了。</p>
+<p>了解Android消息机制的人看到这一定就知道原因了，对：不能在没有looper的线程中创建Handler，而CountDownTimer内部也用的是Handler，而项目中则是开启了一个线程执行任务，我这里刚好就踩到了这个坑，最后把CountDownTimer换成了Timer。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2017/06/12/CountDownTimer%E5%B0%8F%E5%9D%91/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2017/06/05/%E5%88%9D%E8%AF%95EventBus/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -901,91 +985,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2016/12/25/%E6%8E%A2%E7%A9%B6RecyclerView%E7%9A%84ViewHolder%E5%A4%8D%E7%94%A8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-      <meta itemprop="name" content="LJ">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="LJ的Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2016/12/25/%E6%8E%A2%E7%A9%B6RecyclerView%E7%9A%84ViewHolder%E5%A4%8D%E7%94%A8/" class="post-title-link" itemprop="url">探究RecyclerView的ViewHolder复用</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2016-12-25 23:58:48" itemprop="dateCreated datePublished" datetime="2016-12-25T23:58:48+08:00">2016-12-25</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2018-05-30 10:38:26" itemprop="dateModified" datetime="2018-05-30T10:38:26+08:00">2018-05-30</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="啥是RecyclerView"><a href="#啥是RecyclerView" class="headerlink" title="啥是RecyclerView"></a>啥是RecyclerView</h3><ul>
-<li>A flexible view for providing a limited window into a large data set.<br>一个在大小有限的窗口内展示大量数据集的view。恩，我的翻译一向不咋滴。。所以原文也放上了。</li>
-</ul>
-<p>RecyclerView网上很多文都说是用来取代ListView和GridView的，事实上RecyclerView的确可以做到ListView和GridView能做的事，而且他将ViewHolder和Adapter都作为内部类，写在了RecyclerView中。先不管这把所有类都写在RecyclerView内部的做法是否好，但是ViewHolder作为RecyclerView内部复用的单位，直接避免了不必要的findViewById，而在ListView中则需要我们自己定义ViewHolder。</p>
-<h3 id="一个使用RecyclerView的示例"><a href="#一个使用RecyclerView的示例" class="headerlink" title="一个使用RecyclerView的示例"></a>一个使用RecyclerView的示例</h3><p>在进行探究之前，首先回顾一下我们是如何使用一个RecyclerView的。<br>第一步在布局文件里加上RecyclerView：</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2016/12/25/%E6%8E%A2%E7%A9%B6RecyclerView%E7%9A%84ViewHolder%E5%A4%8D%E7%94%A8/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1057,18 +1056,18 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">76</span>
+          <span class="site-state-item-count">77</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
-        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-count">16</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
-        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-count">36</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
