@@ -148,6 +148,90 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2017/01/11/%E6%B5%85%E6%9E%90HashMap/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="LJ">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LJ的Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2017/01/11/%E6%B5%85%E6%9E%90HashMap/" class="post-title-link" itemprop="url">浅析HashMap</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-01-11 10:56:04" itemprop="dateCreated datePublished" datetime="2017-01-11T10:56:04+08:00">2017-01-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2018-05-30 10:31:33" itemprop="dateModified" datetime="2018-05-30T10:31:33+08:00">2018-05-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>基于数组的ArrayList长于按索引获取对应元素，而在中间位置插入和删除元素，都涉及了对数组整体的移动、复制等操作，相比于链表的插入删除来说代价比较大。基于链表的LinkedList长于随机插入删除，Java的双向链表（LinekdList）只能从头到尾或者从尾到头遍历链表获取元素，相较于ArrayList也是比较慢的。那么有没有一种折中的解决方案，使得插入删除和取元素都比较便捷呢？我认为HashMap可以算是这么一种折中的解决方案。</p>
+<h2 id="HashMap概述"><a href="#HashMap概述" class="headerlink" title="HashMap概述"></a>HashMap概述</h2><p>HashMap是一个实现了Map接口的哈希表，允许使用null值和null键。除了非同步和允许使用null之外，HashMap类与Hashtable大致相同。HashMap不保证映射的顺序，不保证该顺序恒久不变。</p>
+<p>HashMap不是线程安全的，如果想要使用线程安全的HashMap，可以通以下代码来得到：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Map map = Collections.synchronizedMap(<span class="keyword">new</span> HashMap());</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2017/01/11/%E6%B5%85%E6%9E%90HashMap/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2016/12/25/%E6%8E%A2%E7%A9%B6RecyclerView%E7%9A%84ViewHolder%E5%A4%8D%E7%94%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -904,89 +988,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2016/10/23/View%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B%E2%80%94%E2%80%94measure/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-      <meta itemprop="name" content="LJ">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="LJ的Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2016/10/23/View%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B%E2%80%94%E2%80%94measure/" class="post-title-link" itemprop="url">View的工作流程——measure</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2016-10-23 00:40:14" itemprop="dateCreated datePublished" datetime="2016-10-23T00:40:14+08:00">2016-10-23</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2018-05-30 11:45:30" itemprop="dateModified" datetime="2018-05-30T11:45:30+08:00">2018-05-30</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h3><p>今天和老爸去医院了，老爸最近腰疼，幸好没什么事，各位也要多多爱惜自己的身体，等身体出了问题就来不及了。好了，闲话到此为止，话说《开发艺术探索》里面不少东西我早就看了，但是因为自己当时水平有限，而且有很多也看不大懂，所以看了忘是挺正常的事。不过感觉随着工作经验的增长，以前大学里上过《操作系统》、《计算机网络》、《数据结构》等一些课都被串到了一起，感觉很好，而且愈发能感觉到自己的不足了。这周的文主要算是一篇读书笔记吧，记一下读《开发艺术探索》第四章和View相关的笔记，至于ViewGroup我觉得还需要过段时间，在沉淀一下再来和各位一起探索一下。而且说真的，这篇文我也是硬着头皮写下来的，因为看源码看着看着发现我疑问越来越多，很多都是现阶段暂时无法解决的，不过问题总是一个一个去解决的，先过一遍View的measure流程再说其他的。</p>
-<h3 id="ViewRoot-amp-DecorView"><a href="#ViewRoot-amp-DecorView" class="headerlink" title="ViewRoot &amp; DecorView"></a>ViewRoot &amp; DecorView</h3><p>ViewRoot对应于ViewRootImpl类，在ViewRootImpl类中有如下一段注释:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** </span></span><br><span class="line"><span class="comment"> * The top of a view hierarchy, implementing the needed </span></span><br><span class="line"><span class="comment"> * protocol between View and the WindowManager.</span></span><br><span class="line"><span class="comment"> */</span> </span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2016/10/23/View%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B%E2%80%94%E2%80%94measure/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1058,18 +1059,18 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">77</span>
+          <span class="site-state-item-count">78</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
-        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-count">18</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
-        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-count">38</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

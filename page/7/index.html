@@ -148,6 +148,89 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2016/10/23/View%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B%E2%80%94%E2%80%94measure/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="LJ">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LJ的Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2016/10/23/View%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B%E2%80%94%E2%80%94measure/" class="post-title-link" itemprop="url">View的工作流程——measure</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2016-10-23 00:40:14" itemprop="dateCreated datePublished" datetime="2016-10-23T00:40:14+08:00">2016-10-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2018-05-30 11:45:30" itemprop="dateModified" datetime="2018-05-30T11:45:30+08:00">2018-05-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h3><p>今天和老爸去医院了，老爸最近腰疼，幸好没什么事，各位也要多多爱惜自己的身体，等身体出了问题就来不及了。好了，闲话到此为止，话说《开发艺术探索》里面不少东西我早就看了，但是因为自己当时水平有限，而且有很多也看不大懂，所以看了忘是挺正常的事。不过感觉随着工作经验的增长，以前大学里上过《操作系统》、《计算机网络》、《数据结构》等一些课都被串到了一起，感觉很好，而且愈发能感觉到自己的不足了。这周的文主要算是一篇读书笔记吧，记一下读《开发艺术探索》第四章和View相关的笔记，至于ViewGroup我觉得还需要过段时间，在沉淀一下再来和各位一起探索一下。而且说真的，这篇文我也是硬着头皮写下来的，因为看源码看着看着发现我疑问越来越多，很多都是现阶段暂时无法解决的，不过问题总是一个一个去解决的，先过一遍View的measure流程再说其他的。</p>
+<h3 id="ViewRoot-amp-DecorView"><a href="#ViewRoot-amp-DecorView" class="headerlink" title="ViewRoot &amp; DecorView"></a>ViewRoot &amp; DecorView</h3><p>ViewRoot对应于ViewRootImpl类，在ViewRootImpl类中有如下一段注释:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** </span></span><br><span class="line"><span class="comment"> * The top of a view hierarchy, implementing the needed </span></span><br><span class="line"><span class="comment"> * protocol between View and the WindowManager.</span></span><br><span class="line"><span class="comment"> */</span> </span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2016/10/23/View%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B%E2%80%94%E2%80%94measure/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2016/10/16/%E7%AC%AC%E4%B8%89%E8%AF%9D--%E5%88%9D%E6%8E%A2%E5%AE%B9%E5%99%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -907,90 +990,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2016/08/28/Android%E9%80%8F%E6%98%8E%E7%8A%B6%E6%80%81%E6%A0%8F%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-      <meta itemprop="name" content="LJ">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="LJ的Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2016/08/28/Android%E9%80%8F%E6%98%8E%E7%8A%B6%E6%80%81%E6%A0%8F%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/" class="post-title-link" itemprop="url">Android透明状态栏解决方案</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2016-08-28 19:52:50" itemprop="dateCreated datePublished" datetime="2016-08-28T19:52:50+08:00">2016-08-28</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2018-05-30 10:40:28" itemprop="dateModified" datetime="2018-05-30T10:40:28+08:00">2018-05-30</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>##写在前面##<br>最近新开了个项目，准备花点时间做一下，不过文也不能少，一周一篇是最起码的了。关于沉浸式状态栏，网上的教程应该是非常非常多的，那么我为什么还要发呢？很简单，有些东西我记不大住，所以都发到我的简书上，以后我就不用到处去找了，麻烦~</p>
-<p>##自定义顶部布局的沉浸式状态栏##<br>什么叫自定义顶部布局呢？这个要首先解释一下，处于一些原因的考虑，有一些项目可能不愿意使用Toolbar或者ActionBar，进入Activity的第一件事情就是：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">requestWindowFeature(Window.FEATURE_NO_TITLE);</span><br></pre></td></tr></table></figure>
-<p>或者</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2016/08/28/Android%E9%80%8F%E6%98%8E%E7%8A%B6%E6%80%81%E6%A0%8F%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1062,18 +1061,18 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">77</span>
+          <span class="site-state-item-count">78</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
-        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-count">18</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
-        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-count">38</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

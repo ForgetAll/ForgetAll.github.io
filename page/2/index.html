@@ -148,6 +148,84 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2018/06/09/%E7%90%86%E8%A7%A3JavaScript%E9%97%AD%E5%8C%85/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="LJ">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LJ的Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2018/06/09/%E7%90%86%E8%A7%A3JavaScript%E9%97%AD%E5%8C%85/" class="post-title-link" itemprop="url">理解JavaScript闭包</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2018-06-09 15:11:38 / 修改时间：15:13:52" itemprop="dateCreated datePublished" datetime="2018-06-09T15:11:38+08:00">2018-06-09</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">前端学习</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>最近把 JavaScript 的基本语法大致看了一下，JavaScript 中的闭包概念理解起来还是有一点难度的。在看了一些资料和结合 Java 的的一些经验，感觉对闭包的概念稍微有了一些概念，这里记录一下。</p>
+<h2 id="什么是闭包？"><a href="#什么是闭包？" class="headerlink" title="什么是闭包？"></a>什么是闭包？</h2><p>网上看了很多解释，觉得比较简明的一个解释放上：有权访问另一个函数作用域变量的函数都是闭包。</p>
+<p>接下来剥丝抽茧，一步一步的分析 JavaScript 中的闭包。首先我们可能会碰到一个计数的需求，可能用来记录用户的某个操作次数：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> count = <span class="number">0</span>;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">add</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> count += <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2018/06/09/%E7%90%86%E8%A7%A3JavaScript%E9%97%AD%E5%8C%85/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2018/06/08/%E8%BF%91%E6%9C%9F%E8%AE%A1%E5%88%92/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -892,88 +970,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2017/10/26/Android%E5%85%A8%E6%96%87%E5%85%B3%E9%94%AE%E5%AD%97%E9%AB%98%E4%BA%AE%E4%B8%8E%E5%85%B3%E9%94%AE%E5%AD%97%E7%82%B9%E5%87%BB/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-      <meta itemprop="name" content="LJ">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="LJ的Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2017/10/26/Android%E5%85%A8%E6%96%87%E5%85%B3%E9%94%AE%E5%AD%97%E9%AB%98%E4%BA%AE%E4%B8%8E%E5%85%B3%E9%94%AE%E5%AD%97%E7%82%B9%E5%87%BB/" class="post-title-link" itemprop="url">Android全文关键字高亮与关键字点击</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2017-10-26 18:33:56" itemprop="dateCreated datePublished" datetime="2017-10-26T18:33:56+08:00">2017-10-26</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2018-05-30 10:26:04" itemprop="dateModified" datetime="2018-05-30T10:26:04+08:00">2018-05-30</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>因为自己看过很多杂七杂八的东西，所以知道 TextView 本身可以解析一些 html 的标签，而且 Span String 可以花式实现各种样式。这里采用 Span String 的方式实现。实现这个需求的难点在哪呢？刚开始在我看来就是实现关键字匹配，刚开始想用 spilt<br> 方法直接分割自己添加 keyword 取巧，后来细想不行，不是所有的输入都能完成，多个关键字这种方式太复杂。没办法，想起以前学过的 kmp 算法，打开了个网页准备开撸了，忽然想到搜一下全文关键字匹配，很容易的就搜到了 Java 中对应的 API ，搜索也是需要技巧的……不能太过于想当然了。效果图：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1976147-eb799e1d50bd9fbb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="图"></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2017/10/26/Android%E5%85%A8%E6%96%87%E5%85%B3%E9%94%AE%E5%AD%97%E9%AB%98%E4%BA%AE%E4%B8%8E%E5%85%B3%E9%94%AE%E5%AD%97%E7%82%B9%E5%87%BB/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1045,18 +1041,18 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">77</span>
+          <span class="site-state-item-count">78</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
-        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-count">18</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
-        <span class="site-state-item-count">36</span>
+        <span class="site-state-item-count">38</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
