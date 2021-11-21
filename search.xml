@@ -4125,6 +4125,8 @@ public ArrayList() &#123;
 <figure class="highlight go"><table><tr><td class="code"><pre><span class="line">f, err := os.Open(<span class="string">&quot;filename.ext&quot;</span>)</span><br><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">    log.Fatal(err)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// do something with the open *File f</span></span><br></pre></td></tr></table></figure>
 
 <p>你可以在 Go 中用知道的关于这个 error 类型来完成很多工作，但是本文我们会仔细看看 error 和讨论在 Go 中错误处理的一些良好实践。</p>
+<span id="more"></span>
+
 <h3 id="错误类型"><a href="#错误类型" class="headerlink" title="错误类型"></a>错误类型</h3><p><code>error</code>类型是一个接口类型。error 变量可以将自身描述为代表任何值的字符串。这是接口的声明：</p>
 <figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> error <span class="keyword">interface</span> &#123;</span><br><span class="line">    Error() <span class="keyword">string</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
