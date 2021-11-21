@@ -148,6 +148,90 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2017/06/18/Socket%E7%9A%84%E4%BD%BF%E7%94%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="LJ">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LJ的Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2017/06/18/Socket%E7%9A%84%E4%BD%BF%E7%94%A8/" class="post-title-link" itemprop="url">Socket的使用</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-06-18 02:18:24" itemprop="dateCreated datePublished" datetime="2017-06-18T02:18:24+08:00">2017-06-18</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2018-05-30 10:32:40" itemprop="dateModified" datetime="2018-05-30T10:32:40+08:00">2018-05-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="Socket基础"><a href="#Socket基础" class="headerlink" title="Socket基础"></a>Socket基础</h2><p>在说到计算机网络模型的时候一定都会提到这两个模型：OSI七层网络模型和TCP/IP四层网络模型，因为OSI七层过于复杂，现在普遍采用的是TCP/IP的四层网络模型。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1976147-0e9dd0a3a92a8428.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="七层OSI &amp; 四层TCP/IP"></p>
+<p>tcp/udp协议位于TCP/IP协议栈的传输层，tcp是一个面向连接、可靠的协议，而udp协议是一个不可靠的、无连接协议。刚开始我有点疑惑，什么样的场景才需要udp协议呢？因为udp协议并不保证数据一定传输到目的地，有什么场景能容忍可能发生丢包的情况呢？后来在项目的某个解决方案的讨论中，听到了老大的解释。当时我们可以选用udp和tcp方案，问我该选用什么方案。我当时也了解了一些tcp和udp，记得在网上看到过这么一句话，如果你需要用额外的操作保证数据准确的传递到目的地，那不如直接采用tcp协议，所以我说udp并不保证数据一定传达，而tcp是可靠的，所以应该采用tcp协议。然后老大说在局域网（当时要解决的就是局域网中的一个问题）可以认为udp是可靠的，不需要考虑丢包的情况，不过数据处理难一点，后来还是用了TCP……</p>
+<p>Socket可以说是对TCP协议的封装，可以理解成TCP的API，在TCP/IP协议栈中应当属于应用层和传输层之间的抽象。那么属于应用层的HTTP协议，和Socket有何异同呢？HTTP协议一般来说是短连接（当然，可以指定长连接），每次请求都会建立和断开TCP连接，而Socket默认就是长连接，两者在传输层都是建立和断开TCP连接。相比于Socket，HTTP协议显得更加的高级。二者都是基于TCP的，Socket可以用来编写一个HTTP框架。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2017/06/18/Socket%E7%9A%84%E4%BD%BF%E7%94%A8/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2017/06/16/%E7%99%BE%E5%BA%A6%E5%AE%9A%E4%BD%8D%20&%20%E5%9C%B0%E7%90%86%E7%BC%96%E7%A0%81%E6%A3%80%E7%B4%A2%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -900,93 +984,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2017/01/13/Android-Service%E5%85%A5%E9%97%A8%E5%88%B0%E5%B4%A9%E6%BA%83/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-      <meta itemprop="name" content="LJ">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="LJ的Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2017/01/13/Android-Service%E5%85%A5%E9%97%A8%E5%88%B0%E5%B4%A9%E6%BA%83/" class="post-title-link" itemprop="url">Android-Service入门到崩溃</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2017-01-13 17:18:59" itemprop="dateCreated datePublished" datetime="2017-01-13T17:18:59+08:00">2017-01-13</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2018-05-30 10:38:55" itemprop="dateModified" datetime="2018-05-30T10:38:55+08:00">2018-05-30</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>最近项目搞完了，有点空正好查漏补缺<del>关于服务这一块，一直都没怎么用过，趁着这个时机学习一下</del>至于为啥起这名呢……因为本来就想着稍微看一下Service，结果发现要看的东西越来越多……越来越多……所以就有崩了的意思……本文代码比较多，请边看边敲，碰到不懂去搜一下。</p>
-<p>首先梳理一下我想要写的东西：</p>
-<ul>
-<li>Service基础</li>
-<li>AIDL</li>
-</ul>
-<h2 id="什么是Service"><a href="#什么是Service" class="headerlink" title="什么是Service"></a>什么是Service</h2><p>Service是一个可以在后台执行长时间运行操作而不提供用户界面的应用组件。服务可由其他应用组件启动，而且即使用户切换到其他应用，服务仍将在后台继续运行。服务并不是一个单独的进程，除非有特殊指明，否则Service是作为application的一部分运行在相同的进程中的。服务没有分离于主线程工作，所以当你要在服务中进行耗时操作最好开启一个新的线程来执行这种操作，避免ANR。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2017/01/13/Android-Service%E5%85%A5%E9%97%A8%E5%88%B0%E5%B4%A9%E6%BA%83/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1058,13 +1055,13 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">78</span>
+          <span class="site-state-item-count">79</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
-        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-count">19</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
