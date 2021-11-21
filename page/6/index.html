@@ -148,6 +148,89 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2017/01/18/%E5%AE%9E%E7%8E%B0RecyclerView%E4%B8%8B%E6%8B%89%E5%88%B7%E6%96%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="LJ">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LJ的Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2017/01/18/%E5%AE%9E%E7%8E%B0RecyclerView%E4%B8%8B%E6%8B%89%E5%88%B7%E6%96%B0/" class="post-title-link" itemprop="url">实现RecyclerView下拉刷新</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-01-18 19:38:48" itemprop="dateCreated datePublished" datetime="2017-01-18T19:38:48+08:00">2017-01-18</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2018-05-30 10:38:10" itemprop="dateModified" datetime="2018-05-30T10:38:10+08:00">2018-05-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>最近项目里有需求要用到下拉刷新，以前写好的代码最好别动太多~在github上发现了一个XRecyclerView能满足的需求，而且也不必对我原来的代码做多大的修改。<br>但是光会用还不够，万一碰到啥满足不了自己需求或者是坑自己还得有办法解决啊。所以打算通过自己写一个，以此来加深自己对XRecyclerView的理解。</p>
+<p>当然了，我只是抱着学习的目的实现一下，重复造轮子是不好的~这篇文主要是理一下自己的思路的，代码不会贴非常完整的，完整代码地址文末有。最后自己也稍微完善了一下代码，权当是练习一下自己的所学所得吧。</p>
+<h2 id="简单的实现部分逻辑"><a href="#简单的实现部分逻辑" class="headerlink" title="简单的实现部分逻辑"></a>简单的实现部分逻辑</h2><p>首先想一下我最初的需求，希望尽量少的改动自己的代码，XRecyclerView做到了这一点，他内部是有一个WrapAdapter继承于RecyclerView.Adapter。并且XRecyclerView重写了setAdapter这个方法，当你调用setAdapter方法时，会先在WrapAdapter内部持有一个adapter的引用，之后调用RecyclerView的setAdapter将这个WrapAdapter设置给RecyclerView，这么做有一个好处，就是可以自己先在onCreateViewHolder和onBindViewHolder方法里对刷新顶部和你添加的头部布局进行处理和绑定，在这之后再调用adapter的相应方法。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2017/01/18/%E5%AE%9E%E7%8E%B0RecyclerView%E4%B8%8B%E6%8B%89%E5%88%B7%E6%96%B0/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2017/01/13/Android-Service%E5%85%A5%E9%97%A8%E5%88%B0%E5%B4%A9%E6%BA%83/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -907,89 +990,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2016/10/29/View%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B%E2%80%94%E2%80%94layout&draw/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-      <meta itemprop="name" content="LJ">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="LJ的Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2016/10/29/View%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B%E2%80%94%E2%80%94layout&draw/" class="post-title-link" itemprop="url">View的工作流程——layout&draw</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2016-10-29 19:18:32" itemprop="dateCreated datePublished" datetime="2016-10-29T19:18:32+08:00">2016-10-29</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2018-05-30 11:44:34" itemprop="dateModified" datetime="2018-05-30T11:44:34+08:00">2018-05-30</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="ViewGroup的measure流程"><a href="#ViewGroup的measure流程" class="headerlink" title="ViewGroup的measure流程"></a>ViewGroup的measure流程</h3><p>上一篇<a target="_blank" rel="noopener" href="http://www.jianshu.com/p/2902a557754a">View的工作流程——measure流程</a>中了解到了View的measure与ViewGroup的measure流程有密不可分的联系，这次就把View的笔记做完。</p>
-<p>ViewGroup作为容器除了完成自己的measure过程以外，还会遍历去调用所有子元素的measure方法，各个子元素再递归去执行这个过程。ViewGroup是一个抽象类没有重写onMeasure()方法，但是它提供了一个measureChildren方法。这个方法会遍历View去测量他们自身。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">measureChildren</span><span class="params">(<span class="keyword">int</span> widthMeasureSpec, <span class="keyword">int</span> heightMeasureSpec)</span></span>&#123;</span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">int</span> size = mChildrenCount;</span><br><span class="line">    <span class="keyword">final</span> View[] children = mChildren;</span><br><span class="line">    <span class="comment">//对子元素遍历</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size; ++i) &#123;</span><br><span class="line">        <span class="keyword">final</span> View child = children[i];</span><br><span class="line">        <span class="keyword">if</span> ((child.mViewFlags &amp; VISIBILITY_MASK) != GONE) &#123;</span><br><span class="line">            measureChild(child, widthMeasureSpec, heightMeasureSpec);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2016/10/29/View%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B%E2%80%94%E2%80%94layout&draw/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1061,7 +1061,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-count">80</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

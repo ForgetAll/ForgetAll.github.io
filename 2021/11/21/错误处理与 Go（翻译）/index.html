@@ -29,7 +29,7 @@
 <meta property="og:description" content="原文：https:&#x2F;&#x2F;go.dev&#x2F;blog&#x2F;error-handling-and-go 错误处理与 GoAndrew Gerrand 2011 年 7 月 12 日 介绍如果你写过任何 Go 代码，你可能会遇到内置的 error 类型。Go 代码使用 error 值来表明不正常的状态。例如：os.Open 函数在他打开文件失败时会返回非空的 error。 1func Open(name stri">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-11-21T03:36:40.000Z">
-<meta property="article:modified_time" content="2021-11-21T06:06:19.229Z">
+<meta property="article:modified_time" content="2021-11-21T06:51:12.203Z">
 <meta property="article:author" content="LJ">
 <meta property="article:tag" content="go">
 <meta property="article:tag" content="翻译">
@@ -178,7 +178,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2021-11-21 11:36:40 / 修改时间：14:06:19" itemprop="dateCreated datePublished" datetime="2021-11-21T11:36:40+08:00">2021-11-21</time>
+              <time title="创建时间：2021-11-21 11:36:40 / 修改时间：14:51:12" itemprop="dateCreated datePublished" datetime="2021-11-21T11:36:40+08:00">2021-11-21</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -306,7 +306,9 @@
 <p>第二点会让最上层的代码充满错误处理，该如何编写好最上层的处理代码呢？我认为好的处理代码应该是这样的：</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">err := doSomething1()</span><br><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">  <span class="comment">// error handle</span></span><br><span class="line">  <span class="keyword">return</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">err = doSomething2()</span><br><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">  <span class="comment">// error handler</span></span><br><span class="line">  <span class="keyword">return</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>我觉得这样写保证了阅读代码的连贯性，个人不是很喜欢 Java 中 try catch 会导致正常的处理逻辑有缩进。而可能因为一些历史遗留原因（早起 try catch 会有很高的性能损失），大家对异常的处理都是 try catch 而不是 throw 在上层统一处理。看到过一个说法：抛异常本身没有错，Java 抛异常也没有错，但是对于程序猿来说很多时候这些异常是难以处理的。</p>
+<p>这样写保证了阅读代码的连贯性，虽然有大量的错误处理，在梳理业务逻辑时直接忽略跳过就可以了，而且大量的错误也无法避免，每一个微服务都是不可靠的，会挂在每一个你意想不到的时候，此时需要我们正确的处理错误给用户正确的响应。</p>
+<p>个人不是很喜欢 Java 中 try catch 会导致正常的处理逻辑有缩进。而可能因为一些历史遗留原因（早期 try catch 会有很高的性能损失），大家对异常的处理都是 try catch 而不是 throw 在上层统一处理，同时也难以在上层统一处理可能来自不同运行时的不同 exception，需要经过精心的设计才可以。同时因为 Java 中大量的异常，异常不再是异常，变得有些司空见惯了，从良性到灾难性都有，异常的严重性由调用者来区分。我觉得这也跟巨石后端时代程序不能挂掉有关，无论是怎样的 exception，都一定要捕获，即使没有正确的处理。</p>
+<p>看到过一个说法：抛异常本身没有错，Java 抛异常也没有错，但是对于程序猿来说很多时候这些异常是难以处理的。（可以参考<a target="_blank" rel="noopener" href="https://devblogs.microsoft.com/oldnewthing/?p=36693">这篇</a>文章）</p>
 <p>关于如何编写良好的错误处理代码先告一段落，接下来讨论如何编写良好的自定义错误。</p>
 <p>TODO…<br>待补全</p>
 
@@ -331,7 +333,10 @@
     <a href="/2021/11/20/Raft%EF%BC%88%E7%BF%BB%E8%AF%91%EF%BC%89/" rel="prev" title="Raft（翻译）">
       <i class="fa fa-chevron-left"></i> Raft（翻译）
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2021/11/21/%E9%94%99%E8%AF%AF%E6%98%AF%E5%80%BC%EF%BC%88%E7%BF%BB%E8%AF%91%EF%BC%89/" rel="next" title="Errors are values（翻译）">
+      Errors are values（翻译） <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -406,7 +411,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-count">80</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

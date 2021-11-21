@@ -148,6 +148,88 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2017/11/07/Glide%204.0%20%E4%BB%A5%E4%B8%8A%E6%97%A0%E6%B3%95%E7%94%9F%E6%88%90%20GlideApp/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="LJ">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LJ的Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2017/11/07/Glide%204.0%20%E4%BB%A5%E4%B8%8A%E6%97%A0%E6%B3%95%E7%94%9F%E6%88%90%20GlideApp/" class="post-title-link" itemprop="url">Glide 4.0 以上无法生成 GlideApp</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-11-07 15:49:05" itemprop="dateCreated datePublished" datetime="2017-11-07T15:49:05+08:00">2017-11-07</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2018-05-30 10:26:44" itemprop="dateModified" datetime="2018-05-30T10:26:44+08:00">2018-05-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>Glide 4.0 以上的版本将很多的 API 都从 Glide 主线这个入口及后续的调用剥离出来了，需要用 GlideApp 来使用。跟着文档走了一遍，愣是生不成，尝试了网上的各种办法都不行。在 CSDN 论坛上看到了一个类似的问题，题主最后一句已解决……日了狗了，你已解决不能发一下你解决的方法么。</p>
+<p>网上说的各种 clean make rebuild 都试了，还是不行，最后静下心来仔细看了下项目里用到了 ButterKnife ，而这玩意我也很久没更新了，看了下用的还是 apt ，而 Glide 依赖的编译时注解是 annotationProcessor 于是猜想是这两个之间有什么见不得人的交易导致我无法生成GlideApp。上 ButterKnife 的 git 仓库看了一下，最新的也采用 annotationProcessor 来实现了，愉快的更新了一波，Glide 成功生成了 GlideApp。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2017/11/07/Glide%204.0%20%E4%BB%A5%E4%B8%8A%E6%97%A0%E6%B3%95%E7%94%9F%E6%88%90%20GlideApp/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2017/10/31/Python%E5%85%A5%E6%89%8B%EF%BC%88%E4%BA%8C%EF%BC%89/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -915,89 +997,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2017/08/26/Android-NDK%E5%AD%A6%E4%B9%A0%EF%BC%882%EF%BC%89/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-      <meta itemprop="name" content="LJ">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="LJ的Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2017/08/26/Android-NDK%E5%AD%A6%E4%B9%A0%EF%BC%882%EF%BC%89/" class="post-title-link" itemprop="url">Android-NDK学习（2）</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2017-08-26 22:35:26" itemprop="dateCreated datePublished" datetime="2017-08-26T22:35:26+08:00">2017-08-26</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2018-05-30 11:35:07" itemprop="dateModified" datetime="2018-05-30T11:35:07+08:00">2018-05-30</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>本文需要一些<code>CMake</code> 和 <code>JNI</code>的基础知识，对于CMake的使用推荐Android官网的<a target="_blank" rel="noopener" href="https://developer.android.com/ndk/guides/index.html?hl=zh-cn">NDK入门</a>。CMake是Android Studio 2.2以上新增的支持原生编程的工具，CMake是一个跨平台的编译工具，可以用简单的语句描述所有平台的编译过程。恩，暂时先记一下吧，本文现处于自嗨状态，不适合作为各位将之作为NDK的学习资料。</p>
-<h2 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h2><p>在创建项目时勾选include c++，在项目创建完毕，文件目录如下：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1976147-16587b93a2ceca12.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="目录结构"><br>可以看到，可以看到app目录下有一个CMakeLists.txt，我在这个txt里加了一些注释</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2017/08/26/Android-NDK%E5%AD%A6%E4%B9%A0%EF%BC%882%EF%BC%89/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1069,7 +1068,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-count">80</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

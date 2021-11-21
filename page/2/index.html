@@ -148,6 +148,87 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2018/07/17/%E4%BD%BF%E7%94%A8%20DownloadManager%20%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E4%B8%8B%E8%BD%BD%20APK%20%E5%92%8C%E6%9B%B4%E6%96%B0%EF%BC%88%E9%80%82%E9%85%8D%E5%88%B0%208.0%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="LJ">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LJ的Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2018/07/17/%E4%BD%BF%E7%94%A8%20DownloadManager%20%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E4%B8%8B%E8%BD%BD%20APK%20%E5%92%8C%E6%9B%B4%E6%96%B0%EF%BC%88%E9%80%82%E9%85%8D%E5%88%B0%208.0%EF%BC%89/" class="post-title-link" itemprop="url">使用 DownloadManager 实现自动下载 APK 和更新（适配到8.0）</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2018-07-17 16:48:33 / 修改时间：17:06:54" itemprop="dateCreated datePublished" datetime="2018-07-17T16:48:33+08:00">2018-07-17</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="使用-DownloadManager-实现自动下载-APK-和更新（适配到-8-0）"><a href="#使用-DownloadManager-实现自动下载-APK-和更新（适配到-8-0）" class="headerlink" title="使用 DownloadManager 实现自动下载 APK 和更新（适配到 8.0）"></a>使用 DownloadManager 实现自动下载 APK 和更新（适配到 8.0）</h2><p>最近有一个强制更新的需求，当然对于强制更新，我的内心是拒绝的。但是有的时候的确有应用的场景，比如服务器接口由于一些考量改变了，一些协议也改变了，那么老的客户端可能就会出现闪退的情况，一般可以通过几个版本的迭代解决这个问题，但是如果几个版本后还是有一些用户停留在老版本，那么强制更新就很有必要了。当然了，这里所谓的强制更新也就是你不更新到最新版本，会让你无法使用，并提醒你更新。普通的应用只能做到这个程度了，因为你没有 root 权限是做不到静默更新的。</p>
+<p>这里只是记录一下在实现的过程中需要注意的几个点：</p>
+<ul>
+<li>Android 6.0 权限问题</li>
+<li>Android 7.0 File Uri 适配问题</li>
+<li>Android 8.0 权限申请问题</li>
+<li>利用 md5 防止重复下载 apk</li>
+</ul>
+<p>当然，并不会每一个都展开写，因为有些东西真的出来挺久了，还没去看的话只能说你已经有点落后于 Android 版本了。本文也不是详细介绍如何使用 DownloadManager 的文，对这玩意感兴趣的可以去看看 api。</p>
+<p>这里我们至少需要后台提供哪些信息呢？</p>
+<ul>
+<li>后台目前的 apk 版本号</li>
+<li>下载地址</li>
+<li>apk 的 md5</li>
+</ul>
+<p>这里的版本号，最好对应我们 Android 中的 versionCode，用这个来判断最直观。下文所有实现均为 Kotlin 代码！</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2018/07/17/%E4%BD%BF%E7%94%A8%20DownloadManager%20%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E4%B8%8B%E8%BD%BD%20APK%20%E5%92%8C%E6%9B%B4%E6%96%B0%EF%BC%88%E9%80%82%E9%85%8D%E5%88%B0%208.0%EF%BC%89/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2018/06/19/Android%E4%B8%AD%E8%B7%A8%E6%A8%A1%E5%9D%97%E4%BC%A0%E9%80%92%E6%95%B0%E6%8D%AE/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -871,88 +952,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2017/11/07/Glide%204.0%20%E4%BB%A5%E4%B8%8A%E6%97%A0%E6%B3%95%E7%94%9F%E6%88%90%20GlideApp/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-      <meta itemprop="name" content="LJ">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="LJ的Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2017/11/07/Glide%204.0%20%E4%BB%A5%E4%B8%8A%E6%97%A0%E6%B3%95%E7%94%9F%E6%88%90%20GlideApp/" class="post-title-link" itemprop="url">Glide 4.0 以上无法生成 GlideApp</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2017-11-07 15:49:05" itemprop="dateCreated datePublished" datetime="2017-11-07T15:49:05+08:00">2017-11-07</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2018-05-30 10:26:44" itemprop="dateModified" datetime="2018-05-30T10:26:44+08:00">2018-05-30</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>Glide 4.0 以上的版本将很多的 API 都从 Glide 主线这个入口及后续的调用剥离出来了，需要用 GlideApp 来使用。跟着文档走了一遍，愣是生不成，尝试了网上的各种办法都不行。在 CSDN 论坛上看到了一个类似的问题，题主最后一句已解决……日了狗了，你已解决不能发一下你解决的方法么。</p>
-<p>网上说的各种 clean make rebuild 都试了，还是不行，最后静下心来仔细看了下项目里用到了 ButterKnife ，而这玩意我也很久没更新了，看了下用的还是 apt ，而 Glide 依赖的编译时注解是 annotationProcessor 于是猜想是这两个之间有什么见不得人的交易导致我无法生成GlideApp。上 ButterKnife 的 git 仓库看了一下，最新的也采用 annotationProcessor 来实现了，愉快的更新了一波，Glide 成功生成了 GlideApp。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2017/11/07/Glide%204.0%20%E4%BB%A5%E4%B8%8A%E6%97%A0%E6%B3%95%E7%94%9F%E6%88%90%20GlideApp/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1024,7 +1023,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-count">80</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

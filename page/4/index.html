@@ -148,6 +148,89 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2017/08/26/Android-NDK%E5%AD%A6%E4%B9%A0%EF%BC%882%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="LJ">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LJ的Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2017/08/26/Android-NDK%E5%AD%A6%E4%B9%A0%EF%BC%882%EF%BC%89/" class="post-title-link" itemprop="url">Android-NDK学习（2）</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-08-26 22:35:26" itemprop="dateCreated datePublished" datetime="2017-08-26T22:35:26+08:00">2017-08-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2018-05-30 11:35:07" itemprop="dateModified" datetime="2018-05-30T11:35:07+08:00">2018-05-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>本文需要一些<code>CMake</code> 和 <code>JNI</code>的基础知识，对于CMake的使用推荐Android官网的<a target="_blank" rel="noopener" href="https://developer.android.com/ndk/guides/index.html?hl=zh-cn">NDK入门</a>。CMake是Android Studio 2.2以上新增的支持原生编程的工具，CMake是一个跨平台的编译工具，可以用简单的语句描述所有平台的编译过程。恩，暂时先记一下吧，本文现处于自嗨状态，不适合作为各位将之作为NDK的学习资料。</p>
+<h2 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h2><p>在创建项目时勾选include c++，在项目创建完毕，文件目录如下：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1976147-16587b93a2ceca12.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="目录结构"><br>可以看到，可以看到app目录下有一个CMakeLists.txt，我在这个txt里加了一些注释</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2017/08/26/Android-NDK%E5%AD%A6%E4%B9%A0%EF%BC%882%EF%BC%89/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2017/08/26/Android%20CMake%20%E4%B8%8D%E7%94%9F%E6%88%90%E5%A4%B4%E6%96%87%E4%BB%B6%E6%8A%A5%E9%94%99/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -912,90 +995,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2017/07/06/Android-NDK%E5%AD%A6%E4%B9%A0%EF%BC%881%EF%BC%89/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-      <meta itemprop="name" content="LJ">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="LJ的Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2017/07/06/Android-NDK%E5%AD%A6%E4%B9%A0%EF%BC%881%EF%BC%89/" class="post-title-link" itemprop="url">Android-NDK学习（1）</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2017-07-06 17:33:42" itemprop="dateCreated datePublished" datetime="2017-07-06T17:33:42+08:00">2017-07-06</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2018-05-30 11:36:49" itemprop="dateModified" datetime="2018-05-30T11:36:49+08:00">2018-05-30</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>最近这两天非常烦躁，移植A项目的功能到B项目里，中间牵扯到的种种资源什么的就不说了，有耐心慢慢剥离就行。中间有一个so库一直加载失败，我真的是日了狗了，尝试了各种办法还是不行。最后用了他的sample里的东西作为module导入才解决，但是我觉得这并不算特别完美的解决办法，唉，没办法，对ndk了解的还是太少，从现在开始做相应的了解。</p>
-<h2 id="第一个总是Hello-World"><a href="#第一个总是Hello-World" class="headerlink" title="第一个总是Hello World"></a>第一个总是Hello World</h2><p>Android Studio在现在的版本可以非常方便的生成一个带jni的项目，只要在创建的时候勾选一个include c++ 那玩意就行了。不过对于我这种刚接触的人来说，还是要自己折腾一下。</p>
-<p>首先是配置ndk开发环境，其实也没什么要配置的，一顿下载就ok了。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1976147-f19b7033fc33b0ad.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="ndk"></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2017/07/06/Android-NDK%E5%AD%A6%E4%B9%A0%EF%BC%881%EF%BC%89/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1067,7 +1066,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-count">80</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
