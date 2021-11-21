@@ -4238,6 +4238,7 @@ public ArrayList() &#123;
 <h2 id="Errors-are-values"><a href="#Errors-are-values" class="headerlink" title="Errors are values"></a>Errors are values</h2><p><em>Rob Pike</em><br><em>12 January 2015</em></p>
 <p>Go 程序猿之间经常讨论的点，特别是那些新进使用 Go 的人，就是如何处理 errors。对话经常会转变为对以下程序出现次数的哀叹：</p>
 <figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> err</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<span id="more"></span>
 
 <p>我们最近扫描了所有我们能找到的开源项目，发现这个（代码）片段仅仅在每页或每两页中出现一次，比某些人认为的次数要少。尽管如此，如果还是有人坚持认为他们一直要输入以下代码：</p>
 <figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span></span><br></pre></td></tr></table></figure>
