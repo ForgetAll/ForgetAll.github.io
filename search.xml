@@ -4114,7 +4114,7 @@ public ArrayList() &#123;
   </entry>
   <entry>
     <title>错误处理与 Go（翻译）</title>
-    <url>/2021/11/20/%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86%E4%B8%8E%20Go%EF%BC%88%E7%BF%BB%E8%AF%91%EF%BC%89/</url>
+    <url>/2021/11/21/%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86%E4%B8%8E%20Go%EF%BC%88%E7%BF%BB%E8%AF%91%EF%BC%89/</url>
     <content><![CDATA[<p>原文：<a href="https://go.dev/blog/error-handling-and-go">https://go.dev/blog/error-handling-and-go</a></p>
 <h2 id="错误处理与-Go"><a href="#错误处理与-Go" class="headerlink" title="错误处理与 Go"></a>错误处理与 Go</h2><p><em>Andrew Gerrand</em></p>
 <p><em>2011 年 7 月 12 日</em></p>
