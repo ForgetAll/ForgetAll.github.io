@@ -148,6 +148,90 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2016/11/06/%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E5%A5%BD%E7%94%A8%E7%9A%84LoadingDialog/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="LJ">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LJ的Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2016/11/06/%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E5%A5%BD%E7%94%A8%E7%9A%84LoadingDialog/" class="post-title-link" itemprop="url">一个简单好用的LoadingDialog</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2016-11-06 19:24:40" itemprop="dateCreated datePublished" datetime="2016-11-06T19:24:40+08:00">2016-11-06</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2018-05-30 11:41:28" itemprop="dateModified" datetime="2018-05-30T11:41:28+08:00">2018-05-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h3><p>还记得以前在网上看到过一个LoadingDialog，感觉还挺不错的，可惜只有一个Loading，配套的错误和正确的反馈都没，一直觉得挺遗憾的，今天花了一些时间把他补全了。今天上多说找了下，找到了原来我的评论，放上<a target="_blank" rel="noopener" href="https://ydmmocoo.github.io/2016/06/24/Android%E8%87%AA%E5%AE%9A%E4%B9%89%E5%8A%A0%E8%BD%BD%E4%B8%ADDialog/">原作者的文章地址</a>。我做的事就是增强LoadingDialog的功能，新增两个自定义View。今天收到了两位前辈不错的建议，后续更新即将到来~</p>
+<p>感谢<a target="_blank" rel="noopener" href="http://www.jianshu.com/users/c37d344afd22/latest_articles">小路</a>同学指出我后面反馈的圆的方向和之前的方向不一致的情况，已修复，因为截gif怪麻烦的，图就不改了。。。</p>
+<h3 id="使用方法与效果图"><a href="#使用方法与效果图" class="headerlink" title="使用方法与效果图"></a>使用方法与效果图</h3><p>展示一个loading dialog：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> LoadingDialog(<span class="keyword">this</span>)</span><br><span class="line">    .setLoadingText(<span class="string">&quot;加载中...&quot;</span>)<span class="comment">//设置loading时显示的文字</span></span><br><span class="line">	.show();</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2016/11/06/%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E5%A5%BD%E7%94%A8%E7%9A%84LoadingDialog/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2016/10/29/View%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B%E2%80%94%E2%80%94layout&draw/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -900,96 +984,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2016/09/09/RxJava%E4%BB%8E%E6%94%BE%E5%BC%83%E5%88%B0%E5%85%A5%E9%97%A8%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E5%9F%BA%E7%A1%80%E7%AF%87/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-      <meta itemprop="name" content="LJ">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="LJ的Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2016/09/09/RxJava%E4%BB%8E%E6%94%BE%E5%BC%83%E5%88%B0%E5%85%A5%E9%97%A8%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E5%9F%BA%E7%A1%80%E7%AF%87/" class="post-title-link" itemprop="url">RxJava从放弃到入门（一）：基础篇</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2016-09-09 23:25:54" itemprop="dateCreated datePublished" datetime="2016-09-09T23:25:54+08:00">2016-09-09</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2018-05-30 10:41:18" itemprop="dateModified" datetime="2018-05-30T10:41:18+08:00">2018-05-30</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h3><p>RxJava我一直是很想用的，扔物线老师的文章我也看了一点，但是说实话，其中很多东西交错在一起，对于我来说有点难以理解。而且看很多文章总是看了前面忘后面，还有一些结合lambda讲的，说实话，我是懵逼的。在这里把我自己对于RxJava的一些理解，看到的一些好文记录下来。</p>
-<h3 id="RxJava是啥"><a href="#RxJava是啥" class="headerlink" title="RxJava是啥"></a>RxJava是啥</h3><blockquote>
-<p>Rx是一个函数库，让开发者可以利用可观察序列和LINQ风格查询操作符来编写异步和基于事件的程序。</p>
-</blockquote>
-<p>好，对于C#不怎么了解的人一般不会知道LINQ是啥东东吧……这个介绍我们先选择略过。看看github上RxJava是怎样描述自己的。</p>
-<p>**  a library for composing asynchronous and event-based programs by using observable sequences. ** 一个在Java VM上使用可观测的序列来组成异步的、基于事件的程序的库。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2016/09/09/RxJava%E4%BB%8E%E6%94%BE%E5%BC%83%E5%88%B0%E5%85%A5%E9%97%A8%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E5%9F%BA%E7%A1%80%E7%AF%87/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/6/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/8/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/6/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/8/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1057,7 +1055,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">80</span>
+          <span class="site-state-item-count">81</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
