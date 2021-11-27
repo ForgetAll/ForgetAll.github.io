@@ -4301,7 +4301,7 @@ public ArrayList() &#123;
   </entry>
   <entry>
     <title>在 Go 1.13 中处理错误（翻译）</title>
-    <url>/2021/11/21/%E5%9C%A8%20Go%201.13%20%E4%B8%AD%E5%A4%84%E7%90%86%E9%94%99%E8%AF%AF%EF%BC%88%E7%BF%BB%E8%AF%91%EF%BC%89/</url>
+    <url>/2021/11/27/%E5%9C%A8%20Go%201.13%20%E4%B8%AD%E5%A4%84%E7%90%86%E9%94%99%E8%AF%AF%EF%BC%88%E7%BF%BB%E8%AF%91%EF%BC%89/</url>
     <content><![CDATA[<h2 id="Working-with-Errors-in-Go-1-13"><a href="#Working-with-Errors-in-Go-1-13" class="headerlink" title="Working with Errors in Go 1.13"></a>Working with Errors in Go 1.13</h2><p><em>Damien Neil and Jonathan Amsterdam</em><br><em>17 October 2019</em></p>
 <h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>Go 将 error 作为 values 已经很好的为我们服务了数十年。尽管标准库对 errors 的支持很少——只有<code>errors.New</code>和<code>fmt.Errorf</code>函数，会产生只包含消息的 errors——内置的 error interface 允许 Go 程序猿添加他们想要的任何信息。它所需要的只是实现一个<code>Error</code>方法：</p>
 <figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> QueryError <span class="keyword">struct</span> &#123;</span><br><span class="line">    Query <span class="keyword">string</span></span><br><span class="line">    Err   error</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(e *QueryError)</span> <span class="title">Error</span><span class="params">()</span> <span class="title">string</span></span> &#123; <span class="keyword">return</span> e.Query + <span class="string">&quot;: &quot;</span> + e.Err.Error() &#125;</span><br></pre></td></tr></table></figure>
