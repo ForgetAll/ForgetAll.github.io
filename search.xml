@@ -3889,6 +3889,8 @@ public ArrayList() &#123;
 </li>
 <li><p>生成 svg，在浏览器中打开：pprof -web [main_binary] profile.pb.gz</p>
 </li>
+<li><p>go race 工具，竞争检测器：go build -race，go test -race</p>
+</li>
 </ul>
 <h3 id="Docker"><a href="#Docker" class="headerlink" title="Docker"></a>Docker</h3><ul>
 <li>构建 docker image：docker build -t alpinevim/latest -f AlpineWithVim ./<ul>
@@ -3923,6 +3925,7 @@ public ArrayList() &#123;
 </ul>
 <h3 id="etcd"><a href="#etcd" class="headerlink" title="etcd"></a>etcd</h3><ul>
 <li>获取值和额外信息：etcdctl get key -wjson</li>
+<li>查看集群成员：etcdctl –write-out=table –endpoints=localhost:2379 member list</li>
 </ul>
 <h3 id="awk"><a href="#awk" class="headerlink" title="awk"></a>awk</h3><h3 id="一些好用的命令行工具"><a href="#一些好用的命令行工具" class="headerlink" title="一些好用的命令行工具"></a>一些好用的命令行工具</h3><ul>
 <li>pip3 install mycli：比 mysql 命令好用一些，有语法提示，更加友好的表名提示，语法高亮</li>
