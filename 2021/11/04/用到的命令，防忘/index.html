@@ -29,7 +29,7 @@
 <meta property="og:description" content="前言不全的记录，只是有一些命令还不是很熟，记录下来备查 k8s 快捷键 将本地端口映射到 k8s 对应 pod：kubectl -n jspp port-forward authsv-7cfc56d85d-v24pb 9999:9090，-n  命名空间，9999 本地端口，9090 远程端口  实时打印 pod 日志： 1kubectl -n jspp logs authsv-6f5f544d7">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-11-04T14:55:24.000Z">
-<meta property="article:modified_time" content="2021-11-29T11:37:48.368Z">
+<meta property="article:modified_time" content="2021-11-30T13:13:37.400Z">
 <meta property="article:author" content="LJ">
 <meta property="article:tag" content="命令">
 <meta name="twitter:card" content="summary">
@@ -183,7 +183,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-11-29 19:37:48" itemprop="dateModified" datetime="2021-11-29T19:37:48+08:00">2021-11-29</time>
+                <time title="修改时间：2021-11-30 21:13:37" itemprop="dateModified" datetime="2021-11-30T21:13:37+08:00">2021-11-30</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -331,8 +331,18 @@
 </li>
 <li>从第 n 个版本开始观察变化：etcdctl watch key –rev=n</li>
 </ul>
-<h3 id="awk"><a href="#awk" class="headerlink" title="awk"></a>awk</h3><h3 id="一些好用的命令行工具"><a href="#一些好用的命令行工具" class="headerlink" title="一些好用的命令行工具"></a>一些好用的命令行工具</h3><ul>
+<h3 id="awk"><a href="#awk" class="headerlink" title="awk"></a>awk</h3><ul>
+<li>指定使用某个字符作为分隔，比如冒号’:’：awk -F :</li>
+<li>拼接字符串使用引号：awk -F : ‘{print “&quot;“$1”&quot;“ “ : &quot;groupsv-svc:9090/rpc.Group/“ $2”&quot;“}’ test1.txt</li>
+</ul>
+<h3 id="一些好用的命令行工具"><a href="#一些好用的命令行工具" class="headerlink" title="一些好用的命令行工具"></a>一些好用的命令行工具</h3><ul>
 <li>pip3 install mycli：比 mysql 命令好用一些，有语法提示，更加友好的表名提示，语法高亮</li>
+<li>ag：ag -G 只搜索匹配文件名的内容</li>
+<li>可以生成 html 预览的 pandoc：pandoc README.md -f markdown -t html -s -o test1.html<ul>
+<li>-f  ====&gt; –from=format</li>
+<li>-t ====&gt; –to=format</li>
+</ul>
+</li>
 </ul>
 
     </div>

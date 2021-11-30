@@ -3943,8 +3943,18 @@ public ArrayList() &#123;
 </li>
 <li>从第 n 个版本开始观察变化：etcdctl watch key –rev=n</li>
 </ul>
-<h3 id="awk"><a href="#awk" class="headerlink" title="awk"></a>awk</h3><h3 id="一些好用的命令行工具"><a href="#一些好用的命令行工具" class="headerlink" title="一些好用的命令行工具"></a>一些好用的命令行工具</h3><ul>
+<h3 id="awk"><a href="#awk" class="headerlink" title="awk"></a>awk</h3><ul>
+<li>指定使用某个字符作为分隔，比如冒号’:’：awk -F :</li>
+<li>拼接字符串使用引号：awk -F : ‘{print “&quot;“$1”&quot;“ “ : &quot;groupsv-svc:9090/rpc.Group/“ $2”&quot;“}’ test1.txt</li>
+</ul>
+<h3 id="一些好用的命令行工具"><a href="#一些好用的命令行工具" class="headerlink" title="一些好用的命令行工具"></a>一些好用的命令行工具</h3><ul>
 <li>pip3 install mycli：比 mysql 命令好用一些，有语法提示，更加友好的表名提示，语法高亮</li>
+<li>ag：ag -G 只搜索匹配文件名的内容</li>
+<li>可以生成 html 预览的 pandoc：pandoc README.md -f markdown -t html -s -o test1.html<ul>
+<li>-f  ====&gt; –from=format</li>
+<li>-t ====&gt; –to=format</li>
+</ul>
+</li>
 </ul>
 ]]></content>
       <categories>
