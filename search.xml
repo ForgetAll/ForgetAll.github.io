@@ -3956,6 +3956,17 @@ public ArrayList() &#123;
 </ul>
 </li>
 </ul>
+<h3 id="无处归档的小命令"><a href="#无处归档的小命令" class="headerlink" title="无处归档的小命令"></a>无处归档的小命令</h3><ul>
+<li>重度命令行依赖者如何方便的在 mac 终端中打开浏览器 &amp; 指定网页或者本地文件：<ul>
+<li>open -a “Google Chrome” index.html(<a href="https://www.google.com/">https://www.google.com</a>)</li>
+<li>设置别名 chrome=open -a “Google Chrome”，chrome index.html</li>
+</ul>
+</li>
+<li>zshell 下设置搜索插件：omz plugin enable web-search<ul>
+<li>然后就可使用 google asdfxx，来搜索你想要搜索的内容了</li>
+</ul>
+</li>
+</ul>
 ]]></content>
       <categories>
         <category>命令</category>
