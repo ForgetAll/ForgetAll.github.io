@@ -686,7 +686,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-12-01 14:05:38" itemprop="dateModified" datetime="2021-12-01T14:05:38+08:00">2021-12-01</time>
+                <time title="修改时间：2021-12-12 15:31:51" itemprop="dateModified" datetime="2021-12-12T15:31:51+08:00">2021-12-12</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -711,15 +711,15 @@
       
           <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>不全的记录，只是有一些命令还不是很熟，记录下来备查</p>
 <h3 id="k8s-快捷键"><a href="#k8s-快捷键" class="headerlink" title="k8s 快捷键"></a>k8s 快捷键</h3><ul>
-<li><p>将本地端口映射到 k8s 对应 pod：kubectl -n jspp port-forward authsv-7cfc56d85d-v24pb 9999:9090，-n  命名空间，9999 本地端口，9090 远程端口</p>
+<li><p>将本地端口映射到 k8s 对应 pod：kubectl -n namespace port-forward authsv-7cfc56d85d-v24pb 9999:9090，-n  命名空间，9999 本地端口，9090 远程端口</p>
 </li>
 <li><p>实时打印 pod 日志：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl -n jspp logs authsv-6f5f544d75-qgw6g authsv --tail 10 -f</span><br></pre></td></tr></table></figure></li>
-<li><p>获取定时任务列表：kubectl -n jspp get cronjob</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl -n namespace logs authsv-6f5f544d75-qgw6g authsv --tail 10 -f</span><br></pre></td></tr></table></figure></li>
+<li><p>获取定时任务列表：kubectl -n namespace get cronjob</p>
 </li>
-<li><p>删除节点：kubectl -n jspp delete xxx</p>
+<li><p>删除节点：kubectl -n namespace delete xxx</p>
 </li>
-<li><p>进入容器执行 shell 命令：kubectl -n jspp exec pod -it sh</p>
+<li><p>进入容器执行 shell 命令：kubectl -n namespace exec pod -it sh</p>
 </li>
 <li><p>k8s 定时任务，没有秒</p>
 </li>

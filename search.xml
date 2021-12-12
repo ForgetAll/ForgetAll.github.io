@@ -3820,15 +3820,15 @@ public ArrayList() &#123;
     <url>/2021/11/04/%E7%94%A8%E5%88%B0%E7%9A%84%E5%91%BD%E4%BB%A4%EF%BC%8C%E9%98%B2%E5%BF%98/</url>
     <content><![CDATA[<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>不全的记录，只是有一些命令还不是很熟，记录下来备查</p>
 <h3 id="k8s-快捷键"><a href="#k8s-快捷键" class="headerlink" title="k8s 快捷键"></a>k8s 快捷键</h3><ul>
-<li><p>将本地端口映射到 k8s 对应 pod：kubectl -n jspp port-forward authsv-7cfc56d85d-v24pb 9999:9090，-n  命名空间，9999 本地端口，9090 远程端口</p>
+<li><p>将本地端口映射到 k8s 对应 pod：kubectl -n namespace port-forward authsv-7cfc56d85d-v24pb 9999:9090，-n  命名空间，9999 本地端口，9090 远程端口</p>
 </li>
 <li><p>实时打印 pod 日志：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">kubectl -n jspp logs authsv-6f5f544d75-qgw6g authsv --tail 10 -f</span><br></pre></td></tr></table></figure></li>
-<li><p>获取定时任务列表：kubectl -n jspp get cronjob</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">kubectl -n namespace logs authsv-6f5f544d75-qgw6g authsv --tail 10 -f</span><br></pre></td></tr></table></figure></li>
+<li><p>获取定时任务列表：kubectl -n namespace get cronjob</p>
 </li>
-<li><p>删除节点：kubectl -n jspp delete xxx</p>
+<li><p>删除节点：kubectl -n namespace delete xxx</p>
 </li>
-<li><p>进入容器执行 shell 命令：kubectl -n jspp exec pod -it sh</p>
+<li><p>进入容器执行 shell 命令：kubectl -n namespace exec pod -it sh</p>
 </li>
 <li><p>k8s 定时任务，没有秒</p>
 </li>
@@ -3863,6 +3863,8 @@ public ArrayList() &#123;
 </ul>
 </li>
 <li>跳到上一个函数代码块（下一个）：[[（]]）</li>
+<li>将下一行内容合并到上一行并添加空格：shift + j</li>
+<li>撤销 u，恢复撤销内容：ctrl + r</li>
 </ul>
 <h3 id="Space-Vim-快捷键"><a href="#Space-Vim-快捷键" class="headerlink" title="Space-Vim 快捷键"></a>Space-Vim 快捷键</h3><ul>
 <li>space t n：显示/隐藏行号</li>
@@ -3915,8 +3917,12 @@ public ArrayList() &#123;
 </ul>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">git reset -mixed：此为默认方式，不带任何参数的git reset，这种方式，它回退到某个版本，只保留源码，回退commit和index信息</span><br><span class="line"></span><br><span class="line">git reset -soft:回退到某个版本，只回退了commit的信息，不会恢复到index file一级。如果还要提交，直接commit即可</span><br><span class="line"></span><br><span class="line">git reset -hard 彻底回退到某个版本，本地的源码也会变成为上一个版本的内容</span><br></pre></td></tr></table></figure>
 
-
-
+<ul>
+<li>查看某次 commit 文件所有内容：git show commit id:file_path<ul>
+<li>想在 vim 中打开，可以 &gt; filename 输出到文件中再打开，如果采用其他方式打开，因为识别不出来是什么语言没有代码高亮</li>
+</ul>
+</li>
+</ul>
 <h3 id="Mongo"><a href="#Mongo" class="headerlink" title="Mongo"></a>Mongo</h3><ul>
 <li>排序：sort() 1 升序，-1 降序</li>
 <li>创建索引：createIndex 1：升序 ，-1：降序</li>
@@ -3963,7 +3969,7 @@ public ArrayList() &#123;
 </ul>
 </li>
 <li>zshell 下设置搜索插件：omz plugin enable web-search<ul>
-<li>然后就可使用 google asdfxx，来搜索你想要搜索的内容了</li>
+<li>然后就可使用 google asdfxx，来搜索你想要搜索的内容了。好景不长，经测试，google 后跟英文可以成功打开 chrome google 搜索，但是中文不行。用别人的电脑试了一下可以，查看 websearch 实现发现也是使用 open 命令打开相应的搜索使用 url + 拼接想要搜索的东西，直接用 open 命令也无法打开浏览器跳转到指定页，英文就可以。略罪，使用别</li>
 </ul>
 </li>
 </ul>
