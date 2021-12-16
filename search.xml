@@ -3904,6 +3904,7 @@ public ArrayList() &#123;
 <li>查看容器是否运行：docker ps -a</li>
 <li>本机所有正在运行的容器：docker container ls</li>
 <li>终止容器运行：docker container kill [containerID]</li>
+<li>将本地目录挂在到 container 并执行命令：docker run -it -v localPath:/root alpinevimgo:latest sh -c ‘cd root &amp;&amp; gcc -o test test.c’</li>
 </ul>
 <h3 id="Git"><a href="#Git" class="headerlink" title="Git"></a>Git</h3><ul>
 <li>查看某次 commit 提交内容：git show commit id</li>
