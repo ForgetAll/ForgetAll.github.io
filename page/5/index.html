@@ -148,6 +148,93 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2017/07/26/OpenCV%E5%9C%A8Android%E4%B8%AD%E7%9A%84%E9%9B%86%E6%88%90%E4%B8%8E%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="LJ">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LJ的Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2017/07/26/OpenCV%E5%9C%A8Android%E4%B8%AD%E7%9A%84%E9%9B%86%E6%88%90%E4%B8%8E%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/" class="post-title-link" itemprop="url">OpenCV在Android中的集成与简单使用</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-07-26 19:15:54" itemprop="dateCreated datePublished" datetime="2017-07-26T19:15:54+08:00">2017-07-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2018-05-30 11:37:45" itemprop="dateModified" datetime="2018-05-30T11:37:45+08:00">2018-05-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/%E6%9D%82%E8%B0%88/" itemprop="url" rel="index"><span itemprop="name">杂谈</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="题外话"><a href="#题外话" class="headerlink" title="题外话"></a>题外话</h2><p>最近在学习Android的NDK相关的东西，看了<a target="_blank" rel="noopener" href="http://www.jianshu.com/u/8b661f60979b">JerryloveEmily</a>这位大神写的JNI相关的文，看到了他用opencv做的一个毛玻璃效果，感觉还挺好玩的。本文记一下在集成过程中对我帮助比较大的几篇文，希望能帮到有同样需求的人，c++代码主要靠copy……</p>
+<h2 id="小记"><a href="#小记" class="headerlink" title="小记"></a>小记</h2><p>OpenCV有多个平台的API，咱Android的也有~首先上官网把sdk下载下来。<a target="_blank" rel="noopener" href="http://opencv.org/">OpenCV官网</a>，下载页<a target="_blank" rel="noopener" href="http://opencv.org/releases.html">在这</a>，自己点击android的包就可以了。下载下来是这么一个情况：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1976147-0314a0d18bd7c139.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="OpenCV-sdk"><br>apk包内有七个apk，分别对应了不同架构的cpu和其abi，这个apk类似于运行依赖的环境。samples包下是一些例子，这些例子需要依赖apk包内的apk。如果你打开这些例子看一下的话，会发现aidl文件，这些例子利用aidl和OpenCV提供的apk通信，实现功能。这种使用方法对于一般的开发者来说是无法接受的，因为总不能让用户装了自己的apk不算，还得装个自己不了解是什么东西的apk把。但是这种方式也是有应用场景的，比如这硬件就是你产的……不过这种情况在这不讨论，我选择的继承方式自然也不是装这个apk，然后调用java的api。在网上看到了一篇文，跟着操作了一下。这篇文章：<a target="_blank" rel="noopener" href="http://blog.csdn.net/u012341163/article/details/51065310">Android开发配置opencv环境超详细教程</a>，真的非常详细，每一步操作都写的非常简单明了。这里记一下我遇到的一个问题：ndk-build失败，</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2017/07/26/OpenCV%E5%9C%A8Android%E4%B8%AD%E7%9A%84%E9%9B%86%E6%88%90%E4%B8%8E%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2017/07/24/Android%20Studio%E5%8D%A1%E9%A1%BF/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -901,90 +988,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2017/02/05/Android%E6%B5%8B%E8%AF%95/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-      <meta itemprop="name" content="LJ">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="LJ的Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2017/02/05/Android%E6%B5%8B%E8%AF%95/" class="post-title-link" itemprop="url">Android测试</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2017-02-05 15:08:31" itemprop="dateCreated datePublished" datetime="2017-02-05T15:08:31+08:00">2017-02-05</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2018-05-30 10:39:04" itemprop="dateModified" datetime="2018-05-30T10:39:04+08:00">2018-05-30</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>我开发经验比较少，这公司也不算太靠谱，由于经验尚浅，很多代码有的时候也有不少毛毛糙糙的地方，没测试，那就自己撸起袖管上吧。本文小记一下我看别人的文所得和一些翻译。</p>
-<h2 id="创建有效的单元测试"><a href="#创建有效的单元测试" class="headerlink" title="创建有效的单元测试"></a>创建有效的单元测试</h2><p><a target="_blank" rel="noopener" href="https://developer.android.com/training/testing/unit-testing/index.html">Building Effective Unit Tests</a> 这个是原文地址，想看原文的可以自己看一下，下面是我自己的翻译= =，比较渣。</p>
-<p>单元测试是在你的应用中基本的测试策略。通过创建和运行单元测试检验你的代码，你可以很容易校验个别单元的逻辑是否正确。当你重构代码时，运行单元测试能帮助你快速的修复软件和复原。</p>
-<p>单元测试通常是反复测试尽可能小的代码单元（可以是一个方法，类或者组件）。你应该在你的app中的特定代码逻辑需要校验的时候创建单元测试。举个例子来说：如果你正在对一个类进行单元测试，你的测试可能会检查那个类是否处于一个正常的状态。通常被测试的代码单元是孤立的。你的测试仅仅影响和检测那个单元的变化。 <a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/Mock_object">mocking framework</a>可以被用来使你的单元从他的依赖上隔离。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2017/02/05/Android%E6%B5%8B%E8%AF%95/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1056,13 +1059,13 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">81</span>
+          <span class="site-state-item-count">82</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
-        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-count">20</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -1109,7 +1112,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2021</span>
+  <span itemprop="copyrightYear">2022</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

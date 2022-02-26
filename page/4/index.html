@@ -148,6 +148,94 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2017/09/03/Kotlin%E7%9A%84LogUtil/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="LJ">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LJ的Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2017/09/03/Kotlin%E7%9A%84LogUtil/" class="post-title-link" itemprop="url">Kotlin的LogUtil</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-09-03 20:27:35" itemprop="dateCreated datePublished" datetime="2017-09-03T20:27:35+08:00">2017-09-03</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2018-05-30 10:34:32" itemprop="dateModified" datetime="2018-05-30T10:34:32+08:00">2018-05-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/Kotlin/" itemprop="url" rel="index"><span itemprop="name">Kotlin</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>最近在撸东西，调试的时候用Android原生的Log感觉很不爽，打的Log给我一种东倒西歪，凌乱的感觉。于是自己看了一下<a target="_blank" rel="noopener" href="http://www.jianshu.com/u/46702d5c6978">Blankj大神</a>的Android-Utils库，看了一下他实现的LogUtils，借鉴了一下，简单的封装了一个在Kotlin中可以正确使用的LogUtil。不过话说讲道理，有扩展，Util这种东西还是可以尽量不用的，但是我有点不清楚Log这玩意该扩展给谁呢，Any？所以还是写了一个LogUtil……</p>
+<h2 id="打印效果"><a href="#打印效果" class="headerlink" title="打印效果"></a>打印效果</h2><p>最后直接放一下打印Log的样子，这里只放出i级别的日志：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1976147-88ca3b626fed0ba9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="效果图"></p>
+<p>处理了日志比较长的时候的情况，点击log中蓝色的字可以跳转到代码中的相应位置，各位如果感兴趣是怎么实现的，可以直接看我代码（当然了，我也是看别人的才知道怎么去实现，哈哈）。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2017/09/03/Kotlin%E7%9A%84LogUtil/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2017/08/29/%E5%9C%A8%E8%87%AA%E5%AE%9A%E4%B9%89View%E6%97%B6%E7%A2%B0%E5%88%B0%E7%9A%84%E5%A5%87%E6%80%AA%E9%97%AE%E9%A2%98/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -907,93 +995,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2017/07/26/OpenCV%E5%9C%A8Android%E4%B8%AD%E7%9A%84%E9%9B%86%E6%88%90%E4%B8%8E%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-      <meta itemprop="name" content="LJ">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="LJ的Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2017/07/26/OpenCV%E5%9C%A8Android%E4%B8%AD%E7%9A%84%E9%9B%86%E6%88%90%E4%B8%8E%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/" class="post-title-link" itemprop="url">OpenCV在Android中的集成与简单使用</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2017-07-26 19:15:54" itemprop="dateCreated datePublished" datetime="2017-07-26T19:15:54+08:00">2017-07-26</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2018-05-30 11:37:45" itemprop="dateModified" datetime="2018-05-30T11:37:45+08:00">2018-05-30</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/%E6%9D%82%E8%B0%88/" itemprop="url" rel="index"><span itemprop="name">杂谈</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="题外话"><a href="#题外话" class="headerlink" title="题外话"></a>题外话</h2><p>最近在学习Android的NDK相关的东西，看了<a target="_blank" rel="noopener" href="http://www.jianshu.com/u/8b661f60979b">JerryloveEmily</a>这位大神写的JNI相关的文，看到了他用opencv做的一个毛玻璃效果，感觉还挺好玩的。本文记一下在集成过程中对我帮助比较大的几篇文，希望能帮到有同样需求的人，c++代码主要靠copy……</p>
-<h2 id="小记"><a href="#小记" class="headerlink" title="小记"></a>小记</h2><p>OpenCV有多个平台的API，咱Android的也有~首先上官网把sdk下载下来。<a target="_blank" rel="noopener" href="http://opencv.org/">OpenCV官网</a>，下载页<a target="_blank" rel="noopener" href="http://opencv.org/releases.html">在这</a>，自己点击android的包就可以了。下载下来是这么一个情况：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/1976147-0314a0d18bd7c139.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="OpenCV-sdk"><br>apk包内有七个apk，分别对应了不同架构的cpu和其abi，这个apk类似于运行依赖的环境。samples包下是一些例子，这些例子需要依赖apk包内的apk。如果你打开这些例子看一下的话，会发现aidl文件，这些例子利用aidl和OpenCV提供的apk通信，实现功能。这种使用方法对于一般的开发者来说是无法接受的，因为总不能让用户装了自己的apk不算，还得装个自己不了解是什么东西的apk把。但是这种方式也是有应用场景的，比如这硬件就是你产的……不过这种情况在这不讨论，我选择的继承方式自然也不是装这个apk，然后调用java的api。在网上看到了一篇文，跟着操作了一下。这篇文章：<a target="_blank" rel="noopener" href="http://blog.csdn.net/u012341163/article/details/51065310">Android开发配置opencv环境超详细教程</a>，真的非常详细，每一步操作都写的非常简单明了。这里记一下我遇到的一个问题：ndk-build失败，</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2017/07/26/OpenCV%E5%9C%A8Android%E4%B8%AD%E7%9A%84%E9%9B%86%E6%88%90%E4%B8%8E%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1065,13 +1066,13 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">81</span>
+          <span class="site-state-item-count">82</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
-        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-count">20</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -1118,7 +1119,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2021</span>
+  <span itemprop="copyrightYear">2022</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
