@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 5.4.0">
+<meta name="generator" content="Hexo 6.0.0">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/avatar.jpeg">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/avatar.jpeg">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/avatar.jpeg">
@@ -148,7 +148,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2017/09/03/Kotlin%E7%9A%84LogUtil/">
+    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/:/abbrlink">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpeg">
@@ -162,7 +162,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2017/09/03/Kotlin%E7%9A%84LogUtil/" class="post-title-link" itemprop="url">Kotlin的LogUtil</a>
+            <a href="/:/abbrlink" class="post-title-link" itemprop="url">Kotlin的LogUtil</a>
         </h2>
 
         <div class="post-meta">
@@ -212,7 +212,7 @@
 <p>处理了日志比较长的时候的情况，点击log中蓝色的字可以跳转到代码中的相应位置，各位如果感兴趣是怎么实现的，可以直接看我代码（当然了，我也是看别人的才知道怎么去实现，哈哈）。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2017/09/03/Kotlin%E7%9A%84LogUtil/#more" rel="contents">
+              <a class="btn" href="/:/abbrlink#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -236,7 +236,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2017/08/29/%E5%9C%A8%E8%87%AA%E5%AE%9A%E4%B9%89View%E6%97%B6%E7%A2%B0%E5%88%B0%E7%9A%84%E5%A5%87%E6%80%AA%E9%97%AE%E9%A2%98/">
+    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/:/abbrlink">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpeg">
@@ -250,7 +250,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2017/08/29/%E5%9C%A8%E8%87%AA%E5%AE%9A%E4%B9%89View%E6%97%B6%E7%A2%B0%E5%88%B0%E7%9A%84%E5%A5%87%E6%80%AA%E9%97%AE%E9%A2%98/" class="post-title-link" itemprop="url">在自定义View时碰到的奇怪问题</a>
+            <a href="/:/abbrlink" class="post-title-link" itemprop="url">在自定义View时碰到的奇怪问题</a>
         </h2>
 
         <div class="post-meta">
@@ -296,7 +296,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addView</span><span class="params">(View child)</span> </span>&#123;</span><br><span class="line">        addView(child, -<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&lt;!--more--&gt;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addView</span><span class="params">(View child, <span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (child == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">&quot;Cannot add a null child view to a ViewGroup&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        LayoutParams params = child.getLayoutParams();</span><br><span class="line">        <span class="keyword">if</span> (params == <span class="keyword">null</span>) &#123;</span><br><span class="line">            params = generateDefaultLayoutParams();</span><br><span class="line">            <span class="keyword">if</span> (params == <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">&quot;generateDefaultLayoutParams() cannot return null&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        addView(child, index, params);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2017/08/29/%E5%9C%A8%E8%87%AA%E5%AE%9A%E4%B9%89View%E6%97%B6%E7%A2%B0%E5%88%B0%E7%9A%84%E5%A5%87%E6%80%AA%E9%97%AE%E9%A2%98/#more" rel="contents">
+              <a class="btn" href="/:/abbrlink#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -320,7 +320,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2017/08/26/Android-NDK%E5%AD%A6%E4%B9%A0%EF%BC%882%EF%BC%89/">
+    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/:/abbrlink">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpeg">
@@ -334,7 +334,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2017/08/26/Android-NDK%E5%AD%A6%E4%B9%A0%EF%BC%882%EF%BC%89/" class="post-title-link" itemprop="url">Android-NDK学习（2）</a>
+            <a href="/:/abbrlink" class="post-title-link" itemprop="url">Android-NDK学习（2）</a>
         </h2>
 
         <div class="post-meta">
@@ -379,7 +379,7 @@
 <p><img src="http://upload-images.jianshu.io/upload_images/1976147-16587b93a2ceca12.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="目录结构"><br>可以看到，可以看到app目录下有一个CMakeLists.txt，我在这个txt里加了一些注释</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2017/08/26/Android-NDK%E5%AD%A6%E4%B9%A0%EF%BC%882%EF%BC%89/#more" rel="contents">
+              <a class="btn" href="/:/abbrlink#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -403,7 +403,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2017/08/26/Android%20CMake%20%E4%B8%8D%E7%94%9F%E6%88%90%E5%A4%B4%E6%96%87%E4%BB%B6%E6%8A%A5%E9%94%99/">
+    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/:/abbrlink">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpeg">
@@ -417,7 +417,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2017/08/26/Android%20CMake%20%E4%B8%8D%E7%94%9F%E6%88%90%E5%A4%B4%E6%96%87%E4%BB%B6%E6%8A%A5%E9%94%99/" class="post-title-link" itemprop="url">Android CMake 不生成头文件报错</a>
+            <a href="/:/abbrlink" class="post-title-link" itemprop="url">Android CMake 不生成头文件报错</a>
         </h2>
 
         <div class="post-meta">
@@ -465,7 +465,7 @@
 <p>看完就感觉不对头了，果然我自己的cpp中没有extern “C”这句话，而生成的头文件都是有的。我重新建了一个include c++的项目，比对了一下，果然也是有这句话的。于是加了这句话，可以不生成头文件了。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2017/08/26/Android%20CMake%20%E4%B8%8D%E7%94%9F%E6%88%90%E5%A4%B4%E6%96%87%E4%BB%B6%E6%8A%A5%E9%94%99/#more" rel="contents">
+              <a class="btn" href="/:/abbrlink#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -489,7 +489,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2017/08/23/%E8%AF%A6%E8%AE%B0Android%E6%89%93%E5%BC%80%E7%9B%B8%E6%9C%BA%E6%8B%8D%E7%85%A7%E6%B5%81%E7%A8%8B/">
+    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/:/abbrlink">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpeg">
@@ -503,7 +503,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2017/08/23/%E8%AF%A6%E8%AE%B0Android%E6%89%93%E5%BC%80%E7%9B%B8%E6%9C%BA%E6%8B%8D%E7%85%A7%E6%B5%81%E7%A8%8B/" class="post-title-link" itemprop="url">详记Android打开相机拍照流程</a>
+            <a href="/:/abbrlink" class="post-title-link" itemprop="url">详记Android打开相机拍照流程</a>
         </h2>
 
         <div class="post-meta">
@@ -553,7 +553,7 @@
 <p>先放一下最终效果图吧，做的比较简单，各位不用担心：</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2017/08/23/%E8%AF%A6%E8%AE%B0Android%E6%89%93%E5%BC%80%E7%9B%B8%E6%9C%BA%E6%8B%8D%E7%85%A7%E6%B5%81%E7%A8%8B/#more" rel="contents">
+              <a class="btn" href="/:/abbrlink#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -577,7 +577,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2017/08/19/Android%E5%B1%9E%E6%80%A7%E5%8A%A8%E7%94%BB%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E2%80%94%E2%80%94%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/">
+    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/:/abbrlink">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpeg">
@@ -591,7 +591,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2017/08/19/Android%E5%B1%9E%E6%80%A7%E5%8A%A8%E7%94%BB%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E2%80%94%E2%80%94%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/" class="post-title-link" itemprop="url">Android属性动画学习笔记（一）——基本使用</a>
+            <a href="/:/abbrlink" class="post-title-link" itemprop="url">Android属性动画学习笔记（一）——基本使用</a>
         </h2>
 
         <div class="post-meta">
@@ -636,7 +636,7 @@
 <h2 id="基础使用"><a href="#基础使用" class="headerlink" title="基础使用"></a>基础使用</h2><p>在放代码之前先放一些个前置：</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2017/08/19/Android%E5%B1%9E%E6%80%A7%E5%8A%A8%E7%94%BB%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%E2%80%94%E2%80%94%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/#more" rel="contents">
+              <a class="btn" href="/:/abbrlink#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -660,7 +660,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2017/08/07/Android%E5%8A%A0%E8%BD%BD%E6%9C%AA%E5%AE%89%E8%A3%85apk%E4%B8%AD%E7%9A%84%E8%B5%84%E6%BA%90/">
+    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/:/abbrlink">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpeg">
@@ -674,7 +674,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2017/08/07/Android%E5%8A%A0%E8%BD%BD%E6%9C%AA%E5%AE%89%E8%A3%85apk%E4%B8%AD%E7%9A%84%E8%B5%84%E6%BA%90/" class="post-title-link" itemprop="url">Android加载未安装apk中的资源</a>
+            <a href="/:/abbrlink" class="post-title-link" itemprop="url">Android加载未安装apk中的资源</a>
         </h2>
 
         <div class="post-meta">
@@ -720,7 +720,7 @@
 <h2 id="简单的代码"><a href="#简单的代码" class="headerlink" title="简单的代码"></a>简单的代码</h2>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2017/08/07/Android%E5%8A%A0%E8%BD%BD%E6%9C%AA%E5%AE%89%E8%A3%85apk%E4%B8%AD%E7%9A%84%E8%B5%84%E6%BA%90/#more" rel="contents">
+              <a class="btn" href="/:/abbrlink#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -744,7 +744,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2017/08/06/Android%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BDdex%E5%88%9D%E8%AF%95/">
+    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/:/abbrlink">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpeg">
@@ -758,7 +758,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2017/08/06/Android%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BDdex%E5%88%9D%E8%AF%95/" class="post-title-link" itemprop="url">Android动态加载dex初试</a>
+            <a href="/:/abbrlink" class="post-title-link" itemprop="url">Android动态加载dex初试</a>
         </h2>
 
         <div class="post-meta">
@@ -804,7 +804,7 @@
 <h3 id="2-新建一个接口和一个类"><a href="#2-新建一个接口和一个类" class="headerlink" title="2.新建一个接口和一个类"></a>2.新建一个接口和一个类</h3>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2017/08/06/Android%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BDdex%E5%88%9D%E8%AF%95/#more" rel="contents">
+              <a class="btn" href="/:/abbrlink#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -828,7 +828,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2017/07/31/Kotlin%E5%A7%94%E6%89%98%20&%20%E6%89%A9%E5%B1%95%20&%20%E9%AB%98%E9%98%B6%E5%87%BD%E6%95%B0/">
+    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/:/abbrlink">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpeg">
@@ -842,7 +842,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2017/07/31/Kotlin%E5%A7%94%E6%89%98%20&%20%E6%89%A9%E5%B1%95%20&%20%E9%AB%98%E9%98%B6%E5%87%BD%E6%95%B0/" class="post-title-link" itemprop="url">Kotlin委托 & 扩展 & 高阶函数</a>
+            <a href="/:/abbrlink" class="post-title-link" itemprop="url">Kotlin委托 & 扩展 & 高阶函数</a>
         </h2>
 
         <div class="post-meta">
@@ -887,7 +887,7 @@
 <h3 id="委托类"><a href="#委托类" class="headerlink" title="委托类"></a>委托类</h3><p>我在看文档的时候就感觉跟Java里的某个操作非常像……于是非常恶趣味的将代码写成了如下模式：</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2017/07/31/Kotlin%E5%A7%94%E6%89%98%20&%20%E6%89%A9%E5%B1%95%20&%20%E9%AB%98%E9%98%B6%E5%87%BD%E6%95%B0/#more" rel="contents">
+              <a class="btn" href="/:/abbrlink#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -911,7 +911,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2017/07/27/Java%E6%8B%B7%E8%B4%9D%E5%AF%B9%E8%B1%A1/">
+    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/:/abbrlink">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpeg">
@@ -925,7 +925,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2017/07/27/Java%E6%8B%B7%E8%B4%9D%E5%AF%B9%E8%B1%A1/" class="post-title-link" itemprop="url">Java拷贝对象</a>
+            <a href="/:/abbrlink" class="post-title-link" itemprop="url">Java拷贝对象</a>
         </h2>
 
         <div class="post-meta">
@@ -975,7 +975,7 @@
 <p>第一种方式在类比较简单的时候还是比较实用的，我们为每一个属性申请内存并将值设置好。但是如果这个类内部的属性很复杂或者有比较复杂的父类，这个时候处理起来就麻烦很多了。第二种方式简单是简单，本来也打算就用这种方式来做。后来同事提醒我还有第三种方式：利用Json框架。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2017/07/27/Java%E6%8B%B7%E8%B4%9D%E5%AF%B9%E8%B1%A1/#more" rel="contents">
+              <a class="btn" href="/:/abbrlink#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
