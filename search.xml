@@ -2,7 +2,7 @@
 <search>
   <entry>
     <title>Android 6.0 动态权限申请与 7.0 适配 File Uri 小记</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>看了下上一篇文章的写作日期，转眼之间已经过去了大半个月了……一个国庆小长假下来也是放松了不少，不过学习也不能过于疏忽了。以前偷懒没有看适配6.0 和 7.0的东西，最近在下也是正式的抛弃了大三时买的ip6，入了一台小米mix2。mix2是基于Android 7.1的系统的，自己平时也喜欢用自己的手机调试应用，各种没有适配导致的崩溃自然也是免不了的。以前没看权限适配一是因为6.0以上的系统覆盖率不是很高，二也是因为那时候要看的东西很多，这东西不是很急迫，现在各个厂商的手机出厂系统都是6.0以上的了，也是时候看一下了。本文包括以下内容：</p>
 <ul>
 <li>Android 6.0 动态权限申请</li>
@@ -64,7 +64,7 @@
   </entry>
   <entry>
     <title>Android Studio卡顿</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<p>最近一段时间公司项目越来越大，编译运行很久不说，写代码的时候也会经常性的发生卡顿。讲道理不应该的，内存16G+ssd怎么说也不该这么卡的。于是抱着试一试的心态搜了一下，在知乎看到了解决方法：<a href="https://www.zhihu.com/question/32282404">https://www.zhihu.com/question/32282404</a></p>
 <p>解释就是虽然内存16G，但是默认设置不会用到那么多内存的，我看了一下我的配置，默认只会用1G。于是在项目越来越大之后，可能会频繁的触发GC（话说idea也是java开发的吧），自然就会卡顿。于是将之设置为4G。卡顿情况明显好转。</p>
 <p>说一下配置的方法吧，我是Mac，首先找到Android Studio的目录，我是在Application中的，进入如下目录：</p>
@@ -88,7 +88,7 @@
   </entry>
   <entry>
     <title>Android 增量更新（使用CMake编译）</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>近期公司的 App 版本迭代比较快，经常发新版本，但实际上就我自己来说，手机里的 App 不到不能用的时候我是不会更新的，我们前期的解决方案就是强制更新，不更新不让用，以前我们用户少的时候还能这么干，用户量上去还这么干，基本等于劝退那些不怎么愿意更新的用户。所以近期研究的技术点是 热修复 与 增量更新。热修复可以不用因为更改 Bug 而专门发布新版本，增量更新可以让用户在不得不更新的时候可以少花一些流量。热更新最近的接入测试流程都过的差不多了，比我想象的要顺利一些，不过我接入的是 Tinker，操作起来还是挺麻烦的，同事去看 Sophix 了，Sophix 是无侵入的接入，感觉打包什么的操作应该会简单很多。回归正题，本文是参考了很多文章最后经过实践得出的，因为一些文章的时间比较久远，我在实践的时候也碰到了很多问题，查资料也不太好查，最后想了想还是用 CMake 去编译，最后跑通了整个流程。</p>
 <span id="more"></span>
 
@@ -140,7 +140,7 @@
   </entry>
   <entry>
     <title>Android CMake 不生成头文件报错</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<p>以前尝试Android中调用C/C++代码，都是自己写一个带native方法的类，然后自己通过命令生成一个头文件，然后再用一个C/C++文件include这个头文件。就一直都很疑惑为毛现在Android Studio点了include c++之后没有生成头文件的操作。最近动手尝试了一波，把原来项目里的native-lib.cpp删掉，将CMake.txt中的native-lib.cpp全部换成了自己的hello.cpp。最后运行的时候却报错了，很奇怪，为毛呢？自己生成了一个头文件放到cpp目录底下，又不报错了……</p>
 <p>当时真是感觉日了狗了，为毛他不需要头文件，偏偏我要？后来网上搜了一下，看到这么一句话：</p>
 <blockquote>
@@ -160,7 +160,7 @@
   </entry>
   <entry>
     <title>Android-NDK学习（2）</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>本文需要一些<code>CMake</code> 和 <code>JNI</code>的基础知识，对于CMake的使用推荐Android官网的<a href="https://developer.android.com/ndk/guides/index.html?hl=zh-cn">NDK入门</a>。CMake是Android Studio 2.2以上新增的支持原生编程的工具，CMake是一个跨平台的编译工具，可以用简单的语句描述所有平台的编译过程。恩，暂时先记一下吧，本文现处于自嗨状态，不适合作为各位将之作为NDK的学习资料。</p>
 <h2 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h2><p>在创建项目时勾选include c++，在项目创建完毕，文件目录如下：</p>
 <p><img src="http://upload-images.jianshu.io/upload_images/1976147-16587b93a2ceca12.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="目录结构"><br>可以看到，可以看到app目录下有一个CMakeLists.txt，我在这个txt里加了一些注释</p>
@@ -187,7 +187,7 @@
   </entry>
   <entry>
     <title>Android-NDK学习（1）</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>最近这两天非常烦躁，移植A项目的功能到B项目里，中间牵扯到的种种资源什么的就不说了，有耐心慢慢剥离就行。中间有一个so库一直加载失败，我真的是日了狗了，尝试了各种办法还是不行。最后用了他的sample里的东西作为module导入才解决，但是我觉得这并不算特别完美的解决办法，唉，没办法，对ndk了解的还是太少，从现在开始做相应的了解。</p>
 <h2 id="第一个总是Hello-World"><a href="#第一个总是Hello-World" class="headerlink" title="第一个总是Hello World"></a>第一个总是Hello World</h2><p>Android Studio在现在的版本可以非常方便的生成一个带jni的项目，只要在创建的时候勾选一个include c++ 那玩意就行了。不过对于我这种刚接触的人来说，还是要自己折腾一下。</p>
 <p>首先是配置ndk开发环境，其实也没什么要配置的，一顿下载就ok了。</p>
@@ -236,7 +236,7 @@
   </entry>
   <entry>
     <title>Android中跨模块传递数据</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<h2 id="一个小问题"><a href="#一个小问题" class="headerlink" title="一个小问题"></a>一个小问题</h2><p>最近碰到一个有趣的情况，在做一个功能时，考虑到从零开始开发需要花费大量的时间和精力，所以选用了一个有 UI 的库，并在这个库的基础之上进行二次开发。于是在项目中引入了这个库，当然，当时已经有大部分功能开发完成了，所以 UI 有一部分在 app 这个主模块中，而一部分则依赖这个库。Android Studio 中 app 模块是可以依赖其他引入项目的库的，而库则不可以依赖 app 模块，那这就引发了一个问题：主要功能已经在 app 中开发完毕，比如用户信息模块，而这个 UI 库的一些 UI 更新和功能也需要当前的用户信息，这该怎么办呢？</p>
 <h2 id="仔细分析"><a href="#仔细分析" class="headerlink" title="仔细分析"></a>仔细分析</h2><p>首先弄清楚这个问题的本质，<code>这个问题的本质上是模块依赖引发的问题</code>，仅仅是库依赖不了 app 模块的问题，所以不要用过于复杂的方法去解决，比如通过文件读写（sp文件）或者 socket 之类的。在刚开始时我第一个想到的是用 EventBus，但是想了想觉得不合适。EventBus 是一个事件发布订阅的模型，你可以想象一下这个情况：</p>
 <span id="more"></span>
@@ -268,7 +268,7 @@
   </entry>
   <entry>
     <title>Android之回调函数</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<p>最近对Android中的回调产生了一些疑问，看了不少博文才算是明白了一点，接下来分享一下我的收获。</p>
 <p><strong>写在正文之前，大神可以跳过：</strong><br>　　1.接口不可以实例化，但可以创建一个接口对象。*注1:<br>　　2.你可能见过这样的语法：</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Button bt_add = (Button) findViewById(R.id.bt_add);</span><br><span class="line">bt_add.setOnClickListener(<span class="keyword">new</span> OnClickListener() &#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
@@ -313,7 +313,7 @@
   </entry>
   <entry>
     <title>Android-Service入门到崩溃</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<p>最近项目搞完了，有点空正好查漏补缺<del>关于服务这一块，一直都没怎么用过，趁着这个时机学习一下</del>至于为啥起这名呢……因为本来就想着稍微看一下Service，结果发现要看的东西越来越多……越来越多……所以就有崩了的意思……本文代码比较多，请边看边敲，碰到不懂去搜一下。</p>
 <p>首先梳理一下我想要写的东西：</p>
 <ul>
@@ -435,7 +435,7 @@
   </entry>
   <entry>
     <title>Android之MVP初尝试</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<p>##写在前面##<br>又到了周末了，本来这周准备总结一下透明状态栏之类的东西……但是突然群里就吹起了MVP的牛，这让我这个MVC都只有小半桶水的人都不敢说话。但是程序员不会吹牛跟条咸鱼又有什么区别？<br><img src="http://upload-images.jianshu.io/upload_images/1976147-bc51e70906298050.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"><br>所以我毅然决然的打开了搜索引擎，利用我科学上网的本领搜集了一些MVP相关的文章，不过看完也没啥感觉是真的，果然对于coder来说talk is cheap果断撸code才是正道。好了，日常吹牛、唠嗑(1/1)。</p>
 <p>##1、MVC与MVP##<br>对于Android开发者来说，MVC应该是比较熟悉的。首先我自制一副极简风格的MVC图来做说明。</p>
 <p><img src="http://upload-images.jianshu.io/upload_images/1976147-55cd71d2d9c94227.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Paste_Image.png"></p>
@@ -496,7 +496,7 @@
   </entry>
   <entry>
     <title>Android之观察者模式</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<h3 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h3><p>以前听说过一句话，说是** 自己写过代码总量没有超过10w行谈设计模式那都是耍流氓 **。我信了，所以一直没怎么系统的看已经买了的《Android源码设计模式》。最近有个小伙伴在群里问recyclerview怎么刷新数据，以前大概也做过，流程也就是那么两步：1.更新Adapter里数据集的引用，让他指向最新的数据集。2.调用Adapter的notifyDataSetChanged()来更新ui。之后小伙伴又问了notifyDataSetChanged()到底如何更新ui的，当时只是看出了一个观察者模式，还有一些细节没想明白。而且讲真的观察者模式的应用还是非常多的，无论是Android还是最近很火的RxJava，其中都可以看到观察者模式的身影，所以决定这周把观察者模式撸一遍。</p>
 <h3 id="1、什么是观察者模式"><a href="#1、什么是观察者模式" class="headerlink" title="1、什么是观察者模式"></a>1、什么是观察者模式</h3><p>观察者模式(Observer Pattern)定义了对象间一种一对多的依赖关系，使得每当一个对象改变状态，则所有依赖于它的对象都会得到通知并被自动更新，观察者模式又叫做发布-订阅(Publish/Subscribe)模式。</p>
 <p>定义总是这么精准而抽象，让我们结合一些Android中的场景来简单的理解一下：在Android最常用的点击事件，我们会通过设置控件的OnClickListener并传入一个OnClickListener的实现类来回调点击事件。这种我们便可以将之看做一个观察者模式。我们的OnClickListener是观察者，被观察者是控件，当有点击事件的时候控件发布点击事件，观察者OnClickListener就会接收到点击事件。当然了，说到底，就是回调。</p>
@@ -580,7 +580,7 @@
   </entry>
   <entry>
     <title>Android全文关键字高亮与关键字点击</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>因为自己看过很多杂七杂八的东西，所以知道 TextView 本身可以解析一些 html 的标签，而且 Span String 可以花式实现各种样式。这里采用 Span String 的方式实现。实现这个需求的难点在哪呢？刚开始在我看来就是实现关键字匹配，刚开始想用 spilt<br> 方法直接分割自己添加 keyword 取巧，后来细想不行，不是所有的输入都能完成，多个关键字这种方式太复杂。没办法，想起以前学过的 kmp 算法，打开了个网页准备开撸了，忽然想到搜一下全文关键字匹配，很容易的就搜到了 Java 中对应的 API ，搜索也是需要技巧的……不能太过于想当然了。效果图：</p>
 <p><img src="http://upload-images.jianshu.io/upload_images/1976147-eb799e1d50bd9fbb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="图"></p>
 <span id="more"></span>
@@ -603,7 +603,7 @@
   </entry>
   <entry>
     <title>Android内存泄露浅析</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>前段时间写了一篇<a href="http://www.jianshu.com/p/6d42bf4efe16">MVP初尝试</a>，由于当时只是刚接触，只是简单的实现，还有很多问题没想明白。关于内存泄露这事是本文着重要谈的一点，同时本文是我在看了很多关于Java和Android内存泄露分析的文章之后的所得。</p>
 <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>在了解MVP引起的内存泄露问题之前，我们首先要理解在Android中内存泄露是啥玩意？简单的讲内存泄漏就是** 本该被释放内存的对象没有被释放 *<em>。最近也和同学<a href="http://www.jianshu.com/users/86f25f8b198b/latest_articles">@iamxiarui</a>就内存泄露这个问题进行了一些讨论，最后发现要搞清楚这个东西，还要从Java层上找原因。学习Android的同学都应该知道，Java这门语言有一个垃圾回收器，一般来说我们是无需关心内存回收的问题。但是玩过LOL或者DOTA的同学都知道，一个猪队友和一个神对手究竟哪个威胁更大一些，我们不能当GC的</em>队友，所以多了解一些这玩意吧。</p>
 <p>在C++中会有析构函数这个概念，在C++中销毁对象必须用到这个函数，如此说来C++中是可以手动释放内存的。你可能会说Java中不也有finalize()方法吗？是的，是有这东西，让我们来看看这玩意。</p>
@@ -734,7 +734,7 @@
   </entry>
   <entry>
     <title>Android加载未安装apk中的资源</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<p><a href="http://www.jianshu.com/p/7c7645d8a8f3">上篇</a>介绍了如何从dex中加载类，这篇尝试了一下从apk中加载资源，用的同样是DexClassLoader。同样还是那个kotlin项目，简单的尝试从另一个apk的drawable中加载一张图片，个人感觉还是挺麻烦的。</p>
 <h2 id="先准备另一个项目"><a href="#先准备另一个项目" class="headerlink" title="先准备另一个项目"></a>先准备另一个项目</h2><p>新建另一个项目，这个项目只在drawable下放了一张名为ssm的图片。然后生成一个debug的apk包。将这个apk拷贝到本项目的assets下（只是为了方便，也可以从远程获取这个apk）。<br><img src="http://upload-images.jianshu.io/upload_images/1976147-99ca1e85144280f6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="debug apk"></p>
 <p>我们的目标就是通过这个debug的apk来加载这张图片，这里我将这个apk的名字改为了plugin1.apk。</p>
@@ -756,7 +756,7 @@
   </entry>
   <entry>
     <title>Android属性动画学习笔记（一）——基本使用</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>动画啊，相机啊，RxJava2啊，还有很多其他的东西，平时都有在看，当时看的时候感觉自己似乎已经明白了，但是过了一时间到需要用的时候还是难免要去翻一下别人的博客。翻别人的不如我记录一下然后翻自己的好了，好记性不如烂简书~</p>
 <p>我开始学Android的时候就没有碰到过需要适配4.0以下的情况了，现在手机也普遍在5.0以上了，所以当初学的时候我就直接看的RecyclerView和属性动画，话不多说，直接进入属性动画的学习（API的使用）。对了，首先放上郭霖大神关于属性动画的介绍， <a href="http://blog.csdn.net/guolin_blog/article/details/43536355">Android属性动画完全解析(上)，初识属性动画的基本用法</a>，上中下三篇写的都非常不错。只不过属性动画的应用场景非常多，三篇文章不可能提到所有场景，还需要我们根据场景去应用。本篇所有例子都是用kotlin写的，不过都比较简单，而且我也会解释下大概的意思，没看过kotlin的读者也完全可以看懂。</p>
 <h2 id="基础使用"><a href="#基础使用" class="headerlink" title="基础使用"></a>基础使用</h2><p>在放代码之前先放一些个前置：</p>
@@ -817,7 +817,7 @@
   </entry>
   <entry>
     <title>Android动态加载dex初试</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<p>最近想研究一波插件化，在简书上看到<a href="http://www.jianshu.com/p/353514d315a7">这个</a>感觉还不错，就按照这个顺序看下去了。不过得小记一下，省的以后我还得去上面提到的文里去找链接。我这里记得就是自己操作的一遍流程。。其实我也是根据他的文来操作的，属于HelloWorld级别吧。</p>
 <h2 id="操作"><a href="#操作" class="headerlink" title="操作"></a>操作</h2><p>本来还想介绍一下概念，想了想，算了，不误人子弟了。感兴趣自己搜。</p>
 <h3 id="1-新建工程"><a href="#1-新建工程" class="headerlink" title="1.新建工程"></a>1.新建工程</h3><p>没什么好说的，打开Android Studio新建一个工程都会吧。我这里新建了一个名为fordex的项目，包名为com.xiasuhuei321.firstpro。</p>
@@ -855,7 +855,7 @@
   </entry>
   <entry>
     <title>Android消息机制浅析</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<h2 id="写在前面："><a href="#写在前面：" class="headerlink" title="写在前面："></a>写在前面：</h2><p>如果你在看本文之前没有对Android消息机制作过了解，可能会比较吃力，关于源码，不需要全部看懂，能看懂其中关键的几句代码就行了。如果在阅读过程中感到吃力，请直接跳到结尾部分看概述。</p>
 <p>最近在看《Android开发艺术探索》，感觉真的是一本好书，恩，让我非常有读完欲望的一本书。话不多说，分享一下我的读书收获。</p>
 <p>Android中的耗时操作需要在子线程中完成，当这些操作完成后可能会需要对UI进行相应的更新。但是Android中的UI不是线程安全的，在多线程中并发访问可能会导致UI控件处于不可预期的状态。Google没有用上锁机制来解决这个问题，而是让开发者通过Handler切换线程来达到更新UI的目的。<strong>Handler</strong>是Android消息机制的上层接口，想要解析Android消息机制还需要了解<strong>Looper</strong>和**消息队列(MessageQueue)**。</p>
@@ -918,7 +918,7 @@
   </entry>
   <entry>
     <title>Android测试</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>我开发经验比较少，这公司也不算太靠谱，由于经验尚浅，很多代码有的时候也有不少毛毛糙糙的地方，没测试，那就自己撸起袖管上吧。本文小记一下我看别人的文所得和一些翻译。</p>
 <h2 id="创建有效的单元测试"><a href="#创建有效的单元测试" class="headerlink" title="创建有效的单元测试"></a>创建有效的单元测试</h2><p><a href="https://developer.android.com/training/testing/unit-testing/index.html">Building Effective Unit Tests</a> 这个是原文地址，想看原文的可以自己看一下，下面是我自己的翻译= =，比较渣。</p>
 <p>单元测试是在你的应用中基本的测试策略。通过创建和运行单元测试检验你的代码，你可以很容易校验个别单元的逻辑是否正确。当你重构代码时，运行单元测试能帮助你快速的修复软件和复原。</p>
@@ -977,7 +977,7 @@
   </entry>
   <entry>
     <title>AsyncTask源码阅读笔记</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<h3 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h3><p>感觉最近自己需要多读书，所以在以后的一段时间里可能都是笔记形式的文了，希望自己能厚积薄发吧。</p>
 <h3 id="AsyncTask简介"><a href="#AsyncTask简介" class="headerlink" title="AsyncTask简介"></a>AsyncTask简介</h3><p>AsyncTask是一个轻量级的异步任务类，允许你将一个耗时操作放在后台进行，并且会返回操作的结果给你。那么AsyncTask和Thread-Handler或者线程池有什么异同呢？</p>
 <p>在AsyncTask的源码注释里这样描述：</p>
@@ -1050,7 +1050,7 @@
   </entry>
   <entry>
     <title>Android自定义View你需要了解的一些东西(巨图预警)</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<p>###写在前面###<br>终于周末了，当我想要松懈一会去浪的时候，脑海中突然闪过了这个东西……<br><img src="http://upload-images.jianshu.io/upload_images/1976147-6d1bda58afc75f85.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="学习.jpg"><br>一图胜千言，日常唠嗑（1/1）。</p>
 <p>###1 进入正题###<br>Android中自定义控件一直是一个比较难但又不得不面对的东西，虽然<strong>github+google</strong>能解决你的大部分需求，但是说实话，当一些bug发生在第三方控件上时，你仍然需要花费大量的时间去搞定。所以先了解一些和自定义相关的东西绝对是不亏的，话不多说，进入正题。</p>
 <p>Android中自定义控件一般分以下三种：</p>
@@ -1150,7 +1150,7 @@
   </entry>
   <entry>
     <title>Android透明状态栏解决方案</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<p>##写在前面##<br>最近新开了个项目，准备花点时间做一下，不过文也不能少，一周一篇是最起码的了。关于沉浸式状态栏，网上的教程应该是非常非常多的，那么我为什么还要发呢？很简单，有些东西我记不大住，所以都发到我的简书上，以后我就不用到处去找了，麻烦~</p>
 <p>##自定义顶部布局的沉浸式状态栏##<br>什么叫自定义顶部布局呢？这个要首先解释一下，处于一些原因的考虑，有一些项目可能不愿意使用Toolbar或者ActionBar，进入Activity的第一件事情就是：</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line">requestWindowFeature(Window.FEATURE_NO_TITLE);</span><br></pre></td></tr></table></figure>
@@ -1200,7 +1200,7 @@
   </entry>
   <entry>
     <title>Git学习小记</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<p>俗话说好记性不如烂笔头，此篇用来记一下常用的命令和一些操作，以后碰到啥问题也都放上来，前面的是跟着廖雪峰的教程过的。</p>
 <p>我的mac和阿里云服务器都带git，所以安装啥的就不说了git官网地址：<a href="https://git-scm.com/">https://git-scm.com/</a>  各位可以自己去看一下。</p>
 <h2 id="创建一个本地仓库"><a href="#创建一个本地仓库" class="headerlink" title="创建一个本地仓库"></a>创建一个本地仓库</h2><ul>
@@ -1354,7 +1354,7 @@
   </entry>
   <entry>
     <title>CountDownTimer小坑</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<p>最近在研究和Socket相关的一些东西，Java中的Socket还是比较易用的，但是比较坑爹的就是有时候Socket不管怎么发送，Server都接收不到，代码也没有任何反馈，这样就需要一个机制确认Socket的状态。方法有很多种，我这里采用了心跳，超时计时选用了CountDownTimer，原来也用过，也知道他内部使用Handler实现的，感觉能用还算靠谱吧。然后问题就出在把本地代码融到项目之后。</p>
 <p>本地代码，经过我自己测试都没有什么问题，心跳也能实现。但是在融入项目之后，发现启动了两个tcp client 只有一个正常启动了！</p>
 <p>经过断点debug之后，我发现在第二个client初始化的CountDownTimer的时候挂了，跟随初始化代码一路点进去，发现是Handler初始化的时候挂掉了。</p>
@@ -1371,7 +1371,7 @@
   </entry>
   <entry>
     <title>Glide 4.0 以上无法生成 GlideApp</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<p>Glide 4.0 以上的版本将很多的 API 都从 Glide 主线这个入口及后续的调用剥离出来了，需要用 GlideApp 来使用。跟着文档走了一遍，愣是生不成，尝试了网上的各种办法都不行。在 CSDN 论坛上看到了一个类似的问题，题主最后一句已解决……日了狗了，你已解决不能发一下你解决的方法么。</p>
 <p>网上说的各种 clean make rebuild 都试了，还是不行，最后静下心来仔细看了下项目里用到了 ButterKnife ，而这玩意我也很久没更新了，看了下用的还是 apt ，而 Glide 依赖的编译时注解是 annotationProcessor 于是猜想是这两个之间有什么见不得人的交易导致我无法生成GlideApp。上 ButterKnife 的 git 仓库看了一下，最新的也采用 annotationProcessor 来实现了，愉快的更新了一波，Glide 成功生成了 GlideApp。</p>
 <span id="more"></span>
@@ -1386,7 +1386,7 @@
   </entry>
   <entry>
     <title>Fragment结合ViewPager之懒加载</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<h3 id="什么是懒加载？为什么要用懒加载？"><a href="#什么是懒加载？为什么要用懒加载？" class="headerlink" title="什么是懒加载？为什么要用懒加载？###"></a>什么是懒加载？为什么要用懒加载？###</h3><h4 id="1、什么是懒加载"><a href="#1、什么是懒加载" class="headerlink" title="1、什么是懒加载"></a>1、什么是懒加载</h4><p>懒加载就是当ViewPager和Fragment结合在一起使用时，Fragment呈现在用户面前时才加载数据，当其从未被呈现在用户面前时，不会执行加载数据的代码。这就是我所理解的懒加载。</p>
 <h4 id="2、为什么要用懒加载"><a href="#2、为什么要用懒加载" class="headerlink" title="2、为什么要用懒加载"></a>2、为什么要用懒加载</h4><p>ViewPager默认会预加载下一页，对于某些重量级的Fragment来说无疑会造成很大的开销，当然了，如果对于你来说这些开销是必要的，也不必无脑用懒加载。</p>
 <h3 id="背景简介"><a href="#背景简介" class="headerlink" title="背景简介"></a>背景简介</h3><p>很多时候我们都会将ViewPager和Fragment结合在一起使用，因为Android给我们提供了非常便利的<strong>FragmentPageAdapter</strong>,而这个adapter实现起来非常简单：</p>
@@ -1420,7 +1420,7 @@
   </entry>
   <entry>
     <title>Glide源码阅读（一）</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<p>Glide是一个图片加载框架，其他的图片加载框架还有UniversalImageLoader，Picasso，Fresco等，个人还是比较喜欢Glide这个框架的。Glide致力于打造更好的列表图片滑动体验，就如他的名字Glide（滑翔）一样顺畅，Glide还支持加载video，Gif，SVG格式。而且Glide会与你的Activity/Fragment绑定相关的生命周期，有自己的缓存策略，这样就让图片加载操作变得非常简单。本文的Glide源码是4.0的版本（我本来以为是3.7.0来着，后来一看有些代码对不上……)。</p>
 <h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><p>如果你还没有使用过glide，可以通过下面两句话引入glide：</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">compile &#x27;com.github.bumptech.glide:glide:3.7.0&#x27;</span><br><span class="line">compile &#x27;com.android.support:support-v4:19.1.0&#x27;</span><br></pre></td></tr></table></figure>
@@ -1513,7 +1513,7 @@
   </entry>
   <entry>
     <title>HTTP协议小结</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>本文是阅读了《图解HTTP》一文同时本周也在一个小团体内进行了一些HTTP协议的讨论，感觉对于HTTP协议的理解比以前又加深了不少。</p>
 <h2 id="历史"><a href="#历史" class="headerlink" title="历史"></a>历史</h2><p>以下材料选自《图解HTTP》：</p>
 <p>在学习Http协议之前首先看一下他的历史，也许能解答我们不少的问题。</p>
@@ -1598,7 +1598,7 @@
   </entry>
   <entry>
     <title>Java拷贝对象</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<p>最近有一个需求，要先把文件从U盘拷贝到sd卡。而这个文件的路径则和一个生成的数据有关系，也就是说之前我保存的路径是U盘的路径，最后生成的时候则需要实际在sd卡的路径。这很简单，把路径改了不就成了？</p>
 <p>没那么简单，万一sd卡内存不够呢？不够你复制，这个时候你前面已经复制了，路径也改了，数据已经被“污染”了，只能从头再配置一遍。这显然是不合理的做法，所以需要我们拷贝一份原有的数据。但是在Java中默认是引用拷贝，并不是在堆里面给你另外分配一块内存，给你一个新的对象，而是拷贝一个引用给你。这并没有什么卵用，操作的是堆内的同一个对象，依旧逃不过数据被污染的命。所以需要我们自己实现深度拷贝。</p>
 <p>我首先能想到的方案有两个：</p>
@@ -1621,7 +1621,7 @@
   </entry>
   <entry>
     <title>Google官方MVP示例代码阅读笔记</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>这个项目很久之前就从** <a href="https://github.com/googlesamples/android-architecture">android-architecture</a> ** 这个仓库clone了这个MVP架构的todoapp，源码也读过，不过没有整理过。最近整理资料准备毕设了，再读一遍源码，感受和以前又不同了。先放上项目地址，各位可以自己去clone或者下载：<a href="https://github.com/googlesamples/android-architecture/tree/todo-mvp">https://github.com/googlesamples/android-architecture/tree/todo-mvp</a></p>
 <p>如果各位对MVP模式不是很熟悉，可以看我之前的一篇文：<br><a href="http://www.jianshu.com/p/6d42bf4efe16">Android之MVP初尝试</a>，简单易懂。下文的view一般是指MVP中的view。</p>
 <h2 id="剥丝抽茧，理清项目结构"><a href="#剥丝抽茧，理清项目结构" class="headerlink" title="剥丝抽茧，理清项目结构"></a>剥丝抽茧，理清项目结构</h2><p>国际惯例，上项目结构图：</p>
@@ -1687,7 +1687,7 @@
   </entry>
   <entry>
     <title>Kotlin的LogUtil</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<p>最近在撸东西，调试的时候用Android原生的Log感觉很不爽，打的Log给我一种东倒西歪，凌乱的感觉。于是自己看了一下<a href="http://www.jianshu.com/u/46702d5c6978">Blankj大神</a>的Android-Utils库，看了一下他实现的LogUtils，借鉴了一下，简单的封装了一个在Kotlin中可以正确使用的LogUtil。不过话说讲道理，有扩展，Util这种东西还是可以尽量不用的，但是我有点不清楚Log这玩意该扩展给谁呢，Any？所以还是写了一个LogUtil……</p>
 <h2 id="打印效果"><a href="#打印效果" class="headerlink" title="打印效果"></a>打印效果</h2><p>最后直接放一下打印Log的样子，这里只放出i级别的日志：</p>
 <p><img src="http://upload-images.jianshu.io/upload_images/1976147-88ca3b626fed0ba9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="效果图"></p>
@@ -1707,7 +1707,7 @@
   </entry>
   <entry>
     <title>Kotlin委托 &amp; 扩展 &amp; 高阶函数</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>Kotlin现在已经是Android官方的一级开发语言了，以前就有大佬给我安利，最近刚好看open cv的c++和ndk看的头昏脑涨，反正最近也用不到，只是出于兴趣，不如换个脑子看看最近势头比较盛的Kotlin好了。在这里感谢一下<a href="%5Bhttp://www.jianshu.com/u/2b4f4be84600">猫哥</a>对我的耐心指导，让我对Kotlin的认识更进了一步。</p>
 <h2 id="委托"><a href="#委托" class="headerlink" title="委托"></a>委托</h2><p>委托有委托类和委托属性。</p>
 <h3 id="委托类"><a href="#委托类" class="headerlink" title="委托类"></a>委托类</h3><p>我在看文档的时候就感觉跟Java里的某个操作非常像……于是非常恶趣味的将代码写成了如下模式：</p>
@@ -1799,7 +1799,7 @@
   </entry>
   <entry>
     <title>MQTT协议学习与在Java（Android通用）中的使用</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>最近有需求要了解一下各个推送的协议，目前了解到实现推送的三个主要方式：MQTT、XMPP和Google Cloud Message（GCM）。第三种方式暂不研究，前两种都要看一看，本篇讨论一下MQTT协议吧。本文使用阿里云Ubuntu云服务器安装代理服务器，使用eclipse paho实现的MqttClient编写代码。文中的所使用的账户名和密码在本文发布后将会更改，请各位自行搭建环境。本文包括以下内容：</p>
 <ul>
 <li>MQTT简介</li>
@@ -1852,7 +1852,7 @@
   </entry>
   <entry>
     <title>ObjectBox填坑</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近准备填一些以前开的坑，当然不能只填坑而没有收获，于是准备做一哈数据库缓存，左挑右选，最终选择了 ObjectBox，作者同样也是 greenDao 和 EventBus 的开发者，质量值得信赖。本文会介绍关于 ObjectBox 的基本使用和我在使用中碰到的一些问题，加上一些我在做缓存时候的思路。</p>
 <h2 id="引入"><a href="#引入" class="headerlink" title="引入"></a>引入</h2><p>能力比较强的同学，直接放上官方文档：<a href="https://docs.objectbox.io/%EF%BC%8C%E9%A6%96%E5%85%88%E5%9C%A8%E9%A1%B9%E7%9B%AE%E6%9C%80%E5%A4%96%E5%B1%82">https://docs.objectbox.io/，首先在项目最外层</a> build.gradle 文件中加入：</p>
 <figure class="highlight groovy"><table><tr><td class="code"><pre><span class="line">buildscript &#123;</span><br><span class="line">    ext.objectboxVersion = <span class="string">&#x27;2.2.0&#x27;</span></span><br><span class="line">    respositories &#123;</span><br><span class="line">        jcenter()</span><br><span class="line">    &#125;</span><br><span class="line">    dependencies &#123;</span><br><span class="line">        <span class="comment">// Android Gradle Plugin 3.0.0 or later supported</span></span><br><span class="line">        classpath <span class="string">&#x27;com.android.tools.build:gradle:3.2.1&#x27;</span></span><br><span class="line">        classpath <span class="string">&quot;io.objectbox:objectbox-gradle-plugin:$objectboxVersion&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -1921,7 +1921,7 @@
   </entry>
   <entry>
     <title>Mac 辣鸡 Finder 无限重启崩</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<p>最近碰到一个情况，Finder无限无响应，然后强制关闭，自动重启，还是无响应。尝试重启，重启之后倒是好了一会，但是打开桌面的某个文件夹还是会出现这个情况。真是日了狗了，仔细回忆了一下，感觉像是自己的一个压缩包解压出现了问题，于是就rm -rf 整个的删掉了那个文件夹，问题就解决了。这里是因为我那个文件夹并没有什么重要的资料，可以这么做，但是如果有重要的资料呢？我也不知道……<span id="more"></span></p>
 ]]></content>
       <categories>
@@ -1933,7 +1933,7 @@
   </entry>
   <entry>
     <title>Okhttp3-addHeader小坑记</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<p>##写在前面<br>最近感觉自己看了不少东西，不过在上班所以并没有很多的时间来写东西。我有一些半成品不过都不想发出来，毕竟缺少一点自己的东西在里面。好了日常唠嗑(1/1)。</p>
 <p>##背景<br>前面也说了最近在上班，接触到的项目里用的都是被抛弃的httpclient，说实话这小项目我觉得我是有能力重构的。所以最近着手重构，重构之前首先选定要拿什么做。经过慎重的思考之后决定:项目尽量采用MVC的模式做，网络请求用okhttp(用hongyang封装的okhttp-utils)，图片的处理和加载想采用glide，但是目前来看还有一些问题。好了背景介绍到这，下面说坑。</p>
 <p>##坑<br>既然采用Okhttp来重写网络请求，我当然得挑几个出来跑一下试试。这一试问题就出来了，见下图:</p>
@@ -1956,7 +1956,7 @@
   </entry>
   <entry>
     <title>OpenCV在Android中的集成与简单使用</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<h2 id="题外话"><a href="#题外话" class="headerlink" title="题外话"></a>题外话</h2><p>最近在学习Android的NDK相关的东西，看了<a href="http://www.jianshu.com/u/8b661f60979b">JerryloveEmily</a>这位大神写的JNI相关的文，看到了他用opencv做的一个毛玻璃效果，感觉还挺好玩的。本文记一下在集成过程中对我帮助比较大的几篇文，希望能帮到有同样需求的人，c++代码主要靠copy……</p>
 <h2 id="小记"><a href="#小记" class="headerlink" title="小记"></a>小记</h2><p>OpenCV有多个平台的API，咱Android的也有~首先上官网把sdk下载下来。<a href="http://opencv.org/">OpenCV官网</a>，下载页<a href="http://opencv.org/releases.html">在这</a>，自己点击android的包就可以了。下载下来是这么一个情况：</p>
 <p><img src="http://upload-images.jianshu.io/upload_images/1976147-0314a0d18bd7c139.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="OpenCV-sdk"><br>apk包内有七个apk，分别对应了不同架构的cpu和其abi，这个apk类似于运行依赖的环境。samples包下是一些例子，这些例子需要依赖apk包内的apk。如果你打开这些例子看一下的话，会发现aidl文件，这些例子利用aidl和OpenCV提供的apk通信，实现功能。这种使用方法对于一般的开发者来说是无法接受的，因为总不能让用户装了自己的apk不算，还得装个自己不了解是什么东西的apk把。但是这种方式也是有应用场景的，比如这硬件就是你产的……不过这种情况在这不讨论，我选择的继承方式自然也不是装这个apk，然后调用java的api。在网上看到了一篇文，跟着操作了一下。这篇文章：<a href="http://blog.csdn.net/u012341163/article/details/51065310">Android开发配置opencv环境超详细教程</a>，真的非常详细，每一步操作都写的非常简单明了。这里记一下我遇到的一个问题：ndk-build失败，</p>
@@ -1985,7 +1985,7 @@
   </entry>
   <entry>
     <title>Python入手（一）</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<p>去年就说要看一看 python（其实去年还说要看C++/JavaScript），看了一点儿语法之后一直没再碰过了。最近写 Android 写的头昏脑涨，决定看点 python 换下脑子。由于暂时打算用python玩一下，所以就不深入追究语言细节，只做一些有趣的事情。本文将简单的提及以下内容：</p>
 <ul>
 <li>requests</li>
@@ -2026,7 +2026,7 @@
   </entry>
   <entry>
     <title>Python入手（二）</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<p>本篇主要记录一些与数据库有关的操作，本来想看一下python的多线程，来优化一下<a href="http://www.jianshu.com/p/05043374b578">上一篇</a>的代码，然后看到了 python 的 GIL，恩，多线程先弃了。别我看了半天线程安全，线程池什么的，结果告诉我优化不能。那么就先看一下数据库有关的，方便以后玩出各种花样。</p>
 <h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><p>Mac、MySQL 5.7.17，我这里MySQL由于以前弄过jdbc、php啥的，都已经装好了。还需要安装PyMySQL包：</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ pip install PyMySQL</span><br></pre></td></tr></table></figure>
@@ -2050,7 +2050,7 @@
   </entry>
   <entry>
     <title>RecyclerView的使用</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<p>今天关于是写ListView还是RecyclerView着实纠结了一会，毕竟这二者都很重要，不过最近做的东西里用的是RecyclerView，所以还是先写RecyclerView了，而且代码也撸好了。好了日常唠嗑（1/1），下面进入正题。</p>
 <p>本文包含以下几个方面：</p>
 <ul>
@@ -2135,7 +2135,7 @@
   </entry>
   <entry>
     <title>RxJava从放弃到入门（一）：基础篇</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<h3 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h3><p>RxJava我一直是很想用的，扔物线老师的文章我也看了一点，但是说实话，其中很多东西交错在一起，对于我来说有点难以理解。而且看很多文章总是看了前面忘后面，还有一些结合lambda讲的，说实话，我是懵逼的。在这里把我自己对于RxJava的一些理解，看到的一些好文记录下来。</p>
 <h3 id="RxJava是啥"><a href="#RxJava是啥" class="headerlink" title="RxJava是啥"></a>RxJava是啥</h3><blockquote>
 <p>Rx是一个函数库，让开发者可以利用可观察序列和LINQ风格查询操作符来编写异步和基于事件的程序。</p>
@@ -2237,7 +2237,7 @@
   </entry>
   <entry>
     <title>RxJava从放弃到入门（二）：学，不能停</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<h3 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h3><p>上篇文章<a href="http://www.jianshu.com/p/93ae2aa6a60a">RxJava从放弃到入门（一）：基础篇</a>讲述的东西都是非常基础的东西，这一篇准备讲述以下一些东西：</p>
 <p>创建Observable:</p>
 <ul>
@@ -2309,7 +2309,7 @@
   </entry>
   <entry>
     <title>Socket的使用</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<h2 id="Socket基础"><a href="#Socket基础" class="headerlink" title="Socket基础"></a>Socket基础</h2><p>在说到计算机网络模型的时候一定都会提到这两个模型：OSI七层网络模型和TCP/IP四层网络模型，因为OSI七层过于复杂，现在普遍采用的是TCP/IP的四层网络模型。</p>
 <p><img src="http://upload-images.jianshu.io/upload_images/1976147-0e9dd0a3a92a8428.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="七层OSI &amp; 四层TCP/IP"></p>
 <p>tcp/udp协议位于TCP/IP协议栈的传输层，tcp是一个面向连接、可靠的协议，而udp协议是一个不可靠的、无连接协议。刚开始我有点疑惑，什么样的场景才需要udp协议呢？因为udp协议并不保证数据一定传输到目的地，有什么场景能容忍可能发生丢包的情况呢？后来在项目的某个解决方案的讨论中，听到了老大的解释。当时我们可以选用udp和tcp方案，问我该选用什么方案。我当时也了解了一些tcp和udp，记得在网上看到过这么一句话，如果你需要用额外的操作保证数据准确的传递到目的地，那不如直接采用tcp协议，所以我说udp并不保证数据一定传达，而tcp是可靠的，所以应该采用tcp协议。然后老大说在局域网（当时要解决的就是局域网中的一个问题）可以认为udp是可靠的，不需要考虑丢包的情况，不过数据处理难一点，后来还是用了TCP……</p>
@@ -2367,7 +2367,7 @@
   </entry>
   <entry>
     <title>View的工作流程——layout&amp;draw</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<h3 id="ViewGroup的measure流程"><a href="#ViewGroup的measure流程" class="headerlink" title="ViewGroup的measure流程"></a>ViewGroup的measure流程</h3><p>上一篇<a href="http://www.jianshu.com/p/2902a557754a">View的工作流程——measure流程</a>中了解到了View的measure与ViewGroup的measure流程有密不可分的联系，这次就把View的笔记做完。</p>
 <p>ViewGroup作为容器除了完成自己的measure过程以外，还会遍历去调用所有子元素的measure方法，各个子元素再递归去执行这个过程。ViewGroup是一个抽象类没有重写onMeasure()方法，但是它提供了一个measureChildren方法。这个方法会遍历View去测量他们自身。</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">measureChildren</span><span class="params">(<span class="keyword">int</span> widthMeasureSpec, <span class="keyword">int</span> heightMeasureSpec)</span></span>&#123;</span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">int</span> size = mChildrenCount;</span><br><span class="line">    <span class="keyword">final</span> View[] children = mChildren;</span><br><span class="line">    <span class="comment">//对子元素遍历</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size; ++i) &#123;</span><br><span class="line">        <span class="keyword">final</span> View child = children[i];</span><br><span class="line">        <span class="keyword">if</span> ((child.mViewFlags &amp; VISIBILITY_MASK) != GONE) &#123;</span><br><span class="line">            measureChild(child, widthMeasureSpec, heightMeasureSpec);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -2407,7 +2407,7 @@
   </entry>
   <entry>
     <title>View的工作流程——measure</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<h3 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h3><p>今天和老爸去医院了，老爸最近腰疼，幸好没什么事，各位也要多多爱惜自己的身体，等身体出了问题就来不及了。好了，闲话到此为止，话说《开发艺术探索》里面不少东西我早就看了，但是因为自己当时水平有限，而且有很多也看不大懂，所以看了忘是挺正常的事。不过感觉随着工作经验的增长，以前大学里上过《操作系统》、《计算机网络》、《数据结构》等一些课都被串到了一起，感觉很好，而且愈发能感觉到自己的不足了。这周的文主要算是一篇读书笔记吧，记一下读《开发艺术探索》第四章和View相关的笔记，至于ViewGroup我觉得还需要过段时间，在沉淀一下再来和各位一起探索一下。而且说真的，这篇文我也是硬着头皮写下来的，因为看源码看着看着发现我疑问越来越多，很多都是现阶段暂时无法解决的，不过问题总是一个一个去解决的，先过一遍View的measure流程再说其他的。</p>
 <h3 id="ViewRoot-amp-DecorView"><a href="#ViewRoot-amp-DecorView" class="headerlink" title="ViewRoot &amp; DecorView"></a>ViewRoot &amp; DecorView</h3><p>ViewRoot对应于ViewRootImpl类，在ViewRootImpl类中有如下一段注释:</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/** </span></span><br><span class="line"><span class="comment"> * The top of a view hierarchy, implementing the needed </span></span><br><span class="line"><span class="comment"> * protocol between View and the WindowManager.</span></span><br><span class="line"><span class="comment"> */</span> </span><br></pre></td></tr></table></figure>
@@ -2478,7 +2478,7 @@
   </entry>
   <entry>
     <title>一个简单好用的LoadingDialog</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<h3 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h3><p>还记得以前在网上看到过一个LoadingDialog，感觉还挺不错的，可惜只有一个Loading，配套的错误和正确的反馈都没，一直觉得挺遗憾的，今天花了一些时间把他补全了。今天上多说找了下，找到了原来我的评论，放上<a href="https://ydmmocoo.github.io/2016/06/24/Android%E8%87%AA%E5%AE%9A%E4%B9%89%E5%8A%A0%E8%BD%BD%E4%B8%ADDialog/">原作者的文章地址</a>。我做的事就是增强LoadingDialog的功能，新增两个自定义View。今天收到了两位前辈不错的建议，后续更新即将到来~</p>
 <p>感谢<a href="http://www.jianshu.com/users/c37d344afd22/latest_articles">小路</a>同学指出我后面反馈的圆的方向和之前的方向不一致的情况，已修复，因为截gif怪麻烦的，图就不改了。。。</p>
 <h3 id="使用方法与效果图"><a href="#使用方法与效果图" class="headerlink" title="使用方法与效果图"></a>使用方法与效果图</h3><p>展示一个loading dialog：</p>
@@ -2540,7 +2540,7 @@
   </entry>
   <entry>
     <title>Python入门笔记（一）</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<p>以前虽然用 python 写过一些小东西，但是一直都没有系统的看过 python 的语法。这里想开一个系列笔记，记录一下我比较在意的一些知识点，比较基础，但是也比较跳跃。</p>
 <h2 id="列表-amp-序列"><a href="#列表-amp-序列" class="headerlink" title="列表 &amp; 序列"></a>列表 &amp; 序列</h2><p>有两种方式构造列表：</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">list1 = []</span><br><span class="line">list2 = <span class="built_in">list</span>()</span><br></pre></td></tr></table></figure>
@@ -2576,7 +2576,7 @@
   </entry>
   <entry>
     <title>使用 DownloadManager 实现自动下载 APK 和更新（适配到8.0）</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<h2 id="使用-DownloadManager-实现自动下载-APK-和更新（适配到-8-0）"><a href="#使用-DownloadManager-实现自动下载-APK-和更新（适配到-8-0）" class="headerlink" title="使用 DownloadManager 实现自动下载 APK 和更新（适配到 8.0）"></a>使用 DownloadManager 实现自动下载 APK 和更新（适配到 8.0）</h2><p>最近有一个强制更新的需求，当然对于强制更新，我的内心是拒绝的。但是有的时候的确有应用的场景，比如服务器接口由于一些考量改变了，一些协议也改变了，那么老的客户端可能就会出现闪退的情况，一般可以通过几个版本的迭代解决这个问题，但是如果几个版本后还是有一些用户停留在老版本，那么强制更新就很有必要了。当然了，这里所谓的强制更新也就是你不更新到最新版本，会让你无法使用，并提醒你更新。普通的应用只能做到这个程度了，因为你没有 root 权限是做不到静默更新的。</p>
 <p>这里只是记录一下在实现的过程中需要注意的几个点：</p>
 <ul>
@@ -2639,7 +2639,7 @@
   </entry>
   <entry>
     <title>几种文字匹配算法</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<p>最近 Android 做了一个全文关键字高亮的功能，直接用了<br> Java 现成的 API 解决了，在查阅资料的过程中得知还有几种匹配算法：BF、RK、KMP、BM、Sunday，有空就做了一些了解。这里记录一下防止忘记，阮一峰大神关于这些算法的博客写的很好。</p>
 <h1 id="BF"><a href="#BF" class="headerlink" title="BF"></a>BF</h1><p>暴力检索，这种方法最容易想到，也是最容易实现的，从首字母开始挨个的将关键字和做比对。用下面的图片就能只管的说明（图片来自阮一峰大神的博客）<br><img src="http://upload-images.jianshu.io/upload_images/1976147-1b605eaf1912776a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="BF"></p>
 <p>代码实现：</p>
@@ -2671,7 +2671,7 @@
   </entry>
   <entry>
     <title>反射</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<h3 id="反射简介"><a href="#反射简介" class="headerlink" title="反射简介"></a>反射简介</h3><p>JAVA反射机制是在运行状态中，对于任意一个类，都能够知道这个类的所有属性和方法；对于任意一个对象，都能调用它的任意方法和属性；这种动态获取信息以及动态调用对象方法的功能成为JAVA语言的反射机制。</p>
 <p>在《Java编程思想》中有RTTI（Run-Time Type Identification），通过运行时类型信息程序能使用基类的指针或引用来检查这些指针或引用所指对象的实际派生类型。不过RTTI的定义我是在百度百科上看到的，看了一下很多都是C++的内容，这与这本书的作者先前有C++的背景有关。不过在这里我并不想区分RTTI与我这想要学习的Java中的反射，在学习Java的过程中俺只认反射……</p>
 <p>首先谈谈我对于反射的一些认知吧，反射对于** 客户端程序员 **来说可能并没有多大的发挥空间，而且因为反射的性能并不理想，在很多场景都是需要避免使用反射的。但是试想一下我现在要实现一个Json字符串映射到Java实体类的东西，这个时候就需要通过反射来拿到实体类的属性信息了，之后再处理Json字符串，将对应的值赋给实体类对应的属性。</p>
@@ -2712,7 +2712,7 @@
   </entry>
   <entry>
     <title>初试EventBus</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>EventBus一直都有听说过，但是之前都没有用过。因为自己的项目里并没有特别复杂的事件传递，自己写个接口回调弄一下解决需求就ok了。最近有需求要了解一下EventBus，将自己的所得记录一下。</p>
 <h2 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h2><p>首先在app的build.gradle中添加引用代码：</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">compile &#x27;org.greenrobot:eventbus:3.0.0&#x27;</span><br></pre></td></tr></table></figure>
@@ -2766,7 +2766,7 @@
   </entry>
   <entry>
     <title>在自定义View时碰到的奇怪问题</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<p>最近在撸新的东西玩，自定义View我也算是半个老司机了。首先在onMeasure中处理了wrap_content的情况，然后我惊奇的在log中发现，我测量出来的结果竟然是1080？这是什么操作？后来调试发现测量宽度时进入了精确模式，没跑了肯定是match_parent。我是怎么把View添加到父View的呢？代码如下：</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line">ll_container!!.addView(v)</span><br></pre></td></tr></table></figure>
 <p>这是一个LinearLayout，不说多的点进addView看一下：</p>
@@ -2788,7 +2788,7 @@
   </entry>
   <entry>
     <title>将博客从简书迁移到到 Hexo</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<p>这两天抽空把简书的文章都迁移到了自己的博客中，这里小记一下。首先说明我这里的配置环境：</p>
 <ul>
 <li>本地安装好 hexo 配套环境</li>
@@ -2831,7 +2831,7 @@
   </entry>
   <entry>
     <title>实现RecyclerView下拉刷新</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>最近项目里有需求要用到下拉刷新，以前写好的代码最好别动太多~在github上发现了一个XRecyclerView能满足的需求，而且也不必对我原来的代码做多大的修改。<br>但是光会用还不够，万一碰到啥满足不了自己需求或者是坑自己还得有办法解决啊。所以打算通过自己写一个，以此来加深自己对XRecyclerView的理解。</p>
 <p>当然了，我只是抱着学习的目的实现一下，重复造轮子是不好的~这篇文主要是理一下自己的思路的，代码不会贴非常完整的，完整代码地址文末有。最后自己也稍微完善了一下代码，权当是练习一下自己的所学所得吧。</p>
 <h2 id="简单的实现部分逻辑"><a href="#简单的实现部分逻辑" class="headerlink" title="简单的实现部分逻辑"></a>简单的实现部分逻辑</h2><p>首先想一下我最初的需求，希望尽量少的改动自己的代码，XRecyclerView做到了这一点，他内部是有一个WrapAdapter继承于RecyclerView.Adapter。并且XRecyclerView重写了setAdapter这个方法，当你调用setAdapter方法时，会先在WrapAdapter内部持有一个adapter的引用，之后调用RecyclerView的setAdapter将这个WrapAdapter设置给RecyclerView，这么做有一个好处，就是可以自己先在onCreateViewHolder和onBindViewHolder方法里对刷新顶部和你添加的头部布局进行处理和绑定，在这之后再调用adapter的相应方法。</p>
@@ -2868,14 +2868,14 @@
   </entry>
   <entry>
     <title>小结</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<p>很久没写过技术类的文章了，最近打算重新拾起来，以前写的虽然比较浅，但是毕竟也记录了自己成长的过程，所以还是都放到这个博客上。后续写的可能更多的会和 go、java 相关，以上。</p>
 <p>2021-10-28 09:05:05</p>
 ]]></content>
   </entry>
   <entry>
     <title>手把手教你打造支持手势放大缩小的ImageView</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<h3 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h3><p>最近有了新的任务，学习的时间比以前少了不少，Java回炉的文估计是得缓缓了，不过每周一篇尽量保质保量。最近感觉我文写的有点不好，因为我写东西除非必要，不然概念性的东西我基本上都是一笔带过……最近感觉这对看我文的人好像不是很友好，恩，我决定改一改，尽量写的详细而有趣一些。<br><img src="http://upload-images.jianshu.io/upload_images/1976147-0e3fbb0aeb3d89e0.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="1.jpg"></p>
 <p>好了废话时间过了，前面也说了最近有了新任务，我现在是搞定用户信息这一块。一般来说现在用户都会有个头像什么的，光有个头像还不够，你还得能点击看个大图吧？光看个大图也不够啊，不说多的，你最起码得支持用户手势放大缩小什么的吧？当时脑海里第一个想到的是PhotoView，不过整个项目好像也只有这一块涉及到用户手势放大缩小，算了，自己实现一个吧。当然了，经常刷hongyang大神博客的我自然知道hongyang大神博客里有写过<a href="http://blog.csdn.net/lmj623565791/article/details/39474553">这东西</a>。所以趁周末有空果断刷之~</p>
 <h3 id="实现思路"><a href="#实现思路" class="headerlink" title="实现思路"></a>实现思路</h3><p>做一个东西之前我们肯定要分析需求，分析完之后我们就可以利用我们会的，或者知道可以实现但是现在不会的去尝试解决这个需求。放大缩小图片，脑子里第一个反应就是矩阵，Android里貌似有个可以通过矩阵处理图像的东西，不过说真的，以前也没有用过几次，不过好歹有个想法了。至于让图片跟随用户手势放大缩小，肯定是需要支持手势检测了。恩，我的思路暂时就是这样了，接下来先去了解一下手势检测。</p>
@@ -2953,7 +2953,7 @@
   </entry>
   <entry>
     <title>汉诺塔问题</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<p>汉诺塔问题描述：<br>汉诺塔：汉诺塔（又称河内塔）问题是源于印度一个古老传说的益智玩具。大梵天创造世界的时候做了三根金刚石柱子，在一根柱子上从下往上按照大小顺序摞着64片黄金圆盘。大梵天命令婆罗门把圆盘从下面开始按大小顺序重新摆放在另一根柱子上。并且规定，在小圆盘上不能放大圆盘，在三根柱子之间一次只能移动一个圆盘。</p>
 <p>关于这个问题，简单的分析一个3层的例子，有a、b、c三根柱子，其中a柱子放着三个盘子1，2，3，c是盘子移动的目的地，b是用来辅助移动的柱子：</p>
 <ul>
@@ -2992,7 +2992,7 @@
   </entry>
   <entry>
     <title>接口小结</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<h3 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h3><p>最近对于接口的应用也算比较多吧，所以来总结一波我对于接口的使用和感悟。</p>
 <h3 id="比抽象类更加抽象"><a href="#比抽象类更加抽象" class="headerlink" title="比抽象类更加抽象"></a>比抽象类更加抽象</h3><p>说到接口，就不得不提抽象类了。这二者有很多相似和很多不同的地方，但是要我说这二者最大的不同，就是标题了：接口比抽象类更加抽象。这个结论通常情况下都是成立的，除非你的抽象类什么都没……但是一般情况下你也不会弄这么个没意义的抽象类。一般来说在设计抽象类时都会考虑到这个抽象类应当实现什么功能和恰当的设计其抽象方法，前者是此抽象类的意义，后者通常是交给使用者去实现其需要的具体的功能。接口则不然，他只需要考虑一个类实现了这个接口的类“是怎样的”，需要我们做的就是恰当的设计一个接口该拥有哪些方法（这一点在java8之后略有不同，因为接口方法可以有默认的实现了），并不需要在接口里去具体的实现。从这一点看来接口比抽象类更加的抽象。</p>
 <p>另外抽象类还有一个使用的技巧——防止类被实例化，这一点在《Thinking in java》中亦有提及，因为接口和抽象类都不能被实例化。这点是个概念问题，我们代码中看起来是实例化接口或者抽象类，实际上都是用的一个匿名类的对象。</p>
@@ -3033,7 +3033,7 @@
   </entry>
   <entry>
     <title>探究RecyclerView的ViewHolder复用</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<h3 id="啥是RecyclerView"><a href="#啥是RecyclerView" class="headerlink" title="啥是RecyclerView"></a>啥是RecyclerView</h3><ul>
 <li>A flexible view for providing a limited window into a large data set.<br>一个在大小有限的窗口内展示大量数据集的view。恩，我的翻译一向不咋滴。。所以原文也放上了。</li>
 </ul>
@@ -3116,7 +3116,7 @@
   </entry>
   <entry>
     <title>浅析ArrayList</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<h3 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h3><p>Java的集合框架完备而又牛叉，其实现值得我这样的小白去一探究竟。当然了，在这我暂时不会很深入的去阅读整个集合框架，而是通过一两个实现去摸一下他的套路，希望最终我能摸到点集合框架的门路。在本文中，我将会带你阅读：</p>
 <ul>
 <li>ArrayList内部的基本实现</li>
@@ -3181,7 +3181,7 @@ public ArrayList() &#123;
   </entry>
   <entry>
     <title>浅析HashMap</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<p>基于数组的ArrayList长于按索引获取对应元素，而在中间位置插入和删除元素，都涉及了对数组整体的移动、复制等操作，相比于链表的插入删除来说代价比较大。基于链表的LinkedList长于随机插入删除，Java的双向链表（LinekdList）只能从头到尾或者从尾到头遍历链表获取元素，相较于ArrayList也是比较慢的。那么有没有一种折中的解决方案，使得插入删除和取元素都比较便捷呢？我认为HashMap可以算是这么一种折中的解决方案。</p>
 <h2 id="HashMap概述"><a href="#HashMap概述" class="headerlink" title="HashMap概述"></a>HashMap概述</h2><p>HashMap是一个实现了Map接口的哈希表，允许使用null值和null键。除了非同步和允许使用null之外，HashMap类与Hashtable大致相同。HashMap不保证映射的顺序，不保证该顺序恒久不变。</p>
 <p>HashMap不是线程安全的，如果想要使用线程安全的HashMap，可以通以下代码来得到：</p>
@@ -3217,7 +3217,7 @@ public ArrayList() &#123;
   </entry>
   <entry>
     <title>浅析LinkedList</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<h3 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h3><p>本文所看的源码是在idea里面查看的，一些代码和Java的源码可能有所不同……但是思想应该是一致的。<br>上一篇<a href="http://www.jianshu.com/p/5495e870ba2b">浅析ArrayList</a>简要的了解了一下ArrayList是如何实现的，ArrayList内部是用一个Object数组对象来作为容器盛放各个对象的。而LinkedList则不然，其内部实现就类似于数据结构中的双向链表。只不过在Java中可能你不能直接使用“指针”，所以得通过Java的“引用”来实现这个双向链表。那么今天也让我们通过几个比较经典的方法来看一下其内部实现。</p>
 <h3 id="Node"><a href="#Node" class="headerlink" title="Node"></a>Node</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Node</span>&lt;<span class="title">E</span>&gt; </span>&#123;</span><br><span class="line">    E item;</span><br><span class="line">    Node&lt;E&gt; next;</span><br><span class="line">    Node&lt;E&gt; prev;</span><br><span class="line"></span><br><span class="line">    Node(Node&lt;E&gt; prev, E element, Node&lt;E&gt; next) &#123;</span><br><span class="line">        <span class="keyword">this</span>.item = element;</span><br><span class="line">        <span class="keyword">this</span>.next = next;</span><br><span class="line">        <span class="keyword">this</span>.prev = prev;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>很经典的一个数据结构……（笑）</p>
@@ -3247,7 +3247,7 @@ public ArrayList() &#123;
   </entry>
   <entry>
     <title>浅析并发</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>最近因为自己毕业的一些事情断更了简书，一转眼已经有两个月了，是时候给自己充一波电了。本篇主要 <del>复习</del> 总结一些多线程中的基础知识，开篇打算理清一些概念性的东西，如有理解错误的地方，欢迎各位指正。</p>
 <h2 id="什么是并发，为什么要用并发？"><a href="#什么是并发，为什么要用并发？" class="headerlink" title="什么是并发，为什么要用并发？"></a>什么是并发，为什么要用并发？</h2><p>并发与并行是一对相似而又有区别的的两个概念。并行是指两个或多个事件在同一时刻发生，只有在多CPU环境下才有可能发生。并发是指在一段时间内宏观上有多个程序在同时运行，但实际上每个程序只是在CPU分配的时间片内运行，每一时刻也只能由一道程序执行。</p>
 <p>使用并发编程的目的是为了让程序运行的更快，但是，并不是启动更多的线程就能让程序运行的更快，这取决于代码的质量和应用场景。抛开并发代码的质量不谈，如果应用场景不得当，并发也不一定比串行的程序快，因为线程有创建和上下文切换的开销。这里不再深入，如果感兴趣可以《Java并发编程艺术》第一章中找到例子。</p>
@@ -3321,7 +3321,7 @@ public ArrayList() &#123;
   </entry>
   <entry>
     <title>用SurfaceView实现下雨和下雪（Kotlin）</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>最近打算做一波东西巩固一下自己近期所学所得。话不多说，先看一下最终完成的效果图：</p>
 <p><img src="http://upload-images.jianshu.io/upload_images/1976147-265cf400679f4b6c.gif?imageMogr2/auto-orient/strip" alt="下雨.gif"></p>
 <p>这里比较懒……第二个图片中还是降雨……不过这不是关键点……<br><img src="http://upload-images.jianshu.io/upload_images/1976147-34137411bb9316fd.gif?imageMogr2/auto-orient/strip" alt="下雪.gif"></p>
@@ -3369,7 +3369,7 @@ public ArrayList() &#123;
   </entry>
   <entry>
     <title>理解JavaScript闭包</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<p>最近把 JavaScript 的基本语法大致看了一下，JavaScript 中的闭包概念理解起来还是有一点难度的。在看了一些资料和结合 Java 的的一些经验，感觉对闭包的概念稍微有了一些概念，这里记录一下。</p>
 <h2 id="什么是闭包？"><a href="#什么是闭包？" class="headerlink" title="什么是闭包？"></a>什么是闭包？</h2><p>网上看了很多解释，觉得比较简明的一个解释放上：有权访问另一个函数作用域变量的函数都是闭包。</p>
 <p>接下来剥丝抽茧，一步一步的分析 JavaScript 中的闭包。首先我们可能会碰到一个计数的需求，可能用来记录用户的某个操作次数：</p>
@@ -3394,7 +3394,7 @@ public ArrayList() &#123;
   </entry>
   <entry>
     <title>百度地图Key验证失败230错误</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<p>####写在文集前面:####<br>这个新增的文集用来记录一些犯过的错，希望各位可以避免。以后可能会把自己遇到的坑慢慢补上来。</p>
 <p>####进入正题####<br>最近有需求要用到地图，同学和我说高德地图社区都关了，他都换百度了……所以我果断……直接用百度地图吧。按照官方文档的步骤，一路下来都很简单。但是在使用官方示例demo的时候却碰到了如下的错误：</p>
 <blockquote>
@@ -3422,7 +3422,7 @@ public ArrayList() &#123;
   </entry>
   <entry>
     <title>百度定位 &amp; 地理编码检索环境配置</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>第三方只要文档详细，基本的功能用起来是十分方便的（和硬件底层有关的就算了。。），但是环境配置可谓入门小白的一大噩梦，反正我刚开始学的时候，各种环境配置简直让我挠破了头。这里我会详细的记一下我集成的步骤。</p>
 <h2 id="1-申请秘钥"><a href="#1-申请秘钥" class="headerlink" title="1.申请秘钥"></a>1.申请秘钥</h2><p>这里只列出两个关键步骤的操作：</p>
 <ul>
@@ -3460,7 +3460,7 @@ public ArrayList() &#123;
   </entry>
   <entry>
     <title>第一话--从头再来</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<p>一直打算让自己的Java回炉重新锻造一下，那么，从现在开始吧。</p>
 <p>本文是阅读《Thinking in Java》(以下简称TIJ)第七章之后的产物，会包含以下：</p>
 <ul>
@@ -3514,7 +3514,7 @@ public ArrayList() &#123;
   </entry>
   <entry>
     <title>第三话--初探容器</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<h3 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h3><p>想看的东西太多，时间总是太少~  好了，先甩个锅给时间不够，然后开始Java重造，抱歉的是可能有些东西我不会讲的太详细。对了，最近看了同学<a href="http://www.jianshu.com/users/86f25f8b198b/latest_articles">iamxiarui</a>的文章。</p>
 <h3 id="容器"><a href="#容器" class="headerlink" title="容器"></a>容器</h3><p>在日常撸code的过程中，很多时候我们都需要在运行时去创建新的对象。在此之前，我们可能不知道所需对象的数量甚至连类型都不知道，所以我们需要一个能在运行时保存对象引用的玩意。事实上数组是保存一组对象的最有效的方式，但是很多时候我们也不知道我们需要保存的对象的数量是多少，所以数组长度固定这一限制会让我们在实际应用中受到非常多的限制。不过好在Java提供了容器来帮我们搞定这些问题。首先上一个经典的容器图谱来理解一下~</p>
 <p><img src="http://upload-images.jianshu.io/upload_images/1976147-110ef6cdb9eb0614.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="经典.jpg"></p>
@@ -3563,7 +3563,7 @@ public ArrayList() &#123;
   </entry>
   <entry>
     <title>第二话--再探多态</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<h3 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h3><p>Java回炉系列也有十多天没更了，虽然心里一直没怎么放下，但是奈何有心无力。项目成堆问题在那，还好中秋得空，出去逛了一下午心情大好~好了，正文开始</p>
 <h3 id="多态是啥，能吃吗？"><a href="#多态是啥，能吃吗？" class="headerlink" title="多态是啥，能吃吗？"></a>多态是啥，能吃吗？</h3><p>学Java一般都会听说“面向对象三大特征”：封装、继承、多态。封装是将一个事物抽象成为一个类，这个类有自己的属性和方法，某些属性和功能的实现不会对外公开，只暴露一些可供获取数据的方法。继承很容易理解，就是一个类继承另一类，这个类被称为子类，而另一个自然就是父类了。当然在有的书上也将父类称为基类，将子类称为导出类，看你个人喜好了，在我这统一称为父、子类。好了，前面说了封装和继承，现在自然是要说多态了。多态应当是一种设计的思想，然后才体现在语言的具体实现。多态的核心思想是消除类型之间的耦合关系，可能你和我一样，刚看到这句话的时候有点懵逼，没关系举个小例子：<br><img src="http://upload-images.jianshu.io/upload_images/1976147-b4b3923c4520c2bf.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="举个栗子"></p>
 <p>现在我有个数据集，因为增删操作做的比较多，行吗，了解数据结构的你一定想到了链表。那好就用链表来搞起：</p>
@@ -3604,7 +3604,7 @@ public ArrayList() &#123;
   </entry>
   <entry>
     <title>记录三种实现图片模糊的方法</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近给自己挖了几个坑，准备填一下。现在来填一下第一个坑：图片模糊。关于图片模糊的方法有很多，比如：Open CV 的各种图片处理、Android 支持的高性能密集型任务执行框架 RenderScript、Java 或者 C/C++ 的算法实现图片模糊处理。本篇文章将包含以下内容：</p>
 <ul>
 <li>RenderScript 简介与图片模糊的实现</li>
@@ -3663,7 +3663,7 @@ public ArrayList() &#123;
   </entry>
   <entry>
     <title>设计模式学习笔记——状态模式</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>许久没有写博客了，最近有一点做咸鱼的倾向，Android方面也碰上瓶颈挺久了。主要是目前可能没有碰上特别有挑战的需求吧，以之前的知识储备就足够了。最近游戏进度倒是喜人，黑魂3快通关了，但也不能老做一条咸鱼，还是得进步啊~看书还是得做做笔记的，不然看了没多久可能就忘了，书携带也不带方便，所以还是做一下笔记发在自己的博客上比较稳妥。</p>
 <p>本文以及后续所有的设模式博文均为《Android源码设计模式》一书的笔记。</p>
 <h2 id="状态模式介绍与定义"><a href="#状态模式介绍与定义" class="headerlink" title="状态模式介绍与定义"></a>状态模式介绍与定义</h2><p>以下为书中原文：状态模式中的行为是由状态来决定的，不同的状态下有不同的行为。状态模式把对象的行为包装在不同的状态对象里，每一个状态对象都有一个共同的抽象状态基类。状态模式的意图是让一个对象在其内部状态改变的时候，其行为也随之改变。</p>
@@ -3704,7 +3704,7 @@ public ArrayList() &#123;
   </entry>
   <entry>
     <title>详记Android打开相机拍照流程</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>本文并不是基于Camera2的，所以想要了解Camera2的同学可以先散了。文题加了详记二字，因为相机整个打开的流程的确是比较复杂的，稍有疏忽可能就会引发一系列问题。我也是看了一下Android的文档才整理了这篇文章，想看原文的<a href="https://developer.android.com/guide/topics/media/camera.html?hl=zh-cn#custom-camera">戳这</a>。不得不说，文档还是详细啊~</p>
 <p>本文主要会涉及以下内容：</p>
 <ul>
@@ -3769,7 +3769,7 @@ public ArrayList() &#123;
   </entry>
   <entry>
     <title>近期计划</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<h2 id="近期学习计划"><a href="#近期学习计划" class="headerlink" title="近期学习计划"></a>近期学习计划</h2><p>最近好不容易进入了学习状态，可能要进入一个高产的状态了。目前比较想要折腾 hexo，所以近期可能会集中的看一下 html + css + js。以前折腾过一些东西，前端的一些东西一直算是我的拦路虎吧。之前由于 Android 本身水平也有限，所以只能先搞定自己的本职。近期 Android 遇到的需求用之前的积累也够了，所以打算扫掉一些我前进路上的拦路虎。python 用来写一些方便的工具还是非常棒的，在扫掉前端的这些拦路虎之后，可能会再去看一下 python。当然了，一切都是在本职能很好的完成的前提下。这里也大体的制定一个目标吧：</p>
 <ul>
 <li>html + css 入门，对于常用的标签有一些了解</li>
@@ -3786,7 +3786,7 @@ public ArrayList() &#123;
   </entry>
   <entry>
     <title>有趣的启动Vim的方式</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<p>同事用的是 emacs 开发，每次使用 ec 命令时都会弹出一首唐诗，觉得挺有意思的。于是咨询了一下，使用的是 fortune 和<a href="https://www.ruanyifeng.com/blog/2015/04/fortune.html">阮一峰</a>大神整理的两个 tang300 的数据文件。</p>
 <p>于是在 .zshrc 中编写了一个 vim 代码，让 vim 在启动时也会弹出一首唐诗：</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">alias v=av</span><br><span class="line">alias nv=av</span><br><span class="line">alias vim=av</span><br><span class="line"></span><br><span class="line">function av() &#123;</span><br><span class="line"><span class="meta">#</span><span class="bash">  res=`curl --connect-timeout 2 https://v1.jinrishici.com/rensheng.txt`</span></span><br><span class="line"><span class="meta">#</span><span class="bash">  <span class="built_in">echo</span> -e <span class="string">&quot;\033[31m <span class="variable">$res</span>&quot;</span></span></span><br><span class="line">  fortune -e tang300</span><br><span class="line">  sleep 0.7</span><br><span class="line">  if [[ $1 == *.java ]]</span><br><span class="line">  then /opt/homebrew/bin/vim $1</span><br><span class="line">  else nvim $1</span><br><span class="line">  fi</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -3817,7 +3817,7 @@ public ArrayList() &#123;
   </entry>
   <entry>
     <title>用到的命令，防忘</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>不全的记录，只是有一些命令还不是很熟，记录下来备查</p>
 <h3 id="k8s-快捷键"><a href="#k8s-快捷键" class="headerlink" title="k8s 快捷键"></a>k8s 快捷键</h3><ul>
 <li><p>将本地端口映射到 k8s 对应 pod：kubectl -n namespace port-forward authsv-7cfc56d85d-v24pb 9999:9090，-n  命名空间，9999 本地端口，9090 远程端口</p>
@@ -3987,7 +3987,7 @@ public ArrayList() &#123;
   </entry>
   <entry>
     <title>Go 内存模型（翻译）</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<p>原文：<a href="https://golang.org/ref/mem">The Go Memory Model</a></p>
 <p>约定：</p>
 <ul>
@@ -4094,7 +4094,7 @@ public ArrayList() &#123;
   </entry>
   <entry>
     <title>为什么要自己翻译文章？</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<p>如今一般的编程资料都会有中文版本，特别是出了一段时间且普及程度比较广泛的资料，几乎一定会有中文版本，那么我们为什么要自己去读英文原文，自己翻译呢？我自己思考如下：</p>
 <ul>
 <li>翻译质量参差不齐，无法保证全篇都是高质量的翻译，难免会有错漏之处，阅读原文可以更好的理解作者的意思</li>
@@ -4113,7 +4113,7 @@ public ArrayList() &#123;
   </entry>
   <entry>
     <title>Raft（翻译）</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<h2 id="Raft-可理解的分布式共识"><a href="#Raft-可理解的分布式共识" class="headerlink" title="Raft(可理解的分布式共识)"></a>Raft(可理解的分布式共识)</h2><p>所以，什么是分布式共识？</p>
 <p>让我们以一个栗子开始…</p>
 <p>假设我们有一个单节点系统，在这个栗子中，你可以认为我们的节点是一个存储单个值的数据库，我们还有一个可以向服务端发送值的客户端，在单节点上很容易就这个值达成一致或共识。</p>
@@ -4165,7 +4165,7 @@ public ArrayList() &#123;
   </entry>
   <entry>
     <title>错误处理与 Go（翻译）</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<p>原文：<a href="https://go.dev/blog/error-handling-and-go">https://go.dev/blog/error-handling-and-go</a></p>
 <h2 id="错误处理与-Go"><a href="#错误处理与-Go" class="headerlink" title="错误处理与 Go"></a>错误处理与 Go</h2><p><em>Andrew Gerrand</em></p>
 <p><em>2011 年 7 月 12 日</em></p>
@@ -4284,7 +4284,7 @@ public ArrayList() &#123;
   </entry>
   <entry>
     <title>Errors are values（翻译）</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<p>原文：<a href="https://go.dev/blog/errors-are-values">https://go.dev/blog/errors-are-values</a></p>
 <h2 id="Errors-are-values"><a href="#Errors-are-values" class="headerlink" title="Errors are values"></a>Errors are values</h2><p><em>Rob Pike</em><br><em>12 January 2015</em></p>
 <p>Go 程序猿之间经常讨论的点，特别是那些新进使用 Go 的人，就是如何处理 errors。对话经常会转变为对以下程序出现次数的哀叹：</p>
@@ -4351,7 +4351,7 @@ public ArrayList() &#123;
   </entry>
   <entry>
     <title>在 Go 1.13 中处理错误（翻译）</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<h2 id="Working-with-Errors-in-Go-1-13"><a href="#Working-with-Errors-in-Go-1-13" class="headerlink" title="Working with Errors in Go 1.13"></a>Working with Errors in Go 1.13</h2><p><em>Damien Neil and Jonathan Amsterdam</em><br><em>17 October 2019</em></p>
 <h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>Go 将 error 作为 values 已经很好的为我们服务了数十年。尽管标准库对 errors 的支持很少——只有<code>errors.New</code>和<code>fmt.Errorf</code>函数，会产生只包含消息的 errors——内置的 error interface 允许 Go 程序猿添加他们想要的任何信息。它所需要的只是实现一个<code>Error</code>方法：</p>
 <figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> QueryError <span class="keyword">struct</span> &#123;</span><br><span class="line">    Query <span class="keyword">string</span></span><br><span class="line">    Err   error</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(e *QueryError)</span> <span class="title">Error</span><span class="params">()</span> <span class="title">string</span></span> &#123; <span class="keyword">return</span> e.Query + <span class="string">&quot;: &quot;</span> + e.Err.Error() &#125;</span><br></pre></td></tr></table></figure>
@@ -4447,7 +4447,7 @@ public ArrayList() &#123;
   </entry>
   <entry>
     <title>使用 redis 实现分布式锁</title>
-    <url>/:/abbrlink</url>
+    <url>/posts/undefined.html</url>
     <content><![CDATA[<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>在项目中某些场景需要先读取值，然后修改再保存，在这个过程中如果有并发请求，可能会突破程序设置的边界：在库存为 1 的情况下，同时有两个请求下单购买，如果不加处理，库存和订单总要异常一个。在单体服务中使用语言提供的锁就可以解决这一问题，但是在集群环境下，多节点的无状态服务，并发请求可能会通过负载均衡分发到不同的节点上，这时候就需要一个能在这种环境下也能生效的分布式锁了。</p>
 <span id="more"></span>
 
