@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/avatar.jpeg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/avatar.jpeg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/avatar.jpeg">
+  <link rel="mask-icon" href="/images/avatar.jpeg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"forgetall.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":null,"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="原文：https:&#x2F;&#x2F;go.dev&#x2F;blog&#x2F;errors-are-values Errors are valuesRob Pike12 January 2015 Go 程序猿之间经常讨论的点，特别是那些新进使用 Go 的人，就是如何处理 errors。对话经常会转变为对以下程序出现次数的哀叹： 123if err !&#x3D; nil &amp;#123;  return err&amp;#125;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Errors are values（翻译）">
+<meta property="og:url" content="https://forgetall.github.io/2021/11/21/%E9%94%99%E8%AF%AF%E6%98%AF%E5%80%BC%EF%BC%88%E7%BF%BB%E8%AF%91%EF%BC%89/index.html">
+<meta property="og:site_name" content="LJ的Blog">
+<meta property="og:description" content="原文：https:&#x2F;&#x2F;go.dev&#x2F;blog&#x2F;errors-are-values Errors are valuesRob Pike12 January 2015 Go 程序猿之间经常讨论的点，特别是那些新进使用 Go 的人，就是如何处理 errors。对话经常会转变为对以下程序出现次数的哀叹： 123if err !&#x3D; nil &amp;#123;  return err&amp;#125;">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-11-21T10:19:27.000Z">
+<meta property="article:modified_time" content="2021-11-21T10:21:03.675Z">
+<meta property="article:author" content="LJ">
+<meta property="article:tag" content="go">
+<meta property="article:tag" content="翻译">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://forgetall.github.io/2021/11/21/%E9%94%99%E8%AF%AF%E6%98%AF%E5%80%BC%EF%BC%88%E7%BF%BB%E8%AF%91%EF%BC%89/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Errors are values（翻译） | LJ的Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">LJ的Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">学海无涯苦做舟</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2021/11/21/%E9%94%99%E8%AF%AF%E6%98%AF%E5%80%BC%EF%BC%88%E7%BF%BB%E8%AF%91%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="LJ">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LJ的Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Errors are values（翻译）
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-11-21 18:19:27 / 修改时间：18:21:03" itemprop="dateCreated datePublished" datetime="2021-11-21T18:19:27+08:00">2021-11-21</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%BF%BB%E8%AF%91/" itemprop="url" rel="index"><span itemprop="name">翻译</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%BF%BB%E8%AF%91/go/" itemprop="url" rel="index"><span itemprop="name">go</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>原文：<a target="_blank" rel="noopener" href="https://go.dev/blog/errors-are-values">https://go.dev/blog/errors-are-values</a></p>
+<h2 id="Errors-are-values"><a href="#Errors-are-values" class="headerlink" title="Errors are values"></a>Errors are values</h2><p><em>Rob Pike</em><br><em>12 January 2015</em></p>
+<p>Go 程序猿之间经常讨论的点，特别是那些新进使用 Go 的人，就是如何处理 errors。对话经常会转变为对以下程序出现次数的哀叹：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> err</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<span id="more"></span>
+
+<p>我们最近扫描了所有我们能找到的开源项目，发现这个（代码）片段仅仅在每页或每两页中出现一次，比某些人认为的次数要少。尽管如此，如果还是有人坚持认为他们一直要输入以下代码：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span></span><br></pre></td></tr></table></figure>
+
+<p>那么一定是哪里出错了，（他们认为）显而易见的目标是 Go 本身。</p>
+<p>这是不幸的，有误导性的，并且很容易纠正的。事情可能是这样的：一个 go 语言的新人提出问题“如何处理 errors？”，学会之后，就停在那了。（learn this pattern, and stop there）。在其他的语言里，也许使用 try-catch 块或者其他的机制处理 errors。所以，程序猿会认为在以前的语言里用 try-catch ，在 Go 里我只要输入 <code>if err != nil</code>。随着时间的推移，Go 代码收集了许多这样的片段，结果感觉很笨拙。</p>
+<p>无论这个解释是否合适，很明显的一点是 Go 程序猿忽略了关于 errors 的一个基本的点：错误是值（Errors are values）</p>
+<p>值可以被编程，既然 errors 是值，那么 errors 就可以被编程。当然一个常见的涉及错误值得语句就是测试它是否为 nil，但是还有无数其他的事可以用一个错误值来做，和其他的一些东西一起应用会让你的程序更好，并消灭大部分死板的错误检查代码。</p>
+<p>这里有一个来自 bufio 包的 Scanner 类的简单栗子。他的 Scan 方法执行底层 I/O 会产生一个 error，然而 Scan 方法根本没有暴露一个 error，而是返回了一个 bool 值，和另一个在 scan 结束后调用的分离的方法，来报告是否有 error 产生，客户端代码如下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">scanner := bufio.NewScanner(input)</span><br><span class="line"><span class="keyword">for</span> scanner.Scan() &#123;</span><br><span class="line">    token := scanner.Text()</span><br><span class="line">    <span class="comment">// process token</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> err := scanner.Err(); err != <span class="literal">nil</span> &#123;</span><br><span class="line">    <span class="comment">// process the error</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当然，有一个对 error 是否为 nil 的检查，但是他只出现和执行一次。Scan 方法可以使用如下定义：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *Scanner)</span> <span class="title">Scan</span><span class="params">()</span> <span class="params">(token []<span class="keyword">byte</span>, error)</span></span></span><br></pre></td></tr></table></figure>
+
+<p>那么上面的示例代码可能如下（依赖 token 如何获取）：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">scanner := bufio.NewScanner(input)</span><br><span class="line"><span class="keyword">for</span> &#123;</span><br><span class="line">    token, err := scanner.Scan()</span><br><span class="line">    <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> err <span class="comment">// or maybe break</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// process token</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这没有很大的不同，但有一个很重要的区别。在这个代码里，客户端必须在每次迭代中检查 error，但是在真正的 Scanner API 中，error 处理被从关键的 API 元素中抽离，使用 token 迭代。使用真正的 API，客户端代码感觉更加自然：循环到结束才需要担心 errors。错误处理不会掩盖控制流。</p>
+<p>在这幕后发生了什么？当然，如果 Scan 立刻遭遇 I/O error，他会记录错误并返回 false。另一个分离的方法 Err 会在客户端询问的时候报告这个 error 值。尽管这是微不足道的，但是与 <code>if err != nil</code>无处不在要求客户端在每次在获取 token 后都检查 error 不同。这是用 error 值编程。简单的编程，是的，但是是编程。</p>
+<p>值得强调的是无论设计如何，如果有 error 无论他们是如何暴露的，都要检查。这里的讨论不是如何避免错误检查，他是关于如何使用语言优雅的处理错误。</p>
+<p>当我参加 2014 年秋季在东京举行的 GoCon 时，出现了重复错误检查代码的话题。一位热情的 gopher，在 twitter 上叫 <a target="_blank" rel="noopener" href="https://twitter.com/jxck_"><code>@jxck_</code></a> ，也有类似的关于错误检查的哀叹。他有一些代码看起来如下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">_, err = fd.Write(p0[a:b])</span><br><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> err</span><br><span class="line">&#125;</span><br><span class="line">_, err = fd.Write(p1[c:d])</span><br><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> err</span><br><span class="line">&#125;</span><br><span class="line">_, err = fd.Write(p2[e:f])</span><br><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> err</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// and so on</span></span><br></pre></td></tr></table></figure>
+
+<p>代码重复性很高。在真实的代码中会更长，还有更多的事发生，所以使用辅助函数对此重构并不容易。但是在种理想情况中，使用一个函数关闭 error 变量会有帮助：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> err error</span><br><span class="line">write := <span class="function"><span class="keyword">func</span><span class="params">(buf []<span class="keyword">byte</span>)</span></span> &#123;</span><br><span class="line">    <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    &#125;</span><br><span class="line">    _, err = w.Write(buf)</span><br><span class="line">&#125;</span><br><span class="line">write(p0[a:b])</span><br><span class="line">write(p1[c:d])</span><br><span class="line">write(p2[e:f])</span><br><span class="line"><span class="comment">// and so on</span></span><br><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> err</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个模式看起来不错，但是需要在每个执行写入的函数中使用闭包函数。单独的辅助函数使用起来比较笨拙，因为 err 变量需要在调用之间维护（试试它）。</p>
+<p>我们可以让他更加简洁、通用和可重复使用，通过上面提到的 Scan 方法带来的想法。在我们的讨论中我提到了这个技术，但是 jxck_ 没看到如何应用他。经过长时间的交流，有点受语言交流的障碍，我询问我是否可以用他的笔记本输入一些代码向他展示。</p>
+<p>我定义了一个对象叫 errWriter，如下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> errWriter <span class="keyword">struct</span> &#123;</span><br><span class="line">    w   io.Writer</span><br><span class="line">    err error</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后给他一个方法，<code>write</code>。他不需要有标准的 Write 签名，他的小写是为了突出区别。<code>write</code>方法调用底层<code>Writer</code>的<code>Write</code>方法和记录未来引用的第一个错误：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(ew *errWriter)</span> <span class="title">write</span><span class="params">(buf []<span class="keyword">byte</span>)</span></span> &#123;</span><br><span class="line">    <span class="keyword">if</span> ew.err != <span class="literal">nil</span> &#123;</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    &#125;</span><br><span class="line">    _, ew.err = ew.w.Write(buf)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当 error 发生时，<code>write</code>方法变成没有操作的方法，但是 error 的值已经被保存了。</p>
+<p>给定 errWriter 类型和他的 write 方法，上面的代码可以重构为：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">ew := &amp;errWriter&#123;w: fd&#125;</span><br><span class="line">ew.write(p0[a:b])</span><br><span class="line">ew.write(p1[c:d])</span><br><span class="line">ew.write(p2[e:f])</span><br><span class="line"><span class="comment">// and so on</span></span><br><span class="line"><span class="keyword">if</span> ew.err != <span class="literal">nil</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> ew.err</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这是干净的代码，甚至比闭包的还要干净，并且还使得实际的写入（的代码）顺序更加易读。不再有杂乱了，使用 error 值（和接口）已经让代码更好了。</p>
+<p>同一个包中的其他代码也可以基于这个想法，甚至直接使用 errWriter。</p>
+<p>此外，一旦 errWriter 存在，它可以做更多的事，特别是在一些（代码）做作的例子中。他可以累计字节数，他可以将写入合并到一个缓冲区中然后可以自动传输。以及更多。</p>
+<p>事实上，这种模式经常在标准库中出现。archive/zip 和 net/http 包使用它。本地讨论更加突出，bufio 包的 Writer 实际上就是 errWriter 想法的实现。尽管 bufio.Writer.Write 返回了一个 error，这主要是为了实现 io.Writer 接口。bufio.Writer 的 Write 方法表现的像上面的 errWriter.write 方法一样，Flush 报告错误，所以我们的例子可以像下面这么写：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">b := bufio.NewWriter(fd)</span><br><span class="line">b.Write(p0[a:b])</span><br><span class="line">b.Write(p1[c:d])</span><br><span class="line">b.Write(p2[e:f])</span><br><span class="line"><span class="comment">// and so on</span></span><br><span class="line"><span class="keyword">if</span> b.Flush() != <span class="literal">nil</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> b.Flush()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这种方式有一个重大的缺点，至少对于一些应用来说：无法知道在错误发生之前完成了多少处理。如果那个（完成了多少处理）信息很重要，需要更细粒度的方式。不过很多时候，在最后全有或全无的检查就足够了。</p>
+<p>我们仅仅看到了一种避免重复处理 error 的代码。记住使用 errWriter 或 bufio.Writer 不是简化 error 处理的唯一方式，这种方式也不适用与所有情况。然而，关键的教训是：errors are values，并且可以使用 Go 编程语言全部能力来处理他们。</p>
+<p>使用语言去简化你的错误处理。</p>
+<p>但是记住：无论你做什么，总是要检查你的 errors！</p>
+<p>最后，jxck 和我互动的完整故事，包括一个他记录的录像，访问<a target="_blank" rel="noopener" href="https://jxck.hatenablog.com/entry/golang-error-handling-lesson-by-rob-pike">他的博客</a>。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/go/" rel="tag"># go</a>
+              <a href="/tags/%E7%BF%BB%E8%AF%91/" rel="tag"># 翻译</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/11/21/%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86%E4%B8%8E%20Go%EF%BC%88%E7%BF%BB%E8%AF%91%EF%BC%89/" rel="prev" title="错误处理与 Go（翻译）">
+      <i class="fa fa-chevron-left"></i> 错误处理与 Go（翻译）
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/11/27/%E5%9C%A8%20Go%201.13%20%E4%B8%AD%E5%A4%84%E7%90%86%E9%94%99%E8%AF%AF%EF%BC%88%E7%BF%BB%E8%AF%91%EF%BC%89/" rel="next" title="在 Go 1.13 中处理错误（翻译）">
+      在 Go 1.13 中处理错误（翻译） <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Errors-are-values"><span class="nav-number">1.</span> <span class="nav-text">Errors are values</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="LJ"
+      src="/images/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">LJ</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">82</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">38</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ForgetAll" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ForgetAll" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://blankj.com/" title="https:&#x2F;&#x2F;blankj.com&#x2F;" rel="noopener" target="_blank">blankj-开源达人</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LJ</span>
+</div>
+  <div class="powered-by">书山有路勤为径
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '76eeb7f12824012f27fe',
+      clientSecret: '41159510cb271785627f9c3d29ca6c6b43f4cdaf',
+      repo        : 'ForgetAll.github.io',
+      owner       : 'ForgetAll',
+      admin       : ['ForgetAll'],
+      id          : '0f9e652eb26c69b04e381e09723c8703',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>

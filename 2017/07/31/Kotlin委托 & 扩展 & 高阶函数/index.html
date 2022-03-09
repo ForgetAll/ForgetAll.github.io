@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/avatar.jpeg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/avatar.jpeg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/avatar.jpeg">
+  <link rel="mask-icon" href="/images/avatar.jpeg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"forgetall.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":null,"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="写在前面Kotlin现在已经是Android官方的一级开发语言了，以前就有大佬给我安利，最近刚好看open cv的c++和ndk看的头昏脑涨，反正最近也用不到，只是出于兴趣，不如换个脑子看看最近势头比较盛的Kotlin好了。在这里感谢一下猫哥对我的耐心指导，让我对Kotlin的认识更进了一步。 委托委托有委托类和委托属性。 委托类我在看文档的时候就感觉跟Java里的某个操作非常像……于是非常恶趣味">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kotlin委托 &amp; 扩展 &amp; 高阶函数">
+<meta property="og:url" content="https://forgetall.github.io/2017/07/31/Kotlin%E5%A7%94%E6%89%98%20&%20%E6%89%A9%E5%B1%95%20&%20%E9%AB%98%E9%98%B6%E5%87%BD%E6%95%B0/index.html">
+<meta property="og:site_name" content="LJ的Blog">
+<meta property="og:description" content="写在前面Kotlin现在已经是Android官方的一级开发语言了，以前就有大佬给我安利，最近刚好看open cv的c++和ndk看的头昏脑涨，反正最近也用不到，只是出于兴趣，不如换个脑子看看最近势头比较盛的Kotlin好了。在这里感谢一下猫哥对我的耐心指导，让我对Kotlin的认识更进了一步。 委托委托有委托类和委托属性。 委托类我在看文档的时候就感觉跟Java里的某个操作非常像……于是非常恶趣味">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1976147-9b5f57378793cbdb.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="article:published_time" content="2017-07-31T09:24:49.000Z">
+<meta property="article:modified_time" content="2018-05-30T02:34:49.000Z">
+<meta property="article:author" content="LJ">
+<meta property="article:tag" content="入门学习">
+<meta property="article:tag" content="Kotlin">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/1976147-9b5f57378793cbdb.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+<link rel="canonical" href="https://forgetall.github.io/2017/07/31/Kotlin%E5%A7%94%E6%89%98%20&%20%E6%89%A9%E5%B1%95%20&%20%E9%AB%98%E9%98%B6%E5%87%BD%E6%95%B0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Kotlin委托 & 扩展 & 高阶函数 | LJ的Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">LJ的Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">学海无涯苦做舟</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2017/07/31/Kotlin%E5%A7%94%E6%89%98%20&%20%E6%89%A9%E5%B1%95%20&%20%E9%AB%98%E9%98%B6%E5%87%BD%E6%95%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="LJ">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LJ的Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Kotlin委托 & 扩展 & 高阶函数
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-07-31 17:24:49" itemprop="dateCreated datePublished" datetime="2017-07-31T17:24:49+08:00">2017-07-31</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2018-05-30 10:34:49" itemprop="dateModified" datetime="2018-05-30T10:34:49+08:00">2018-05-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Kotlin/" itemprop="url" rel="index"><span itemprop="name">Kotlin</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>Kotlin现在已经是Android官方的一级开发语言了，以前就有大佬给我安利，最近刚好看open cv的c++和ndk看的头昏脑涨，反正最近也用不到，只是出于兴趣，不如换个脑子看看最近势头比较盛的Kotlin好了。在这里感谢一下<a href="%5Bhttp://www.jianshu.com/u/2b4f4be84600">猫哥</a>对我的耐心指导，让我对Kotlin的认识更进了一步。</p>
+<h2 id="委托"><a href="#委托" class="headerlink" title="委托"></a>委托</h2><p>委托有委托类和委托属性。</p>
+<h3 id="委托类"><a href="#委托类" class="headerlink" title="委托类"></a>委托类</h3><p>我在看文档的时候就感觉跟Java里的某个操作非常像……于是非常恶趣味的将代码写成了如下模式：</p>
+<span id="more"></span>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">OnClickListener</span> </span>&#123;</span><br><span class="line">   <span class="function"><span class="keyword">fun</span> <span class="title">click</span><span class="params">()</span></span></span><br><span class="line">&#125;</span><br><span class="line">​</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyListener</span> : <span class="type">OnClickListener &#123;</span></span></span><br><span class="line">   <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">click</span><span class="params">()</span></span> &#123;</span><br><span class="line">       println(<span class="string">&quot;do something about click event&quot;</span>)</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line">​</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span></span>(b: OnClickListener) : OnClickListener <span class="keyword">by</span> b &#123;</span><br><span class="line">   <span class="keyword">init</span> &#123;</span><br><span class="line">       println(<span class="string">&quot;we can do something about activity here&quot;</span>)</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line">​</span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span> &#123;</span><br><span class="line">   <span class="keyword">val</span> listener = MyListener()</span><br><span class="line">   <span class="keyword">val</span> activity = MainActivity(listener)</span><br><span class="line">   activity.click()</span><br><span class="line">&#125;</span><br><span class="line">​</span><br><span class="line"><span class="comment">// 输出：</span></span><br><span class="line"><span class="comment">// we can do something about activity here</span></span><br><span class="line"><span class="comment">// do something about click event</span></span><br></pre></td></tr></table></figure>
+
+<p>是的，我觉得这个类委托跟Java里设置接口回调这个操作很像。只不过一般情况下，我们会使用匿名类来实现这个接口，并在实现中写上我们的代码。而委托类在文档中的描述是：The Delegation pattern has proven to be a good alternative to implementation inheritance, and Kotlin supports it natively requiring zero boilerplate code. </p>
+<p>又到了展示我辣鸡英语水平的时候了：委托模式是一种实现继承的良好方式，Kotlin原生支持不需要额外的样板代码。（意译，不完全符合字面意思）</p>
+<p>也就是说跟我想的差不多，Kotlin语言本身提供了委托，可以让我们省了setxxxListener这种重复劳动。</p>
+<h3 id="委托属性"><a href="#委托属性" class="headerlink" title="委托属性"></a>委托属性</h3><p>委托属性官方举了三个应用场景：</p>
+<ul>
+<li><p>延迟属性：只在第一次访问的时候初始化（计算）</p>
+</li>
+<li><p>可观察属性：监听器得到关于这个特性变化的通知</p>
+</li>
+<li><p>把所有属性存储在一个map中，而不是在单独的字段里</p>
+</li>
+</ul>
+<p>假如现在在项目里需要一个地点名称的属性，这个地点并不是每一次都需要用到，我们只在有需要的时候获取这个属性，我们就可以使用Kotlin提供的lazy来实现：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">   <span class="keyword">val</span> address: String <span class="keyword">by</span> lazy &#123;</span><br><span class="line">       getAdd()</span><br><span class="line">   &#125;</span><br><span class="line">​</span><br><span class="line">   <span class="function"><span class="keyword">fun</span> <span class="title">getAdd</span><span class="params">()</span></span>: String = <span class="string">&quot;北京天安门&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>下面是可观察属性，Kotlin中提供了Observable委托，来看看是怎么用的：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PropertyDelegate</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">var</span> status: <span class="built_in">Int</span> <span class="keyword">by</span> Delegates.observable(<span class="number">0</span>) &#123;</span><br><span class="line">       d, old, new -&gt;</span><br><span class="line">       println(<span class="string">&quot;属性名称：<span class="variable">$d</span>，以前是：<span class="variable">$old</span>，现在是：<span class="variable">$new</span>&quot;</span>)</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line">​</span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span> &#123;</span><br><span class="line">   <span class="keyword">var</span> p = PropertyDelegate()</span><br><span class="line">​</span><br><span class="line">   println(p.status)</span><br><span class="line">   p.status = <span class="number">2</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 输出：</span></span><br><span class="line"><span class="comment">// 0</span></span><br><span class="line"><span class="comment">// 属性名称：var PropertyDelegate.status: kotlin.Int，以前是：0，现在是：2</span></span><br></pre></td></tr></table></figure>
+
+<p>的确观察到了属性值的变化，上面observable(0)中的0作为status的初始化值，后面的那种写法暂时先放着，是将函数作为参数的一种使用方式。<br>接下来看看将属性存储在Map中：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TestUser</span></span>(<span class="keyword">val</span> map: Map&lt;String, Any?&gt;) &#123;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">val</span> name: String <span class="keyword">by</span> map</span><br><span class="line">   <span class="keyword">val</span> age: <span class="built_in">Int</span> <span class="keyword">by</span> map</span><br><span class="line">&#125;</span><br><span class="line">​</span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span> &#123;</span><br><span class="line">   <span class="keyword">var</span> user: TestUser = TestUser(mapOf(</span><br><span class="line">           <span class="string">&quot;name&quot;</span> to <span class="string">&quot;test&quot;</span>,</span><br><span class="line">           <span class="string">&quot;age&quot;</span> to <span class="number">16</span></span><br><span class="line">   ))</span><br><span class="line">​</span><br><span class="line">   println(<span class="string">&quot;username:&quot;</span> + user.name + <span class="string">&quot;,age:&quot;</span> + user.age)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 输出：</span></span><br><span class="line"><span class="comment">// username:test,age:16</span></span><br></pre></td></tr></table></figure>
+
+<p>上面三个都是Kotlin提供的委托，我们也可以自己实现属性委托：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Http</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">var</span> name: String? = <span class="literal">null</span></span><br><span class="line">​</span><br><span class="line">   <span class="function"><span class="keyword">fun</span> <span class="title">getNameInfoFromNetWork</span><span class="params">()</span></span>: String &#123;</span><br><span class="line">       <span class="keyword">return</span> name ?: <span class="string">&quot;假装我是从网络获取的名字&quot;</span></span><br><span class="line">   &#125;</span><br><span class="line">​</span><br><span class="line">   <span class="keyword">operator</span> <span class="function"><span class="keyword">fun</span> <span class="title">getValue</span><span class="params">(any: <span class="type">Any</span>, property: <span class="type">KProperty</span>&lt;*&gt;)</span></span>: String &#123;</span><br><span class="line">       println(<span class="string">&quot;打印观察：any=<span class="variable">$any</span> property=<span class="variable">$property</span>&quot;</span>)</span><br><span class="line">       <span class="keyword">return</span> getNameInfoFromNetWork()</span><br><span class="line">   &#125;</span><br><span class="line">​</span><br><span class="line">   <span class="keyword">operator</span> <span class="function"><span class="keyword">fun</span> <span class="title">setValue</span><span class="params">(any: <span class="type">Any</span>, property: <span class="type">KProperty</span>&lt;*&gt;, s: <span class="type">String</span>)</span></span> &#123;</span><br><span class="line">       <span class="keyword">this</span>.name = s</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line">​</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PropertyDelegate</span> </span>&#123;</span><br><span class="line">   <span class="keyword">var</span> name: String <span class="keyword">by</span> Http()</span><br><span class="line">​</span><br><span class="line">   <span class="keyword">val</span> address: String <span class="keyword">by</span> lazy &#123;</span><br><span class="line">       getAdd()</span><br><span class="line">   &#125;</span><br><span class="line">​</span><br><span class="line">   <span class="function"><span class="keyword">fun</span> <span class="title">getAdd</span><span class="params">()</span></span>: String = <span class="string">&quot;北京天安门&quot;</span></span><br><span class="line">​</span><br><span class="line">   <span class="keyword">var</span> status: <span class="built_in">Int</span> <span class="keyword">by</span> Delegates.observable(<span class="number">0</span>) &#123;</span><br><span class="line">       d, old, new -&gt;</span><br><span class="line">       println(<span class="string">&quot;属性名称：<span class="variable">$d</span>，以前是：<span class="variable">$old</span>，现在是：<span class="variable">$new</span>&quot;</span>)</span><br><span class="line">   &#125;</span><br><span class="line">​</span><br><span class="line">​</span><br><span class="line">&#125;</span><br><span class="line">​</span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span> &#123;</span><br><span class="line">   <span class="keyword">var</span> p = PropertyDelegate()</span><br><span class="line">   println(p.name)</span><br><span class="line">   p.name = <span class="string">&quot;hh&quot;</span></span><br><span class="line">   println(p.name)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 输出：</span></span><br><span class="line"><span class="comment">// 打印观察：any=PropertyDelegate@2e5d6d97 property=var PropertyDelegate.name: kotlin.String</span></span><br><span class="line"><span class="comment">// 假装我是从网络获取的名字</span></span><br><span class="line"><span class="comment">// 打印观察：any=PropertyDelegate@2e5d6d97 property=var PropertyDelegate.name: kotlin.String</span></span><br><span class="line"><span class="comment">// hh</span></span><br></pre></td></tr></table></figure>
+
+<p>var声明的是可变量，需要实现set和get，而val是不可变量，只需要实现get。</p>
+<p>简单的介绍了一下官方列举的这三个应用场景，其实感觉这三个例子并不能戳中我的痛点，因为现有的Java虽然实现起来啰嗦了点，但也并不是非常麻烦。比如可观察的属性，我只要在将属性声明为private，然后在set方法里设置一个接口回调就可以了，接口再弄个泛型，得了，所有可观察属性都能用这个接口了。至于后面两个也是同样的，但是这是语言层面的直接支持，喂你糖吃总是得心怀感激的，总好过吃翔不是。接下来就来了解一下Kotlin比较牛x的两个东西：扩展和高阶函数。</p>
+<h2 id="扩展-amp-高阶函数"><a href="#扩展-amp-高阶函数" class="headerlink" title="扩展 &amp; 高阶函数"></a>扩展 &amp; 高阶函数</h2><p>扩展是Kotlin中比较能打动我的一个特性，比如原来的Android中的Toast需要这么写：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Toast.makeText(mContext,<span class="string">&quot;toast&quot;</span>,Toast.LENGTH_SHORT).show();</span><br></pre></td></tr></table></figure>
+
+<p>说实话，刚开始还觉得敲着挺带感，慢慢的就烦了，自己简单的封装一下是这样：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ToastUtil</span></span>&#123;</span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">show</span><span class="params">(Context context,String text)</span></span>&#123;</span><br><span class="line">  Toast.makeText(context,text,Toast.LENGTH_SHORT).show();</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>后来传context也传烦了，进一步封装，在Application里弄一个静态方法获取context，然后：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ToastUtil</span></span>&#123;</span><br><span class="line"></span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">show</span><span class="params">(String text)</span></span>&#123;</span><br><span class="line">  Toast.makeText(Application.getContext(),text,Toast.LENGTH_SHORT).show();</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>那么利用Kotlin的扩展，可以怎么做呢？</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> Context.<span class="title">toast</span><span class="params">(text: <span class="type">String</span>)</span></span>&#123;</span><br><span class="line">   Toast.makeText(<span class="keyword">this</span>,text,Toast.LENGTH_SHORT).show()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这为Context类扩展了一个toast方法，这样以后你可以这样使用：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">context.toast(<span class="string">&quot;hello&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>如果你已经在上下文中：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">toast(<span class="string">&quot;hello&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>这可以说是十分的好用了，有了扩展，还要什么工（zi）具（xing）类（che）。扩展的语法比较简单，不多赘述。另外值得注意的是扩展并非继承，没办法复写类中的函数，用以下例子来说明一下：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Extend</span> </span>&#123;</span><br><span class="line">   <span class="function"><span class="keyword">fun</span> <span class="title">hello</span><span class="params">()</span></span> &#123;</span><br><span class="line">       println(<span class="string">&quot;hello&quot;</span>)</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line">​</span><br><span class="line"><span class="function"><span class="keyword">fun</span> Extend.<span class="title">hello</span><span class="params">(s: <span class="type">String</span>)</span></span> &#123;</span><br><span class="line">   println(<span class="string">&quot;<span class="variable">$s</span> hello&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line">​</span><br><span class="line"><span class="function"><span class="keyword">fun</span> Extend.<span class="title">hello</span><span class="params">()</span></span> &#123;</span><br><span class="line">   println(<span class="string">&quot;无参 扩展 hello&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line">​</span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span> &#123;</span><br><span class="line">   <span class="keyword">val</span> e = Extend()</span><br><span class="line">   e.hello()</span><br><span class="line">   e.hello(<span class="string">&quot;luo&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 输出：</span></span><br><span class="line"><span class="comment">// hello</span></span><br><span class="line"><span class="comment">// luo hello</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到当参数和方法名一样时，调用的是类内部的方法并非扩展方法，当参数不一致时调用对应的方法。</p>
+<h3 id="高阶函数"><a href="#高阶函数" class="headerlink" title="高阶函数"></a>高阶函数</h3><p>高阶，这俩字一看就高端大气上档次，看一下文档的描述：A higher-order function is a function that takes functions as parameters, or returns a function。高阶函数一种能把函数作为参数，或者将函数作为返回值的函数。将函数作为参数，桥豆麻袋，这……这不是跟传递点击事件那玩意很像么！Java里写的是接口回调，Java8 可以用lambda，先不管Java内部是怎么实现lambda的，至少从形式上看是很像直接传了个函数进去的。那么，继续用这个点击作为实例：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SecondActivity</span> </span>&#123;</span><br><span class="line">   <span class="function"><span class="keyword">fun</span> <span class="title">clickEvent</span><span class="params">(click: () -&gt; <span class="type">Unit</span>)</span></span>&#123;</span><br><span class="line">       println(<span class="string">&quot;click event start&quot;</span>)</span><br><span class="line">       click()</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line">​</span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span> &#123;</span><br><span class="line">   <span class="keyword">val</span> secondActivity = SecondActivity()</span><br><span class="line">   secondActivity.clickEvent(&#123;</span><br><span class="line">       println(<span class="string">&quot;do something about click event&quot;</span>)</span><br><span class="line">   &#125;)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 输出：</span></span><br><span class="line"><span class="comment">// click event start</span></span><br><span class="line"><span class="comment">// do something about click event</span></span><br></pre></td></tr></table></figure>
+
+<p>首先解释一下clickEvent函数，click: () 表示函数类型， -&gt; Unit表示返回值为空，也就是clickEvent接收一个返回值为空的click()方法。在clickEvent方法内部调用了这个传入的方法，达到了传递事件的目的。当然，如果函数是作为最后一个参数，是可以写成这样的：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">secondActivity.clickEvent() &#123;</span><br><span class="line">    println(<span class="string">&quot;do something about click event&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果没有其他参数，那么还能写成这样：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">secondActivity.clickEvent &#123;</span><br><span class="line">    println(<span class="string">&quot;do something about click event&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>相比Java，黑科技的味道慢慢的就出来了。光看这些可能你会觉得没啥，那么接下来的骚操作一定会让你对Kotlin的感觉提升一截。我也是在猫哥给我指导了一番之后，十分惊讶，还有这种操作？</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1976147-9b5f57378793cbdb.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="令人窒息的操作"></p>
+<p>利用高阶函数可以接受函数参数这一点，能玩的东西可就多了去了，接下来就写几个好玩的：</p>
+<p>debug模式配置</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">inline</span> <span class="function"><span class="keyword">fun</span> <span class="title">debugConf</span><span class="params">(code: () -&gt; <span class="type">Unit</span>)</span></span> &#123;</span><br><span class="line">   <span class="keyword">if</span> (BuildConfig.DEBUG) &#123;</span><br><span class="line">       code()</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line">​</span><br><span class="line">   debugConf &#123;</span><br><span class="line">       <span class="comment">// init</span></span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<p>这只是一个比较简单的应用场景，类似的还有Android中支持版本代码的编写，每一次都需要判断版本然后调用api，无疑是十分麻烦的，我们也可以利用高阶函数的特性来搞定。具体的代码就不再编写了。接下来举一个利用扩展和高阶函数特性编写的一个判断集合元素是否满足条件的函数。我们利用扩展给List扩展一个叫做myAll的方法，List调用此方法判断集合中的所有元素是否满足条件，如果所有元素都满足，返回true，反之false。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">inline</span> <span class="function"><span class="keyword">fun</span> <span class="type">&lt;T&gt;</span> List<span class="type">&lt;T&gt;</span>.<span class="title">myAll</span><span class="params">(getItem: (<span class="type">T</span>) -&gt; <span class="type">Boolean</span>)</span></span>: <span class="built_in">Boolean</span> &#123;</span><br><span class="line">   <span class="keyword">for</span> (element <span class="keyword">in</span> <span class="keyword">this</span>) &#123;</span><br><span class="line">       <span class="keyword">if</span> (!getItem(element)) &#123;</span><br><span class="line">           <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">&#125;</span><br><span class="line">​</span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span> &#123;</span><br><span class="line"> <span class="keyword">val</span> list = listOf(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>)</span><br><span class="line"> println(<span class="string">&quot;myAll：&quot;</span> + list.myAll &#123; it % <span class="number">1</span> == <span class="number">0</span> &#125;)</span><br><span class="line"> println(<span class="string">&quot;myAll: &quot;</span> + list.myAll &#123; it % <span class="number">2</span> == <span class="number">0</span> &#125;)</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 输出：</span></span><br><span class="line"><span class="comment">// myAll：true</span></span><br><span class="line"><span class="comment">// myAll: false</span></span><br></pre></td></tr></table></figure>
+
+<p>简单的解释一下，inline是内联函数，在编译时编译器将函数体嵌入在每一个调用处。先看最外层，一个泛型T，用来表示集合内元素类型。myAll方法返回Boolean类型，用来表示所有元素是否符合条件。而getItem方法接收类型为T的参数（List元素类型），返回一个Boolean值表示该元素是否符合条件。判断也是简单粗暴的，遍历List如果有getItem()的返回值是false，那么就返回false。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>我看Kotlin也就是断断续续的看了一些语法，总体看下来感觉Java开发者学习Kotlin的成本不是非常高，而且最重要的是，Kotlin兼容Java，迁移成本也非常的低。Kotlin中的很多特性，只是提供了一种语言层面上的支持，Java也不是不能实现，总得拐弯抹角，麻烦的一批。Java语法啰嗦受人诟病也不是一天两天了，不过Java发展到现在更像是一个平台而不是语言了，Java能做的事太多，语法已经不是最值得关注的事情了。不过如果有一个兼容Java而且还喂你各种语法糖的语言出现，为什么不尝试一下呢？如果我说成这样你还不尝试一下，那我只能……</p>
+<p>强行给你安利一波了，大爷，试一下Kotlin呗~</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a target="_blank" rel="noopener" href="http://tanfujun.com/kotlin-web-site-cn/docs/reference/">Kotlin Programming Language 中文版</a></li>
+<li><a target="_blank" rel="noopener" href="http://kotlinlang.org/docs/reference/">Kotlin Programming Language 英文版</a></li>
+<li>kotlin for android developers：电子书</li>
+<li><a target="_blank" rel="noopener" href="http://www.jianshu.com/u/2b4f4be84600">猫哥</a>Kotlin系列</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%85%A5%E9%97%A8%E5%AD%A6%E4%B9%A0/" rel="tag"># 入门学习</a>
+              <a href="/tags/Kotlin/" rel="tag"># Kotlin</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2017/07/27/Java%E6%8B%B7%E8%B4%9D%E5%AF%B9%E8%B1%A1/" rel="prev" title="Java拷贝对象">
+      <i class="fa fa-chevron-left"></i> Java拷贝对象
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/08/06/Android%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BDdex%E5%88%9D%E8%AF%95/" rel="next" title="Android动态加载dex初试">
+      Android动态加载dex初试 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2"><span class="nav-number">1.</span> <span class="nav-text">写在前面</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A7%94%E6%89%98"><span class="nav-number">2.</span> <span class="nav-text">委托</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A7%94%E6%89%98%E7%B1%BB"><span class="nav-number">2.1.</span> <span class="nav-text">委托类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A7%94%E6%89%98%E5%B1%9E%E6%80%A7"><span class="nav-number">2.2.</span> <span class="nav-text">委托属性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%A9%E5%B1%95-amp-%E9%AB%98%E9%98%B6%E5%87%BD%E6%95%B0"><span class="nav-number">3.</span> <span class="nav-text">扩展 &amp; 高阶函数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AB%98%E9%98%B6%E5%87%BD%E6%95%B0"><span class="nav-number">3.1.</span> <span class="nav-text">高阶函数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">4.</span> <span class="nav-text">小结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">5.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="LJ"
+      src="/images/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">LJ</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">82</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">38</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ForgetAll" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ForgetAll" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://blankj.com/" title="https:&#x2F;&#x2F;blankj.com&#x2F;" rel="noopener" target="_blank">blankj-开源达人</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LJ</span>
+</div>
+  <div class="powered-by">书山有路勤为径
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '76eeb7f12824012f27fe',
+      clientSecret: '41159510cb271785627f9c3d29ca6c6b43f4cdaf',
+      repo        : 'ForgetAll.github.io',
+      owner       : 'ForgetAll',
+      admin       : ['ForgetAll'],
+      id          : '2034cc5ef6339f8b6145a320d9b41220',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>

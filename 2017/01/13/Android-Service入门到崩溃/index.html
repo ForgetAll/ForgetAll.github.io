@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/avatar.jpeg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/avatar.jpeg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/avatar.jpeg">
+  <link rel="mask-icon" href="/images/avatar.jpeg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"forgetall.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":null,"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="最近项目搞完了，有点空正好查漏补缺关于服务这一块，一直都没怎么用过，趁着这个时机学习一下至于为啥起这名呢……因为本来就想着稍微看一下Service，结果发现要看的东西越来越多……越来越多……所以就有崩了的意思……本文代码比较多，请边看边敲，碰到不懂去搜一下。 首先梳理一下我想要写的东西：  Service基础 AIDL  什么是ServiceService是一个可以在后台执行长时间运行操作而不提供">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android-Service入门到崩溃">
+<meta property="og:url" content="https://forgetall.github.io/2017/01/13/Android-Service%E5%85%A5%E9%97%A8%E5%88%B0%E5%B4%A9%E6%BA%83/index.html">
+<meta property="og:site_name" content="LJ的Blog">
+<meta property="og:description" content="最近项目搞完了，有点空正好查漏补缺关于服务这一块，一直都没怎么用过，趁着这个时机学习一下至于为啥起这名呢……因为本来就想着稍微看一下Service，结果发现要看的东西越来越多……越来越多……所以就有崩了的意思……本文代码比较多，请边看边敲，碰到不懂去搜一下。 首先梳理一下我想要写的东西：  Service基础 AIDL  什么是ServiceService是一个可以在后台执行长时间运行操作而不提供">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1976147-76c7ebd486f7c48a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1976147-226a453a59c8e402.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1976147-640bbee4e9c39f6a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1976147-49c77846a3147887.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1976147-67427398a2972d92.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1976147-e584ce486d91519e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1976147-4ae5e9006f5a99d8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1976147-ae626cb6c50a7ab1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1976147-45c831d37ed90d11.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1976147-cb0bfbd9fedea47a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1976147-dceee8022a3d8e5f.gif?imageMogr2/auto-orient/strip">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1976147-ce6f6a46593db5a6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1976147-db5718cc94e4d80a.gif?imageMogr2/auto-orient/strip">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1976147-fa95c53340653723.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1976147-71e8e3c9ade2b030.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1976147-f6cc3650f88e18d6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1976147-168027012463256e.gif?imageMogr2/auto-orient/strip">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1976147-7a3d9a36bc3cb570.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="article:published_time" content="2017-01-13T09:18:59.000Z">
+<meta property="article:modified_time" content="2018-05-30T02:38:55.000Z">
+<meta property="article:author" content="LJ">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="入门学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/1976147-76c7ebd486f7c48a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+<link rel="canonical" href="https://forgetall.github.io/2017/01/13/Android-Service%E5%85%A5%E9%97%A8%E5%88%B0%E5%B4%A9%E6%BA%83/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Android-Service入门到崩溃 | LJ的Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">LJ的Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">学海无涯苦做舟</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2017/01/13/Android-Service%E5%85%A5%E9%97%A8%E5%88%B0%E5%B4%A9%E6%BA%83/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="LJ">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LJ的Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android-Service入门到崩溃
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-01-13 17:18:59" itemprop="dateCreated datePublished" datetime="2017-01-13T17:18:59+08:00">2017-01-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2018-05-30 10:38:55" itemprop="dateModified" datetime="2018-05-30T10:38:55+08:00">2018-05-30</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>最近项目搞完了，有点空正好查漏补缺<del>关于服务这一块，一直都没怎么用过，趁着这个时机学习一下</del>至于为啥起这名呢……因为本来就想着稍微看一下Service，结果发现要看的东西越来越多……越来越多……所以就有崩了的意思……本文代码比较多，请边看边敲，碰到不懂去搜一下。</p>
+<p>首先梳理一下我想要写的东西：</p>
+<ul>
+<li>Service基础</li>
+<li>AIDL</li>
+</ul>
+<h2 id="什么是Service"><a href="#什么是Service" class="headerlink" title="什么是Service"></a>什么是Service</h2><p>Service是一个可以在后台执行长时间运行操作而不提供用户界面的应用组件。服务可由其他应用组件启动，而且即使用户切换到其他应用，服务仍将在后台继续运行。服务并不是一个单独的进程，除非有特殊指明，否则Service是作为application的一部分运行在相同的进程中的。服务没有分离于主线程工作，所以当你要在服务中进行耗时操作最好开启一个新的线程来执行这种操作，避免ANR。</p>
+<span id="more"></span>
+<h2 id="启动Service的两种方式"><a href="#启动Service的两种方式" class="headerlink" title="启动Service的两种方式"></a>启动Service的两种方式</h2><p>有两种方式启动service，一种是startService，一种是bindService，暂时从service的生命周期上来看一下这两种有何异同，先贴代码：<br>Service：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.xiasuhuei321.client;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.app.Service;</span><br><span class="line"><span class="keyword">import</span> android.content.Intent;</span><br><span class="line"><span class="keyword">import</span> android.os.Binder;</span><br><span class="line"><span class="keyword">import</span> android.os.IBinder;</span><br><span class="line"><span class="keyword">import</span> android.support.annotation.Nullable;</span><br><span class="line"><span class="keyword">import</span> android.util.Log;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Created by xiasuhuei321 on 2017/1/11.</span></span><br><span class="line"><span class="comment"> * author:luo</span></span><br><span class="line"><span class="comment"> * e-mail:xiasuhuei321@163.com</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestService</span> <span class="keyword">extends</span> <span class="title">Service</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String TAG = <span class="string">&quot;TestService&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Nullable</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> IBinder <span class="title">onBind</span><span class="params">(Intent intent)</span> </span>&#123;</span><br><span class="line">        Log.e(TAG, <span class="string">&quot;onBind&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Log.e(TAG, <span class="string">&quot;onCreate&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">onStartCommand</span><span class="params">(Intent intent, <span class="keyword">int</span> flags, <span class="keyword">int</span> startId)</span> </span>&#123;</span><br><span class="line">        Log.e(TAG, <span class="string">&quot;onStartCommand&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">super</span>.onStartCommand(intent, flags, startId);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onRebind</span><span class="params">(Intent intent)</span> </span>&#123;</span><br><span class="line">        Log.e(TAG, <span class="string">&quot;onRebind&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onDestroy</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Log.e(TAG, <span class="string">&quot;onDestroy&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onUnbind</span><span class="params">(Intent intent)</span> </span>&#123;</span><br><span class="line">        Log.e(TAG, <span class="string">&quot;onUnbind&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">super</span>.onUnbind(intent);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">MyBinder</span> <span class="keyword">extends</span> <span class="title">Binder</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Activity:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.xiasuhuei321.client;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.content.ComponentName;</span><br><span class="line"><span class="keyword">import</span> android.content.Intent;</span><br><span class="line"><span class="keyword">import</span> android.content.ServiceConnection;</span><br><span class="line"><span class="keyword">import</span> android.os.IBinder;</span><br><span class="line"><span class="keyword">import</span> android.support.v7.app.AppCompatActivity;</span><br><span class="line"><span class="keyword">import</span> android.os.Bundle;</span><br><span class="line"><span class="keyword">import</span> android.util.Log;</span><br><span class="line"><span class="keyword">import</span> android.view.View;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> <span class="keyword">implements</span> <span class="title">View</span>.<span class="title">OnClickListener</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Intent startIntent;</span><br><span class="line">    <span class="keyword">private</span> Intent bindIntent;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String TAG = <span class="string">&quot;MainActivity&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line">        findViewById(R.id.bt_bind_service).setOnClickListener(<span class="keyword">this</span>);</span><br><span class="line">        findViewById(R.id.bt_start_service).setOnClickListener(<span class="keyword">this</span>);</span><br><span class="line">        findViewById(R.id.bt_stop_service).setOnClickListener(<span class="keyword">this</span>);</span><br><span class="line">        findViewById(R.id.bt_unbind_service).setOnClickListener(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View view)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">switch</span> (view.getId()) &#123;</span><br><span class="line">            <span class="keyword">case</span> R.id.bt_bind_service:</span><br><span class="line">                bindIntent = <span class="keyword">new</span> Intent(<span class="keyword">this</span>, TestService.class);</span><br><span class="line">                bindService(bindIntent, connection, BIND_AUTO_CREATE);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">case</span> R.id.bt_start_service:</span><br><span class="line">                startIntent = <span class="keyword">new</span> Intent(<span class="keyword">this</span>, TestService.class);</span><br><span class="line">                startService(startIntent);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">case</span> R.id.bt_stop_service:</span><br><span class="line">                <span class="keyword">if</span> (startIntent != <span class="keyword">null</span>)</span><br><span class="line">                    stopService(startIntent);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">case</span> R.id.bt_unbind_service:</span><br><span class="line">                <span class="keyword">if</span>(bindIntent != <span class="keyword">null</span>)</span><br><span class="line">                    unbindService(connection);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ServiceConnection connection = <span class="keyword">new</span> ServiceConnection() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onServiceConnected</span><span class="params">(ComponentName componentName, IBinder iBinder)</span> </span>&#123;</span><br><span class="line">            Log.e(TAG, <span class="string">&quot;onServiceConnected&quot;</span>);</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onServiceDisconnected</span><span class="params">(ComponentName componentName)</span> </span>&#123;</span><br><span class="line">            Log.e(TAG, <span class="string">&quot;onServiceDisconnected&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>xml文件就不贴了，就是四个按钮，从上到下分别是bindService、startService、unbindService、stopService两两对应，样子如下所示：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1976147-76c7ebd486f7c48a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Paste_Image.png"><br>最后别忘了在清单文件中注册一下，android四大组件都需要注册的。</p>
+<p>使用bindService方法启动时service的生命周期：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1976147-226a453a59c8e402.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="service"></p>
+<p>点击unbind按钮时service的生命周期：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1976147-640bbee4e9c39f6a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="service"></p>
+<p>点击startService</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1976147-49c77846a3147887.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="service"></p>
+<p>点击stopService</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1976147-67427398a2972d92.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="service"></p>
+<p>通过以上的生命周期我们会发现，通过bindService和startService启动的服务生命周期会有所不同，其实bindService还有另外的东西，不过因为我在onBind()方法里返回了null所以没有体现出来。那么我返回一个他要的试试看，修改的代码只有TestService和ServiceConnection，只放修改的代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.xiasuhuei321.client;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.app.Service;</span><br><span class="line"><span class="keyword">import</span> android.content.Intent;</span><br><span class="line"><span class="keyword">import</span> android.os.Binder;</span><br><span class="line"><span class="keyword">import</span> android.os.IBinder;</span><br><span class="line"><span class="keyword">import</span> android.support.annotation.Nullable;</span><br><span class="line"><span class="keyword">import</span> android.util.Log;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Created by xiasuhuei321 on 2017/1/11.</span></span><br><span class="line"><span class="comment"> * author:luo</span></span><br><span class="line"><span class="comment"> * e-mail:xiasuhuei321@163.com</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestService</span> <span class="keyword">extends</span> <span class="title">Service</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String TAG = <span class="string">&quot;TestService&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Nullable</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> IBinder <span class="title">onBind</span><span class="params">(Intent intent)</span> </span>&#123;</span><br><span class="line">        Log.e(TAG, <span class="string">&quot;onBind&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> MyBinder();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Log.e(TAG, <span class="string">&quot;onCreate&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">onStartCommand</span><span class="params">(Intent intent, <span class="keyword">int</span> flags, <span class="keyword">int</span> startId)</span> </span>&#123;</span><br><span class="line">        Log.e(TAG, <span class="string">&quot;onStartCommand&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">super</span>.onStartCommand(intent, flags, startId);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onRebind</span><span class="params">(Intent intent)</span> </span>&#123;</span><br><span class="line">        Log.e(TAG, <span class="string">&quot;onRebind&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onDestroy</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Log.e(TAG, <span class="string">&quot;onDestroy&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onUnbind</span><span class="params">(Intent intent)</span> </span>&#123;</span><br><span class="line">        Log.e(TAG, <span class="string">&quot;onUnbind&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">super</span>.onUnbind(intent);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">MyBinder</span> <span class="keyword">extends</span> <span class="title">Binder</span> </span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">playMusic</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            Log.e(<span class="string">&quot;MyBinder&quot;</span>, <span class="string">&quot;play music&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">    <span class="comment">// 在MainActivity中</span></span><br><span class="line">    ServiceConnection connection = <span class="keyword">new</span> ServiceConnection() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onServiceConnected</span><span class="params">(ComponentName componentName, IBinder iBinder)</span> </span>&#123;</span><br><span class="line">            Log.e(TAG, <span class="string">&quot;onServiceConnected&quot;</span>);</span><br><span class="line">            TestService.MyBinder mb = (TestService.MyBinder) iBinder;</span><br><span class="line">            mb.playMusic();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onServiceDisconnected</span><span class="params">(ComponentName componentName)</span> </span>&#123;</span><br><span class="line">            Log.e(TAG, <span class="string">&quot;onServiceDisconnected&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br></pre></td></tr></table></figure>
+<p>那么让咱点下BIND_SERVICE按钮看看有啥反应：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1976147-e584ce486d91519e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="service"></p>
+<p>可以看到，通过ServiceConnection中有两个回调方法，其中一个带有IBinder类型的对象，而我强转成我自己继承自Binder的MyBinder也没有错。可以猜测这里的IBinder就是我在onBind()里返回的MyBinder，而我可以在这个类里写一个方法，再通过拿到的IBinder来调用这个方法。</p>
+<p>小结：</p>
+<p>onCreate方法只在首次创建服务时，系统将调用此方法来执行一次性设置程序（在调用 onStartCommand()或onBind()之前）。如果服务已在运行，则不会调用此方法。点击BIND_SERVIC和START_SERVICE（即bindService和startService都调用），再点击UNBIND_SERVICE或STOP_SERVICE实际上都不会调用onDestroy方法。因为service可以和多个客户端绑定（不过只在第一次和客户端绑定的时候调用onBind方法，随后即可将同一IBinder传递给其他绑定的客户端），除非所有的客户端均取消绑定（如果通过startService也启动了这个服务，那么还得stopService才会停止），否则stopService或stopSelf不会实际停止服务。</p>
+<p>在阅读鸿洋大神的一篇AIDL文章时，我尝试了下他的代码，发现使用隐式Intent启动服务会报错，后来搜索发现说是Android 5.0以上只能显示启动服务了，解决方案后文和网上都有。</p>
+<h2 id="创建绑定服务的三种方式"><a href="#创建绑定服务的三种方式" class="headerlink" title="创建绑定服务的三种方式"></a>创建绑定服务的三种方式</h2><p>创建绑定服务时必须提供IBinder，提供客户端和服务交互的“接口”。这里的接口并非java语言中的interface，可以理解为提供客户端调用的方法之类的。android提供三种方式：</p>
+<ul>
+<li>扩展（继承）Binder类</li>
+<li>使用Messenger</li>
+<li>使用AIDL</li>
+</ul>
+<p>第一种扩展Binder类在Android API指南中描述如下：如果服务是供你的自由应用专用，并且在客户端相同的进程中运行（常见情况），则应通过扩展Binder类并从onBind()返回它的一个实例来创建接口。客户端收到Binder后，可利用它直接访问Binder实现中乃至Service中可用的公共方法。</p>
+<p>如果服务只是您的自有应用的后台工作线程，则优先采用这种方法。不以这种方式创建接口的唯一原因是，您的服务被其他应用或不同的进程占用。</p>
+<p>也就是说如果不是为了跨进程而用其他两种方式你就是在耍流氓~</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1976147-4ae5e9006f5a99d8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="耍流氓"></p>
+<h3 id="AIDL"><a href="#AIDL" class="headerlink" title="AIDL"></a>AIDL</h3><p>在正式了解AIDL之前，我觉得有必要先弄明白线程和进程的概念。首先看一下他们正式的定义：</p>
+<ul>
+<li><p>线程（Thread）是进程中的一个实体，是被系统独立调度和分派的基本单位，线程自己不拥有系统资源，只拥有一点儿在运行中必不可少的资源，但它可与同属一个进程的其它线程共享进程所拥有的全部资源。</p>
+</li>
+<li><p>进程（Process）是计算机中的程序关于某数据集合上的一次运行活动，是系统进行资源分配和调度的基本单位，是操作系统结构的基础</p>
+</li>
+</ul>
+<p>从我们平时的开发中可以这么阐述进程与线程：进程是程序的一次运行，线程是其中一段代码的执行。而我们平时写的Android程序一般都是在一个进程中运行的，进程名即包名。Android系统内核是Linux内核，而每一个应用程序都运行在一个虚拟机上，每个应用程序都是一个进程。在Android中一个应用程序也是可以使用多进程的，其方式非常简单，只要在清单文件中指定对应的组件属性：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">android:process=&quot;:remote&quot;</span><br></pre></td></tr></table></figure>
+<p>这样就可以了，但是本来一个问题你可以用多进程来解决，然后你用了，之后你就会有两个问题了。说笑，多进程会带来的问题就是内存不共享，因为每个进程都独享自己的一块内存，没办法直接互相访问内存。一个进程中已经存在对象另外一个进程中不能直接使用，不过好在Android提供了很多方式给我们“跨进程”，AIDL便是我们首先要探究的一种方式。</p>
+<h3 id="AIDL小例子"><a href="#AIDL小例子" class="headerlink" title="AIDL小例子"></a>AIDL小例子</h3><p>我看了几篇文的例子，《Android开发艺术探索》、鸿洋大神和网上其他人写的，感觉还是先用鸿洋大神的例子好一点，鸿洋大神的例子是简单的计算两个整型数值的相加和相减的结果。我们首先新建一个AIDL文件：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1976147-ae626cb6c50a7ab1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="新建AIDL"></p>
+<p>AIDL文件代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Calc.aidl</span></span><br><span class="line"><span class="keyword">package</span> com.xiasuhuei321.forjianshu;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Declare any non-default types here with import statements</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">CalcManage</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">plus</span><span class="params">(<span class="keyword">int</span> a,<span class="keyword">int</span> b)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">min</span><span class="params">(<span class="keyword">int</span> a,<span class="keyword">int</span> b)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后点击Android Studio的make project</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1976147-45c831d37ed90d11.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="make pro"></p>
+<p>完成之后会在项目的app/build/generated/source/aidl/debug下生成一个java文件，这里和鸿洋大神一样，具体的解释放到之后再说，我们先走完这个流程。</p>
+<p>接着新建一个CalcService的Java类：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.xiasuhuei321.forjianshu;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.app.Service;</span><br><span class="line"><span class="keyword">import</span> android.content.Intent;</span><br><span class="line"><span class="keyword">import</span> android.os.IBinder;</span><br><span class="line"><span class="keyword">import</span> android.os.RemoteException;</span><br><span class="line"><span class="keyword">import</span> android.support.annotation.Nullable;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Created by xiasuhuei321 on 2017/1/13.</span></span><br><span class="line"><span class="comment"> * author:luo</span></span><br><span class="line"><span class="comment"> * e-mail:xiasuhuei321@163.com</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CalcService</span> <span class="keyword">extends</span> <span class="title">Service</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Nullable</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> IBinder <span class="title">onBind</span><span class="params">(Intent intent)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> binder;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    CalcManage.Stub binder = <span class="keyword">new</span> CalcManage.Stub() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">plus</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span> <span class="keyword">throws</span> RemoteException </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> a + b;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">min</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span> <span class="keyword">throws</span> RemoteException </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> a - b;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到我这里只是返回了一个binder，不过这个binder是我们通过AIDL生成的java文件中的一个类，恩，下文再解释。</p>
+<p>接着是主界面的布局，和MainActivity的代码，恩因为能直接用鸿洋大神的。。直接copy过来的。。。各位不要学我。。。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1976147-cb0bfbd9fedea47a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="不要学"></p>
+<p>布局：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">LinearLayout</span> <span class="attr">xmlns:android</span>=<span class="string">&quot;http://schemas.android.com/apk/res/android&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:tools</span>=<span class="string">&quot;http://schemas.android.com/tools&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:id</span>=<span class="string">&quot;@+id/activity_main&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_width</span>=<span class="string">&quot;match_parent&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_height</span>=<span class="string">&quot;match_parent&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:orientation</span>=<span class="string">&quot;vertical&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">tools:context</span>=<span class="string">&quot;com.xiasuhuei321.forjianshu.MainActivity&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">Button</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_width</span>=<span class="string">&quot;fill_parent&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_height</span>=<span class="string">&quot;wrap_content&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:onClick</span>=<span class="string">&quot;bindService&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:text</span>=<span class="string">&quot;BindService&quot;</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">Button</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_width</span>=<span class="string">&quot;fill_parent&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_height</span>=<span class="string">&quot;wrap_content&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:onClick</span>=<span class="string">&quot;unbindService&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:text</span>=<span class="string">&quot;UnbindService&quot;</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">Button</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_width</span>=<span class="string">&quot;fill_parent&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_height</span>=<span class="string">&quot;wrap_content&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:onClick</span>=<span class="string">&quot;addInvoked&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:text</span>=<span class="string">&quot;12+12&quot;</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">Button</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_width</span>=<span class="string">&quot;fill_parent&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_height</span>=<span class="string">&quot;wrap_content&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:onClick</span>=<span class="string">&quot;minInvoked&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:text</span>=<span class="string">&quot;50-12&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">LinearLayout</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>MainActivity：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.xiasuhuei321.forjianshu;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.content.ComponentName;</span><br><span class="line"><span class="keyword">import</span> android.content.Context;</span><br><span class="line"><span class="keyword">import</span> android.content.Intent;</span><br><span class="line"><span class="keyword">import</span> android.content.ServiceConnection;</span><br><span class="line"><span class="keyword">import</span> android.content.pm.PackageManager;</span><br><span class="line"><span class="keyword">import</span> android.content.pm.ResolveInfo;</span><br><span class="line"><span class="keyword">import</span> android.os.IBinder;</span><br><span class="line"><span class="keyword">import</span> android.os.RemoteException;</span><br><span class="line"><span class="keyword">import</span> android.support.v7.app.AppCompatActivity;</span><br><span class="line"><span class="keyword">import</span> android.os.Bundle;</span><br><span class="line"><span class="keyword">import</span> android.util.Log;</span><br><span class="line"><span class="keyword">import</span> android.view.View;</span><br><span class="line"><span class="keyword">import</span> android.widget.Toast;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> CalcManage mCalcAidl;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 客户端主要通过ServiceConnected与服务端连接</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> ServiceConnection mServiceConn = <span class="keyword">new</span> ServiceConnection() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onServiceConnected</span><span class="params">(ComponentName name, IBinder service)</span> </span>&#123;</span><br><span class="line">            Log.e(<span class="string">&quot;client&quot;</span>, <span class="string">&quot;onServiceConnected&quot;</span>);</span><br><span class="line">            mCalcAidl = CalcManage.Stub.asInterface(service);</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onServiceDisconnected</span><span class="params">(ComponentName name)</span> </span>&#123;</span><br><span class="line">            Log.e(<span class="string">&quot;client&quot;</span>, <span class="string">&quot;onServiceDisconnected&quot;</span>);</span><br><span class="line">            mCalcAidl = <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 点击BindService按钮时调用</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> v</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">bindService</span><span class="params">(View v)</span> </span>&#123;</span><br><span class="line">        Intent intent = <span class="keyword">new</span> Intent();</span><br><span class="line">        intent.setAction(<span class="string">&quot;com.xiasuhuei321.forjianshu.calc&quot;</span>);</span><br><span class="line">        <span class="comment">// 在5.0以上隐式启动绑定service会抛异常</span></span><br><span class="line">        <span class="keyword">final</span> Intent i = <span class="keyword">new</span> Intent(createExplicitFromImplicitIntent(<span class="keyword">this</span>,intent));</span><br><span class="line">        bindService(i, mServiceConn, Context.BIND_AUTO_CREATE);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 点击unBindService按钮时调用</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">unbindService</span><span class="params">(View v)</span> </span>&#123;</span><br><span class="line">        unbindService(mServiceConn);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 点击12 + 12按钮时调用</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addInvoked</span><span class="params">(View v)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (mCalcAidl != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">int</span> addRes = mCalcAidl.plus(<span class="number">12</span>, <span class="number">12</span>);</span><br><span class="line">            Toast.makeText(<span class="keyword">this</span>, addRes + <span class="string">&quot;&quot;</span>, Toast.LENGTH_SHORT).show();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            Toast.makeText(<span class="keyword">this</span>, <span class="string">&quot;服务器被异常杀死，请重新绑定服务端&quot;</span>, Toast.LENGTH_SHORT).show();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 点击50 - 12按钮时调用</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">minInvoked</span><span class="params">(View v)</span> <span class="keyword">throws</span> RemoteException </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (mCalcAidl != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">int</span> addRes = mCalcAidl.min(<span class="number">50</span>, <span class="number">12</span>);</span><br><span class="line">            Toast.makeText(<span class="keyword">this</span>, addRes + <span class="string">&quot;&quot;</span>, Toast.LENGTH_SHORT).show();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            Toast.makeText(<span class="keyword">this</span>, <span class="string">&quot;服务端未绑定或被异常杀死，请重新绑定服务端&quot;</span>, Toast.LENGTH_SHORT).show();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/***</span></span><br><span class="line"><span class="comment">     * Android L (lollipop, API 21) introduced a new problem when trying to invoke implicit intent,</span></span><br><span class="line"><span class="comment">     * &quot;java.lang.IllegalArgumentException: Service Intent must be explicit&quot;</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * If you are using an implicit intent, and know only 1 target would answer this intent,</span></span><br><span class="line"><span class="comment">     * This method will help you turn the implicit intent into the explicit form.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * Inspired from SO answer: http://stackoverflow.com/a/26318757/1446466</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> context</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> implicitIntent - The original implicit intent</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> Explicit Intent created from the implicit original intent</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Intent <span class="title">createExplicitFromImplicitIntent</span><span class="params">(Context context, Intent implicitIntent)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// Retrieve all services that can match the given intent</span></span><br><span class="line">        PackageManager pm = context.getPackageManager();</span><br><span class="line">        List&lt;ResolveInfo&gt; resolveInfo = pm.queryIntentServices(implicitIntent, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Make sure only one match was found</span></span><br><span class="line">        <span class="keyword">if</span> (resolveInfo == <span class="keyword">null</span> || resolveInfo.size() != <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Get component info and create ComponentName</span></span><br><span class="line">        ResolveInfo serviceInfo = resolveInfo.get(<span class="number">0</span>);</span><br><span class="line">        String packageName = serviceInfo.serviceInfo.packageName;</span><br><span class="line">        String className = serviceInfo.serviceInfo.name;</span><br><span class="line">        ComponentName component = <span class="keyword">new</span> ComponentName(packageName, className);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Create a new intent. Use the old one for extras and such reuse</span></span><br><span class="line">        Intent explicitIntent = <span class="keyword">new</span> Intent(implicitIntent);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Set the component to be explicit</span></span><br><span class="line">        explicitIntent.setComponent(component);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> explicitIntent;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>最后不要忘了在清单文件中注册这个service：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">service</span> <span class="attr">android:name</span>=<span class="string">&quot;.CalcService&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">intent-filter</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">action</span> <span class="attr">android:name</span>=<span class="string">&quot;com.xiasuhuei321.forjianshu.calc&quot;</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">category</span> <span class="attr">android:name</span>=<span class="string">&quot;android.intent.category.DEFAULT&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">intent-filter</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">service</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>最后来看一下结果如何：<br><img src="http://upload-images.jianshu.io/upload_images/1976147-dceee8022a3d8e5f.gif?imageMogr2/auto-orient/strip" alt="结果"></p>
+<p>一些值得注意的地方已经在代码中注释了，看结果很明显是对的，但是我这里还没有体现出来AIDL跨进程跨在哪了，接下来就给这个service指定一个进程，看一下还能跑不。</p>
+<p>修改一下清单文件中service的属性：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">service</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:name</span>=<span class="string">&quot;.CalcService&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:process</span>=<span class="string">&quot;:calc&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">intent-filter</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">action</span> <span class="attr">android:name</span>=<span class="string">&quot;com.xiasuhuei321.forjianshu.calc&quot;</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">category</span> <span class="attr">android:name</span>=<span class="string">&quot;android.intent.category.DEFAULT&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">intent-filter</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">service</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>启动之后点击第一个按钮绑定服务，再查看果然多了:calc进程。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1976147-ce6f6a46593db5a6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="两个进程"></p>
+<p>还能跑不？<br><img src="http://upload-images.jianshu.io/upload_images/1976147-db5718cc94e4d80a.gif?imageMogr2/auto-orient/strip" alt="结果"></p>
+<p>结果是一样的，正常运行，这说明了AIDL的确能实现“跨进程”。这种方式也可以用于不同app间的通信，只不过可能会麻烦一点。接下来就新建一个client module：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1976147-fa95c53340653723.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="新建一个module"></p>
+<p>现在我们新建的这个module将之称为client，而之前的项目将之称为server。现在我们将在server通过AIDL文件生成的java文件复制过来</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1976147-71e8e3c9ade2b030.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="复制"><br>当然了，因为包更改了，肯定一堆问题，改过来就好了，将该文件内的包名全部修改对了就可以了。然后，恩，把之前的布局和能用到的都复制过来……布局不怎么需要改，MainActivity的代码也先不该，复制过来跑起来看看咋样。</p>
+<p>结果肯定是闪退了~别问我咋知道，如果你报的错是以下这种：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1976147-f6cc3650f88e18d6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="错误"></p>
+<p>那说明CalcMange代码里的DESCRIPTOR错了，毕竟直接拷贝过来的。。。各种错不稀奇。。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String DESCRIPTOR = <span class="string">&quot;com.xiasuhuei321.client.CalcManage&quot;</span>;</span><br></pre></td></tr></table></figure>
+<p>因为刚全局修改了包名，所以这里也改了，但是这不能改，不然就会抛这个异常。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String DESCRIPTOR = <span class="string">&quot;com.xiasuhuei321.forjianshu.CalcManage&quot;</span>;</span><br></pre></td></tr></table></figure>
+<p>好了，改成这样再来一遍，看一下结果：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1976147-168027012463256e.gif?imageMogr2/auto-orient/strip" alt="结果"></p>
+<h3 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h3><p>正确的得出了结果，恩，试也试完了，接下来研究一下AIDL为啥能做到跨进程。前面一直拖着说道后面解释的玩意，现在再来看看，系统为我们生成的java文件：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * This file is auto-generated.  DO NOT MODIFY.</span></span><br><span class="line"><span class="comment"> * Original file: /Users/luojun/Desktop/ForJianShu/app/src/main/aidl/com/xiasuhuei321/forjianshu/CalcManage.aidl</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">package</span> com.xiasuhuei321.forjianshu;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Declare any non-default types here with import statements</span></span><br><span class="line"><span class="comment">// 继承了IInterface，同时自己也是也是一个接口，所有可以再Binder中传输的接口都需要继承IIterface</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">CalcManage</span> <span class="keyword">extends</span> <span class="title">android</span>.<span class="title">os</span>.<span class="title">IInterface</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Local-side IPC implementation stub class.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="comment">// Binder类，当客户端和服务端都位于同一个进程的时候，方法调用不会走跨进程的transact过程，</span></span><br><span class="line">    <span class="comment">// 而当两者位于不同进程时，方法调用需要走transact过程。逻辑由Stub的内部代理类Proxy来完成</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Stub</span> <span class="keyword">extends</span> <span class="title">android</span>.<span class="title">os</span>.<span class="title">Binder</span> <span class="keyword">implements</span> <span class="title">com</span>.<span class="title">xiasuhuei321</span>.<span class="title">forjianshu</span>.<span class="title">CalcManage</span> </span>&#123;</span><br><span class="line">        <span class="comment">// Binder的唯一标识，一般用当前Binder的类名标识</span></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> java.lang.String DESCRIPTOR = <span class="string">&quot;com.xiasuhuei321.forjianshu.CalcManage&quot;</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * Construct the stub at attach it to the interface.</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">Stub</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.attachInterface(<span class="keyword">this</span>, DESCRIPTOR);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * Cast an IBinder object into an com.xiasuhuei321.forjianshu.CalcManage interface,</span></span><br><span class="line"><span class="comment">         * generating a proxy if needed.</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="comment">// 用于将服务端的Binder对象转换成客户端所需的AIDL接口类型的对象，这种转换过程是区分进程的，如果</span></span><br><span class="line">        <span class="comment">// 客户端和服务端位于同一进程，那么此方法返回的就是服务端的Stub对象本身，否则返回的就是系统</span></span><br><span class="line">        <span class="comment">// 封装后的Stub.proxy</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">static</span> com.xiasuhuei321.forjianshu.<span class="function">CalcManage <span class="title">asInterface</span><span class="params">(android.os.IBinder obj)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">if</span> ((obj == <span class="keyword">null</span>)) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            android.os.IInterface iin = obj.queryLocalInterface(DESCRIPTOR);</span><br><span class="line">            <span class="keyword">if</span> (((iin != <span class="keyword">null</span>) &amp;&amp; (iin <span class="keyword">instanceof</span> com.xiasuhuei321.forjianshu.CalcManage))) &#123;</span><br><span class="line">                <span class="keyword">return</span> ((com.xiasuhuei321.forjianshu.CalcManage) iin);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> com.xiasuhuei321.forjianshu.CalcManage.Stub.Proxy(obj);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 返回当前Binder对象</span></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> android.os.<span class="function">IBinder <span class="title">asBinder</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 这个方法运行在客户端，当客户端远程调用此方法时，它的内部实现是这样的：创建该方法所需要的输入类型</span></span><br><span class="line">        <span class="comment">// Parcel对象_data、输出型Parcel对象_reply和返回值对象List;然后把该方法的参数信息写入_data中</span></span><br><span class="line">        <span class="comment">// （如果有参数的话）；接着调用transact方法来发起RPC（远程过程调用）请求，同事当前线程挂起；然后</span></span><br><span class="line">        <span class="comment">// 服务端的onTransact方法会被调用，直到RPC过程返回后，当前线程继续执行，并从_reply中取出RPC过程</span></span><br><span class="line">        <span class="comment">// 的返回结果；返回_reply中的数据。</span></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onTransact</span><span class="params">(<span class="keyword">int</span> code, android.os.Parcel data, android.os.Parcel reply, <span class="keyword">int</span> flags)</span> <span class="keyword">throws</span> android.os.RemoteException </span>&#123;</span><br><span class="line">            <span class="keyword">switch</span> (code) &#123;<span class="comment">// 唯一标识，区分执行哪个方法</span></span><br><span class="line">                <span class="keyword">case</span> INTERFACE_TRANSACTION: &#123;</span><br><span class="line">                    reply.writeString(DESCRIPTOR);</span><br><span class="line">                    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">case</span> TRANSACTION_plus: &#123;</span><br><span class="line">                    <span class="comment">// 与客户端的writeInterfaceToken对用，标识远程服务的名称</span></span><br><span class="line">                    data.enforceInterface(DESCRIPTOR);</span><br><span class="line">                    <span class="comment">// 读取客户端传入的两个参数</span></span><br><span class="line">                    <span class="keyword">int</span> _arg0;</span><br><span class="line">                    _arg0 = data.readInt();</span><br><span class="line">                    <span class="keyword">int</span> _arg1;</span><br><span class="line">                    _arg1 = data.readInt();</span><br><span class="line">                    <span class="comment">// 这里涉及到java多态，是一个基本的概念，这里最终调用的是我们在</span></span><br><span class="line">                    <span class="comment">// Service中创建的实现类中的方法。</span></span><br><span class="line">                    <span class="keyword">int</span> _result = <span class="keyword">this</span>.plus(_arg0, _arg1);</span><br><span class="line">                    reply.writeNoException();</span><br><span class="line">                    reply.writeInt(_result);</span><br><span class="line">                    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">case</span> TRANSACTION_min: &#123;</span><br><span class="line">                    data.enforceInterface(DESCRIPTOR);</span><br><span class="line">                    <span class="keyword">int</span> _arg0;</span><br><span class="line">                    _arg0 = data.readInt();</span><br><span class="line">                    <span class="keyword">int</span> _arg1;</span><br><span class="line">                    _arg1 = data.readInt();</span><br><span class="line">                    <span class="keyword">int</span> _result = <span class="keyword">this</span>.min(_arg0, _arg1);</span><br><span class="line">                    reply.writeNoException();</span><br><span class="line">                    reply.writeInt(_result);</span><br><span class="line">                    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">super</span>.onTransact(code, data, reply, flags);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Proxy</span> <span class="keyword">implements</span> <span class="title">com</span>.<span class="title">xiasuhuei321</span>.<span class="title">forjianshu</span>.<span class="title">CalcManage</span> </span>&#123;</span><br><span class="line">            <span class="keyword">private</span> android.os.IBinder mRemote;</span><br><span class="line"></span><br><span class="line">            Proxy(android.os.IBinder remote) &#123;</span><br><span class="line">                mRemote = remote;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> android.os.<span class="function">IBinder <span class="title">asBinder</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                <span class="keyword">return</span> mRemote;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">public</span> java.lang.<span class="function">String <span class="title">getInterfaceDescriptor</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                <span class="keyword">return</span> DESCRIPTOR;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// CalcManage.aidl中声明的方法。这个方法运行在客户端，当客户端远程调用此方法时，它的内部</span></span><br><span class="line">            <span class="comment">// 实现是这样的：创建该方法所需要的输入型Parcel对象_data、输出型Parcel对象_reply和返回值</span></span><br><span class="line">            <span class="comment">// 对象</span></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">plus</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span> <span class="keyword">throws</span> android.os.RemoteException </span>&#123;</span><br><span class="line">                <span class="comment">// 创建输入对象</span></span><br><span class="line">                android.os.Parcel _data = android.os.Parcel.obtain();</span><br><span class="line">                <span class="comment">// 创建输出对象</span></span><br><span class="line">                android.os.Parcel _reply = android.os.Parcel.obtain();</span><br><span class="line">                <span class="comment">// 返回值</span></span><br><span class="line">                <span class="keyword">int</span> _result;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    _data.writeInterfaceToken(DESCRIPTOR);</span><br><span class="line">                    <span class="comment">// 将参数写入_data</span></span><br><span class="line">                    _data.writeInt(a);</span><br><span class="line">                    _data.writeInt(b);</span><br><span class="line">                    <span class="comment">// 发起RPC（远程郭恒调用）请求，当前线程挂起。服务端的onTransact方法会被</span></span><br><span class="line">                    <span class="comment">// 调用，直到RPC过程返回后，当前线程继续执行，并从_reply中取出RPC过程中的</span></span><br><span class="line">                    <span class="comment">// 返回结果；</span></span><br><span class="line">                    mRemote.transact(Stub.TRANSACTION_plus, _data, _reply, <span class="number">0</span>);</span><br><span class="line">                    _reply.readException();</span><br><span class="line">                    _result = _reply.readInt();</span><br><span class="line">                &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">                    _reply.recycle();</span><br><span class="line">                    _data.recycle();</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">return</span> _result;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">min</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span> <span class="keyword">throws</span> android.os.RemoteException </span>&#123;</span><br><span class="line">                android.os.Parcel _data = android.os.Parcel.obtain();</span><br><span class="line">                android.os.Parcel _reply = android.os.Parcel.obtain();</span><br><span class="line">                <span class="keyword">int</span> _result;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    _data.writeInterfaceToken(DESCRIPTOR);</span><br><span class="line">                    _data.writeInt(a);</span><br><span class="line">                    _data.writeInt(b);</span><br><span class="line">                    mRemote.transact(Stub.TRANSACTION_min, _data, _reply, <span class="number">0</span>);</span><br><span class="line">                    _reply.readException();</span><br><span class="line">                    _result = _reply.readInt();</span><br><span class="line">                &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">                    _reply.recycle();</span><br><span class="line">                    _data.recycle();</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">return</span> _result;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 用于标识plus和min方法</span></span><br><span class="line">        <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> TRANSACTION_plus = (android.os.IBinder.FIRST_CALL_TRANSACTION + <span class="number">0</span>);</span><br><span class="line">        <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> TRANSACTION_min = (android.os.IBinder.FIRST_CALL_TRANSACTION + <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">plus</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span> <span class="keyword">throws</span> android.os.RemoteException</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">min</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span> <span class="keyword">throws</span> android.os.RemoteException</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>写到这，我觉得有必要再重新审视一下Binder了，因为通过以上的代码和注释，你一定发现老提到Binder。Binder是Android中的一个类，它实现了IBinder接口。从IPC（Inter-Process Communication,进程间通信）角度来说，Binder是Android中的一种跨进程通信方式。从Android应用层来说，Binder是客户端和服务端调用的Binder对象，通过这个Binder对象，客户端就可以获取服务端提供的服务或者数据，这里的服务端包括普通服务和基于AIDL的服务。</p>
+<p>本来还想分个服务端，客户端继续吹吹牛，但是写着写着觉得我注释够详细了。。。不吹了不吹了，各位自己看上面我带注释的代码吧。</p>
+<p>写到这感觉篇幅有点小长了，关于Binder、Messenger和IPC还是留待下一篇吧~</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1976147-7a3d9a36bc3cb570.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="下一篇"></p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><p><a target="_blank" rel="noopener" href="http://blog.csdn.net/l2show/article/details/47421961">Android 5.0之后隐式声明Intent 启动Service引发的问题 </a></p>
+</li>
+<li><p> <a target="_blank" rel="noopener" href="http://blog.csdn.net/lmj623565791/article/details/38461079">Android aidl Binder框架浅析</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://developer.android.google.cn/guide/components/services.html?hl=zh-cn">Android API指南</a></p>
+</li>
+<li><p>Android开发艺术探索</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="http://www.open-open.com/lib/view/open1469493649028.html#articleHeader8">Android：学习AIDL，这一篇文章就够了</a></p>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"># Android</a>
+              <a href="/tags/%E5%85%A5%E9%97%A8%E5%AD%A6%E4%B9%A0/" rel="tag"># 入门学习</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2017/01/11/%E6%B5%85%E6%9E%90HashMap/" rel="prev" title="浅析HashMap">
+      <i class="fa fa-chevron-left"></i> 浅析HashMap
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/01/18/%E5%AE%9E%E7%8E%B0RecyclerView%E4%B8%8B%E6%8B%89%E5%88%B7%E6%96%B0/" rel="next" title="实现RecyclerView下拉刷新">
+      实现RecyclerView下拉刷新 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFService"><span class="nav-number">1.</span> <span class="nav-text">什么是Service</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8Service%E7%9A%84%E4%B8%A4%E7%A7%8D%E6%96%B9%E5%BC%8F"><span class="nav-number">2.</span> <span class="nav-text">启动Service的两种方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E7%BB%91%E5%AE%9A%E6%9C%8D%E5%8A%A1%E7%9A%84%E4%B8%89%E7%A7%8D%E6%96%B9%E5%BC%8F"><span class="nav-number">3.</span> <span class="nav-text">创建绑定服务的三种方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#AIDL"><span class="nav-number">3.1.</span> <span class="nav-text">AIDL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AIDL%E5%B0%8F%E4%BE%8B%E5%AD%90"><span class="nav-number">3.2.</span> <span class="nav-text">AIDL小例子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90"><span class="nav-number">3.3.</span> <span class="nav-text">分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">4.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="LJ"
+      src="/images/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">LJ</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">82</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">38</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ForgetAll" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ForgetAll" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://blankj.com/" title="https:&#x2F;&#x2F;blankj.com&#x2F;" rel="noopener" target="_blank">blankj-开源达人</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LJ</span>
+</div>
+  <div class="powered-by">书山有路勤为径
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '76eeb7f12824012f27fe',
+      clientSecret: '41159510cb271785627f9c3d29ca6c6b43f4cdaf',
+      repo        : 'ForgetAll.github.io',
+      owner       : 'ForgetAll',
+      admin       : ['ForgetAll'],
+      id          : 'ada0f0522367422c94e35a5c8d9cc31e',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>
