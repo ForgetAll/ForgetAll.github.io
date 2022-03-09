@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/avatar.jpeg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/avatar.jpeg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/avatar.jpeg">
+  <link rel="mask-icon" href="/images/avatar.jpeg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"forgetall.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":null,"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Socket基础在说到计算机网络模型的时候一定都会提到这两个模型：OSI七层网络模型和TCP&#x2F;IP四层网络模型，因为OSI七层过于复杂，现在普遍采用的是TCP&#x2F;IP的四层网络模型。  tcp&#x2F;udp协议位于TCP&#x2F;IP协议栈的传输层，tcp是一个面向连接、可靠的协议，而udp协议是一个不可靠的、无连接协议。刚开始我有点疑惑，什么样的场景才需要udp协议呢？因">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Socket的使用">
+<meta property="og:url" content="https://forgetall.github.io/8390f6e6a33939ba76663c6d24767fba/index.html">
+<meta property="og:site_name" content="LJ的Blog">
+<meta property="og:description" content="Socket基础在说到计算机网络模型的时候一定都会提到这两个模型：OSI七层网络模型和TCP&#x2F;IP四层网络模型，因为OSI七层过于复杂，现在普遍采用的是TCP&#x2F;IP的四层网络模型。  tcp&#x2F;udp协议位于TCP&#x2F;IP协议栈的传输层，tcp是一个面向连接、可靠的协议，而udp协议是一个不可靠的、无连接协议。刚开始我有点疑惑，什么样的场景才需要udp协议呢？因">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1976147-0e9dd0a3a92a8428.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1976147-2238df865428acb2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1976147-02deb9e26f80f63a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1976147-42975b3066b2444e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1976147-8ad38875ec52a373.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1976147-6c71f158edb95db9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="article:published_time" content="2017-06-17T18:18:24.000Z">
+<meta property="article:modified_time" content="2022-03-09T08:44:27.497Z">
+<meta property="article:author" content="LJ">
+<meta property="article:tag" content="复习巩固">
+<meta property="article:tag" content="Java">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/1976147-0e9dd0a3a92a8428.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+<link rel="canonical" href="https://forgetall.github.io/8390f6e6a33939ba76663c6d24767fba/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Socket的使用 | LJ的Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">LJ的Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">学海无涯苦做舟</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/8390f6e6a33939ba76663c6d24767fba/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="LJ">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LJ的Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Socket的使用
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-06-18 02:18:24" itemprop="dateCreated datePublished" datetime="2017-06-18T02:18:24+08:00">2017-06-18</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-03-09 16:44:27" itemprop="dateModified" datetime="2022-03-09T16:44:27+08:00">2022-03-09</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="Socket基础"><a href="#Socket基础" class="headerlink" title="Socket基础"></a>Socket基础</h2><p>在说到计算机网络模型的时候一定都会提到这两个模型：OSI七层网络模型和TCP&#x2F;IP四层网络模型，因为OSI七层过于复杂，现在普遍采用的是TCP&#x2F;IP的四层网络模型。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1976147-0e9dd0a3a92a8428.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="七层OSI &amp; 四层TCP/IP"></p>
+<p>tcp&#x2F;udp协议位于TCP&#x2F;IP协议栈的传输层，tcp是一个面向连接、可靠的协议，而udp协议是一个不可靠的、无连接协议。刚开始我有点疑惑，什么样的场景才需要udp协议呢？因为udp协议并不保证数据一定传输到目的地，有什么场景能容忍可能发生丢包的情况呢？后来在项目的某个解决方案的讨论中，听到了老大的解释。当时我们可以选用udp和tcp方案，问我该选用什么方案。我当时也了解了一些tcp和udp，记得在网上看到过这么一句话，如果你需要用额外的操作保证数据准确的传递到目的地，那不如直接采用tcp协议，所以我说udp并不保证数据一定传达，而tcp是可靠的，所以应该采用tcp协议。然后老大说在局域网（当时要解决的就是局域网中的一个问题）可以认为udp是可靠的，不需要考虑丢包的情况，不过数据处理难一点，后来还是用了TCP……</p>
+<p>Socket可以说是对TCP协议的封装，可以理解成TCP的API，在TCP&#x2F;IP协议栈中应当属于应用层和传输层之间的抽象。那么属于应用层的HTTP协议，和Socket有何异同呢？HTTP协议一般来说是短连接（当然，可以指定长连接），每次请求都会建立和断开TCP连接，而Socket默认就是长连接，两者在传输层都是建立和断开TCP连接。相比于Socket，HTTP协议显得更加的高级。二者都是基于TCP的，Socket可以用来编写一个HTTP框架。</p>
+<span id="more"></span>
+<h2 id="Socket-Client"><a href="#Socket-Client" class="headerlink" title="Socket Client"></a>Socket Client</h2><p>在Java中想要使用Socket只要用Socket这个类就可以了，而且得益于Java方便的IO，入门的成本不会非常高，但是前提是你熟悉Java的IO和基本的网络知识。当然了，如果你的追求更高还可以去用非阻塞的NIO玩玩……我这是不会介绍的……</p>
+<p>接下来将会创建一个Socket来获取时间（要看到结果得翻墙……）</p>
+<p>首先创建一个Socket</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Socket socket = <span class="keyword">new</span> Socket(<span class="string">&quot;time.nist.gov&quot;</span>,<span class="number">13</span>);</span><br></pre></td></tr></table></figure>
+<p>第一个参数可以是主机域名也可以是ip，第二个参数是端口，这种方式建立的Socket会直接开始尝试连接远程服务器的端口。服务器监听端口的服务在和客户端建立连接之后，会按照一定的协定发送、接收数据。而这里建立连接之后就会直接把时间返回给客户端，这里用Java中的字符流处理，简单~</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">InputStream in = socket.getInputStream();</span><br><span class="line">BufferedReader br = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(in,<span class="string">&quot;ASCII&quot;</span>));</span><br><span class="line"><span class="keyword">byte</span>[] data = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span>];</span><br><span class="line"><span class="keyword">int</span> length = data.length;</span><br><span class="line">StringBuilder sb = <span class="keyword">new</span> StringBuilder();</span><br><span class="line">String info;</span><br><span class="line"><span class="keyword">while</span>((info = br.readLine()) != <span class="keyword">null</span>)&#123;</span><br><span class="line">    sb.append(info);</span><br><span class="line">&#125;</span><br><span class="line">System.out.println(sb.toString());</span><br></pre></td></tr></table></figure>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/1976147-2238df865428acb2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="输出"></p>
+<p>完整代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TimeSocket</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String... args)</span></span>&#123;</span><br><span class="line">        <span class="comment">// 创建客户端指定主机和端口</span></span><br><span class="line">        <span class="keyword">try</span>(Socket socket = <span class="keyword">new</span> Socket(<span class="string">&quot;time.nist.gov&quot;</span>,<span class="number">13</span>))&#123;</span><br><span class="line">            socket.setSoTimeout(<span class="number">15000</span>);</span><br><span class="line">            InputStream in = socket.getInputStream();</span><br><span class="line">            BufferedReader br = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(in,<span class="string">&quot;ASCII&quot;</span>));</span><br><span class="line">            <span class="keyword">byte</span>[] data = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span>];</span><br><span class="line">            <span class="keyword">int</span> length = data.length;</span><br><span class="line">            StringBuilder sb = <span class="keyword">new</span> StringBuilder();</span><br><span class="line">            String info;</span><br><span class="line">            <span class="keyword">while</span>((info = br.readLine()) != <span class="keyword">null</span>)&#123;</span><br><span class="line">                sb.append(info);</span><br><span class="line">            &#125;</span><br><span class="line">            System.out.println(sb.toString());</span><br><span class="line"><span class="comment">//            socket.shutdownOutput();</span></span><br><span class="line"></span><br><span class="line">        &#125;<span class="keyword">catch</span> (IOException e)&#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Socket-Client-amp-Socket-Server"><a href="#Socket-Client-amp-Socket-Server" class="headerlink" title="Socket Client &amp; Socket Server"></a>Socket Client &amp; Socket Server</h2><p>接下来的例子会建立一个TCP Client 和 TCP Server，通过互相发送字符串来模拟服务器和客户端的通信。在Java中想要使用TCP Server，可以使用ServerSocket。我们首先建立一个TCP Server：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * 1.用指定的端口实例化一个SeverSocket对象。服务器就可以用这个端口监听从客户端发来的连接请求。</span></span><br><span class="line"><span class="comment">         * 2.调用ServerSocket的accept()方法，以在等待连接期间造成阻塞，监听连接从端口上发来的连接请求。</span></span><br><span class="line"><span class="comment">         * 3.利用accept方法返回的客户端的Socket对象，进行读写IO的操作</span></span><br><span class="line"><span class="comment">         * 4.关闭打开的流和Socket对象</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="comment">// 1.创建一个服务端Socket，ServerSocket，指定绑定端口，并监听此端口</span></span><br><span class="line">        ServerSocket serverSocket = <span class="keyword">new</span> ServerSocket(<span class="number">10086</span>);<span class="comment">// 1024 - 65535的某个端口</span></span><br><span class="line">        <span class="comment">// 2.调用accept方法开始监听，等待客户端的连接</span></span><br><span class="line">        Socket socket = serverSocket.accept();</span><br><span class="line">        <span class="comment">// 3.获取输入流，并读取客户端信息</span></span><br><span class="line">        InputStream is = socket.getInputStream();</span><br><span class="line">        InputStreamReader isr = <span class="keyword">new</span> InputStreamReader(is);</span><br><span class="line">        BufferedReader br = <span class="keyword">new</span> BufferedReader(isr);</span><br><span class="line">        String info = <span class="keyword">null</span>;</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">while</span> ((info = br.readLine()) != <span class="keyword">null</span>) &#123;</span><br><span class="line">                System.out.println(<span class="string">&quot;server: &quot;</span> + info);</span><br><span class="line">            &#125;</span><br><span class="line">            socket.shutdownInput();</span><br><span class="line">            <span class="comment">// 4.获取输出流，响应客户端的请e求</span></span><br><span class="line">            OutputStream os = socket.getOutputStream();</span><br><span class="line">            PrintWriter pw = <span class="keyword">new</span> PrintWriter(os);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 5.关闭资源</span></span><br><span class="line">            pw.close();</span><br><span class="line">            os.close();</span><br><span class="line">            br.close();</span><br><span class="line">            isr.close();</span><br><span class="line">            is.close();</span><br><span class="line">            socket.close();</span><br><span class="line">            serverSocket.close();</span><br><span class="line"></span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+<p>注释写的很清楚了，这里还要提醒一下，accept()这个方法是一个阻塞方法，也就是说如果没有socket连接，代码会一直阻塞在这里。而接下来则是拿到输入流，读入客户端的输入。拿到客户端的输入之后，再获取输出流返回响应给客户端。</p>
+<p>接下来是建立客户端，上面的服务端监听了10086端口，所以下面的服务端也要连10086端口，套路跟之前的Socket差不多：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 客户端</span></span><br><span class="line"><span class="comment">// 1.创建客户端Socket，指定服务器地址和端口</span></span><br><span class="line">Socket socket = <span class="keyword">new</span> Socket(<span class="string">&quot;127.0.0.1&quot;</span>, <span class="number">10086</span>);</span><br><span class="line"><span class="comment">// 2.获取输出流，向服务器端发送信息</span></span><br><span class="line">OutputStream os = socket.getOutputStream();<span class="comment">// 字节输出流</span></span><br><span class="line">PrintWriter pw = <span class="keyword">new</span> PrintWriter(os);<span class="comment">// 将输出来包装成打印流</span></span><br><span class="line">pw.write(<span class="string">&quot;用户名:admin;密码:admin&quot;</span>);</span><br><span class="line">pw.flush();</span><br><span class="line">socket.shutdownOutput();</span><br><span class="line"><span class="comment">// 3.获取输入流，并读取到服务器端的响应信息</span></span><br><span class="line">InputStream is = socket.getInputStream();</span><br><span class="line">BufferedReader br = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(is));</span><br><span class="line">String info = <span class="keyword">null</span>;</span><br><span class="line"><span class="keyword">while</span> ((info = br.readLine()) != <span class="keyword">null</span>) &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;Hello，我是客户端，服务器说：&quot;</span> + info);</span><br><span class="line">&#125;</span><br><span class="line">br.close();</span><br><span class="line">is.close();</span><br><span class="line">pw.close();</span><br><span class="line">os.close();</span><br><span class="line">socket.close();</span><br></pre></td></tr></table></figure>
+<p>熟悉的配方，熟悉的味道，这里就不再多做介绍了。注释写的很详细，运行的时候注意先运行服务端，再运行客户端。因为服务端的代码会阻塞在accept方法，而客户端在服务端没有启动的情况下，会出现连接失败的情况。</p>
+<p>看一下server和client各自的输出：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1976147-02deb9e26f80f63a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="server"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1976147-42975b3066b2444e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="client"></p>
+<p>这里server和client的代码我是写在两个类各自的main方法中的，这代码我也是跟着网上找到的博客一行一行敲的，敲完之后运行，恩，成功了。后来我感觉到有点不对……不对在哪呢？因为我这里是两个main方法运行，可以理解成是两个进程，这两个进程竟然惊人的出现了顺序性！你连接我，我监听到，拿到你发的内容，然后我响应你，你再拿到我的响应。符合逻辑，合乎情理，但是凭什么啊？多线程都要为一些个顺序性挠破头，何况是多进程？后来我仔细看了代码，发现这些表现出来的顺序性是因为：阻塞。</p>
+<p>首先是服务端的代码，第一次阻塞发生在accept()方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Socket socket = serverSocket.accept();</span><br></pre></td></tr></table></figure>
+<p>这里会阻塞进程，等待Socket连接。而在客户端连接上之后，会继续执行代码，代码会在哪里阻塞呢？第二次阻塞发生在读取客户端输入的时候：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> ((info = br.readLine()) != <span class="keyword">null</span>) &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;Hello，我是客户端，服务器说：&quot;</span> + info);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>是的，就是阻塞在这个br.readLine()了，首先我们可以从代码的现象来分析：从代码来说，能正确的打印客户端传来的信息，那么这个while循环一定是能正常的执行的。因为如果不满足条件会跳出，满足则会一直打印，即使没读到信息，那么只能说明一件事，br.readLine()阻塞了程序。这里的io是阻塞式io，不作更多的介绍，有兴趣可以了解Java的IO模型。在读到信息之后将之打印出来，那么后来为什么又不阻塞跳出了循环呢？这里可以看一下这个方法的注释：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Reads a line of text.  A line is considered to be terminated by any one</span></span><br><span class="line"><span class="comment"> * of a line feed (&#x27;\n&#x27;), a carriage return (&#x27;\r&#x27;), or a carriage return</span></span><br><span class="line"><span class="comment"> * followed immediately by a linefeed.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span>     A String containing the contents of the line, not including</span></span><br><span class="line"><span class="comment"> *             any line-termination characters, or null if the end of the</span></span><br><span class="line"><span class="comment"> *             stream has been reached</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@exception</span>  IOException  If an I/O error occurs</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@see</span> java.nio.file.Files#readAllLines</span></span><br><span class="line"><span class="comment"> */</span></span><br></pre></td></tr></table></figure>
+<p>注释中关于返回值写的非常清楚： or null if the end of the stream has been reached，如果到了流的末尾会返回null。怎么判断到了流的末尾呢？这里我认为是这个流结束了，不会再有任何后续输出了，这个在代码中是怎么体现的呢？在Client中的这句代码就是解释的体现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">socket.shutdownOutput();</span><br></pre></td></tr></table></figure>
+<p>终结了输出流，这样在Server中就跳出了while循环，而不是阻塞在br.readLine。如果注释这句shutdownOutput()，程序则会阻塞住，现象如下：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1976147-8ad38875ec52a373.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Server"></p>
+<p>Server没有跟上次一样最后有显示退出了程序，而是一直在运行，是的阻塞住了。而Client则是没有任何输出，因为Client也有一个读取的操作，也阻塞住了。</p>
+<p>简单的流程就是这样，这是一个简单的TCP Server和TCP Client的阻塞模型。接下来介绍几种TCP Server模型。</p>
+<h2 id="TCP-Server-的几种模型"><a href="#TCP-Server-的几种模型" class="headerlink" title="TCP Server 的几种模型"></a>TCP Server 的几种模型</h2><p>TCP Server有阻塞式、并发式以及异步服务器。其中阻塞式服务器最好实现，同时也是问题比较多的。因为客户端发送到服务器的请求，服务器会依次处理，只要碰到一个处理时间特别长的请求，其余请求就无法得到及时的处理，同时可能会有部分客户端认为连接已经超时了。并发式服务器在处理请求时会为连接开启一个线程，在线程中完成各自的读取响应操作，这样就不会阻塞服务器对于其他请求的访问了，缺点无疑是服务器资源有限，不可能为每一个连接开辟新的线程，通常会配合线程池一起处理。异步服务器需要Java中的NIO配合，这里不做介绍。</p>
+<p>阻塞式的实现就是上面的代码，不过上面的代码通过shutdown来跳出阻塞，通常来说是不会这样的，因为shutdown之后无法再次使用输入输出流，一般来说会自定义数据边界，在拿到一个完整的数据之后将数据传递出去，让上层处理，然后就阻塞在那，等待下一次的数据到来。这种实现起来也不是非常难，跟人配合的时候协商好协议就可以了。下面要实现的是并发式服务器，至于异步服务器，我自己也不是非常熟，各位感兴趣可以自己查阅资料。</p>
+<p>客户端还是使用上面的代码，不做改变，而Server则做一些并发的处理：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"><span class="keyword">import</span> java.net.ServerSocket;</span><br><span class="line"><span class="keyword">import</span> java.net.Socket;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.Executor;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.Executors;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Created by luojun on 2017/6/5.</span></span><br><span class="line"><span class="comment"> * desc:熟悉Socket</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Server</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Executor executor;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> count = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String... args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        executor = Executors.newFixedThreadPool(<span class="number">100</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * 1.用指定的端口实例化一个SeverSocket对象。服务器就可以用这个端口监听从客户端发来的连接请求。</span></span><br><span class="line"><span class="comment">         * 2.调用ServerSocket的accept()方法，以在等待连接期间造成阻塞，监听连接从端口上发来的连接请求。</span></span><br><span class="line"><span class="comment">         * 3.利用accept方法返回的客户端的Socket对象，进行读写IO的操作</span></span><br><span class="line"><span class="comment">         * 4.关闭打开的流和Socket对象</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="comment">// 1.创建一个服务端Socket，ServerSocket，指定绑定端口，并监听此端口</span></span><br><span class="line">        ServerSocket serverSocket = <span class="keyword">new</span> ServerSocket(<span class="number">10086</span>);<span class="comment">// 1024 - 65535的某个端口</span></span><br><span class="line">        <span class="comment">// 2.调用accept方法开始监听，等待客户端的连接</span></span><br><span class="line">        <span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">            <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    Socket socket = serverSocket.accept();</span><br><span class="line">                    count++;</span><br><span class="line">                    System.out.println(<span class="string">&quot;有 &quot;</span> + count + <span class="string">&quot; 个Socket连接&quot;</span>);</span><br><span class="line">                    handleSocket(socket);</span><br><span class="line">                &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).start();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">handleSocket</span><span class="params">(Socket socket)</span> </span>&#123;</span><br><span class="line">        executor.execute(() -&gt; &#123;</span><br><span class="line">            InputStream is = <span class="keyword">null</span>;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                is = socket.getInputStream();</span><br><span class="line">                InputStreamReader isr = <span class="keyword">new</span> InputStreamReader(is);</span><br><span class="line">                BufferedReader br = <span class="keyword">new</span> BufferedReader(isr);</span><br><span class="line">                String info = <span class="keyword">null</span>;</span><br><span class="line">                <span class="keyword">while</span> ((info = br.readLine()) != <span class="keyword">null</span>) &#123;</span><br><span class="line">                    System.out.println(<span class="string">&quot;server: &quot;</span> + info);</span><br><span class="line">                    handleData(info);</span><br><span class="line">                &#125;</span><br><span class="line">                socket.shutdownInput();</span><br><span class="line">                <span class="comment">// 4.获取输出流，响应客户端的请e求</span></span><br><span class="line">                OutputStream os = socket.getOutputStream();</span><br><span class="line">                PrintWriter pw = <span class="keyword">new</span> PrintWriter(os);</span><br><span class="line"><span class="comment">//            if(info.equals(&quot;我还活着，你好吗？&quot;))&#123;</span></span><br><span class="line"><span class="comment">//                pw.write(&quot;我也很好，你放心。&quot;);</span></span><br><span class="line"><span class="comment">//                pw.flush();</span></span><br><span class="line"><span class="comment">//            &#125;else &#123;</span></span><br><span class="line">                pw.write(<span class="string">&quot;欢迎您！&quot;</span>);</span><br><span class="line">                pw.flush();</span><br><span class="line"><span class="comment">//            &#125;</span></span><br><span class="line"></span><br><span class="line">                <span class="comment">// 5.在合适的时机关闭资源</span></span><br><span class="line">                pw.close();</span><br><span class="line">                os.close();</span><br><span class="line">                br.close();</span><br><span class="line">                isr.close();</span><br><span class="line">                is.close();</span><br><span class="line">                socket.close();</span><br><span class="line"></span><br><span class="line">            &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 处理数据</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> data 数据</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">handleData</span><span class="params">(String data)</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>当然，这里我偷懒也没有设置个数据边界什么的，只是简单的让服务器读取数据然后传递给处理方法。关于并发，坑也是比较多的，只能说各位量力而行吧……下面看一下启动多个Socket连接并发服务器时的输出吧：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1976147-6c71f158edb95db9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="并发服务器"></p>
+<p>这里都是比较简单的例子，希望各位看官能有耐心的看完。接下来要写的是关于Socket失效的问题。</p>
+<h2 id="Socket失效"><a href="#Socket失效" class="headerlink" title="Socket失效"></a>Socket失效</h2><p>在使用Socket的过程中，有的时候会发现无论怎么发送数据，服务器都收不到，而且Java本地也没有任何异常提示，这个时候就需要一个机制来让开发者判断Socket是否失效。目前我了解的方式有两个：心跳包和超时重发，主要原理都是客户端向服务端发送数据，心跳是如果超过一段时间服务器无响应则判定Socket失效，而超时重发可以设置为累计重发满一定次数无响应判断Socket失效。心跳机制的好处是相对比较稳定，客户端很容易就能知道Socket是否断开，一般来说也不是特别耗费资源，有的心跳可能会设置成十几分钟发送一次数据包。但是对于一些特殊的场景，需要保证Socket一定要稳定的（比如通过中间层硬件和底层交互），那么心跳包可能会十分的频繁，这个时候超时重发更加的适合。不过超时重发的前提是客户端每一个数据发送都需要有服务器的响应，不然客户端是无法判断数据发送是否成功的。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%A4%8D%E4%B9%A0%E5%B7%A9%E5%9B%BA/" rel="tag"># 复习巩固</a>
+              <a href="/tags/Java/" rel="tag"># Java</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/97b72575a8077a438815cde390957a4d/" rel="prev" title="百度定位 & 地理编码检索环境配置">
+      <i class="fa fa-chevron-left"></i> 百度定位 & 地理编码检索环境配置
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/391a3204cd62a2500680fc9d1cfb56ee/" rel="next" title="Android-NDK学习（1）">
+      Android-NDK学习（1） <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Socket%E5%9F%BA%E7%A1%80"><span class="nav-number">1.</span> <span class="nav-text">Socket基础</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Socket-Client"><span class="nav-number">2.</span> <span class="nav-text">Socket Client</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Socket-Client-amp-Socket-Server"><span class="nav-number">3.</span> <span class="nav-text">Socket Client &amp; Socket Server</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP-Server-%E7%9A%84%E5%87%A0%E7%A7%8D%E6%A8%A1%E5%9E%8B"><span class="nav-number">4.</span> <span class="nav-text">TCP Server 的几种模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Socket%E5%A4%B1%E6%95%88"><span class="nav-number">5.</span> <span class="nav-text">Socket失效</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="LJ"
+      src="/images/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">LJ</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">82</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">38</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ForgetAll" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ForgetAll" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://blankj.com/" title="https:&#x2F;&#x2F;blankj.com&#x2F;" rel="noopener" target="_blank">blankj-开源达人</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LJ</span>
+</div>
+  <div class="powered-by">书山有路勤为径
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '76eeb7f12824012f27fe',
+      clientSecret: '41159510cb271785627f9c3d29ca6c6b43f4cdaf',
+      repo        : 'ForgetAll.github.io',
+      owner       : 'ForgetAll',
+      admin       : ['ForgetAll'],
+      id          : 'ee0c51e679a45e4c69a07eebf486f39a',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/avatar.jpeg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/avatar.jpeg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/avatar.jpeg">
+  <link rel="mask-icon" href="/images/avatar.jpeg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"forgetall.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":null,"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="前言最近准备填一些以前开的坑，当然不能只填坑而没有收获，于是准备做一哈数据库缓存，左挑右选，最终选择了 ObjectBox，作者同样也是 greenDao 和 EventBus 的开发者，质量值得信赖。本文会介绍关于 ObjectBox 的基本使用和我在使用中碰到的一些问题，加上一些我在做缓存时候的思路。 引入能力比较强的同学，直接放上官方文档：https:&#x2F;&#x2F;docs.objectbox.io&#x2F;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ObjectBox填坑">
+<meta property="og:url" content="https://forgetall.github.io/193408459fdb30dc4d6d2b5a4674c2f7/index.html">
+<meta property="og:site_name" content="LJ的Blog">
+<meta property="og:description" content="前言最近准备填一些以前开的坑，当然不能只填坑而没有收获，于是准备做一哈数据库缓存，左挑右选，最终选择了 ObjectBox，作者同样也是 greenDao 和 EventBus 的开发者，质量值得信赖。本文会介绍关于 ObjectBox 的基本使用和我在使用中碰到的一些问题，加上一些我在做缓存时候的思路。 引入能力比较强的同学，直接放上官方文档：https:&#x2F;&#x2F;docs.objectbox.io&#x2F;">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://xiasuhuei321.com/images/blog/%E7%BC%93%E5%AD%98%E6%B5%81%E7%A8%8B%E5%9B%BE.png">
+<meta property="article:published_time" content="2018-12-16T18:51:02.000Z">
+<meta property="article:modified_time" content="2022-03-09T08:44:27.494Z">
+<meta property="article:author" content="LJ">
+<meta property="article:tag" content="博客 go java android">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://xiasuhuei321.com/images/blog/%E7%BC%93%E5%AD%98%E6%B5%81%E7%A8%8B%E5%9B%BE.png">
+
+<link rel="canonical" href="https://forgetall.github.io/193408459fdb30dc4d6d2b5a4674c2f7/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>ObjectBox填坑 | LJ的Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">LJ的Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">学海无涯苦做舟</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/193408459fdb30dc4d6d2b5a4674c2f7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="LJ">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LJ的Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          ObjectBox填坑
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2018-12-17 02:51:02" itemprop="dateCreated datePublished" datetime="2018-12-17T02:51:02+08:00">2018-12-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-03-09 16:44:27" itemprop="dateModified" datetime="2022-03-09T16:44:27+08:00">2022-03-09</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近准备填一些以前开的坑，当然不能只填坑而没有收获，于是准备做一哈数据库缓存，左挑右选，最终选择了 ObjectBox，作者同样也是 greenDao 和 EventBus 的开发者，质量值得信赖。本文会介绍关于 ObjectBox 的基本使用和我在使用中碰到的一些问题，加上一些我在做缓存时候的思路。</p>
+<h2 id="引入"><a href="#引入" class="headerlink" title="引入"></a>引入</h2><p>能力比较强的同学，直接放上官方文档：<a target="_blank" rel="noopener" href="https://docs.objectbox.io/%EF%BC%8C%E9%A6%96%E5%85%88%E5%9C%A8%E9%A1%B9%E7%9B%AE%E6%9C%80%E5%A4%96%E5%B1%82">https://docs.objectbox.io/，首先在项目最外层</a> build.gradle 文件中加入：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">buildscript &#123;</span><br><span class="line">    ext.objectboxVersion = <span class="string">&#x27;2.2.0&#x27;</span></span><br><span class="line">    respositories &#123;</span><br><span class="line">        jcenter()</span><br><span class="line">    &#125;</span><br><span class="line">    dependencies &#123;</span><br><span class="line">        <span class="comment">// Android Gradle Plugin 3.0.0 or later supported</span></span><br><span class="line">        classpath <span class="string">&#x27;com.android.tools.build:gradle:3.2.1&#x27;</span></span><br><span class="line">        classpath <span class="string">&quot;io.objectbox:objectbox-gradle-plugin:$objectboxVersion&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<span id="more"></span>
+
+<p>在 app 模块的 gradle 文件中加入：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apply <span class="attr">plugin:</span> <span class="string">&#x27;io.objectbox&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>如果你和我一样也用 Kotlin，那也要加入：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apply <span class="attr">plugin:</span> <span class="string">&#x27;kotlin-kapt&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>这里简单解释一下，apt 全称是 annotation processing tool 即注解处理工具，而 kapt 也就是 kotlin 的注解处理工具了。注解处理工具主要用来在编译时获取被注解的类、方法等信息，生成所需代码，ButterKnife、EventBus 等框架都使用这种方式。这样 ObjectBox 的引入就完成了。</p>
+<h2 id="简单的封装和使用"><a href="#简单的封装和使用" class="headerlink" title="简单的封装和使用"></a>简单的封装和使用</h2><p>首先介绍一下实体类的创建，Java 和 Kotlin 的都会说</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Entity</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ExampleEntity</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Id</span> <span class="keyword">public</span> <span class="keyword">long</span> id;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用 @Entity 注解实体类， @Id public long id，id 这个属性是固定的，一定要有，在生成对象的时候由 ObjectBox 为其赋值，这是一个自增的 long 类型的 id，在同一类型的实体类插入的时候会根据 id 决定是插入还是更新。写到这你可能就会有疑惑了，如果除了 id 其他的值都一样，那也会插入？答案是肯定的，如何解决放到我们稍微了解用法之后去探讨。继续说一下 Kotlin 实体类的创建：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Entity</span></span><br><span class="line"><span class="keyword">data</span> <span class="class"><span class="keyword">class</span> <span class="title">ExampleEntity</span></span>(<span class="meta">@Id</span> <span class="keyword">var</span> id: <span class="built_in">Long</span> = <span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+
+<p>data class 会有带有所有属性的构造函数，如果这个构造函数里的所有参数没有一个被 ObjectBox 注解的，那么 ObjectBox 会在取出数据将其映射为对象的时候报错：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">io.objectbox.exception.DbException: Entity is expected to have a no-arg constructor: Data</span><br></pre></td></tr></table></figure>
+
+<p>意思是说实体被期望有一个无参的构造函数，但实际上你只要把被注解的属性放在他的构造函数里他也能正确的处理。</p>
+<p>写完之后编译一下，让我们看看如何增删查改：</p>
+<p>首先我们要构建一个 BoxStore 对象，然后用其进行后续操作：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> <span class="keyword">data</span> = ExampleEntity()</span><br><span class="line"><span class="comment">// 构建 BoxStore 对象</span></span><br><span class="line"><span class="keyword">val</span> boxStore = MyObjectBox.builder().androidContext(context).build()</span><br><span class="line"><span class="keyword">val</span> exampleStore = boxStore.boxFor(ExampleEntity::<span class="keyword">class</span>.java)</span><br><span class="line"><span class="comment">// 增（或者更新）</span></span><br><span class="line">exampleStore.put(<span class="keyword">data</span>)</span><br><span class="line"><span class="comment">// 删</span></span><br><span class="line">exampleStore.remove(<span class="keyword">data</span>)</span><br><span class="line"><span class="comment">// 查</span></span><br><span class="line">exampleStore.query()</span><br></pre></td></tr></table></figure>
+
+<p>可以看到操作比较简单，但是需要注意的是 put（插入或者更新）运行了隐含的事务，简单的理解就是开销比较大，所以循环 put 这种操作是不推荐的，那么在需要循环时，该咋做呢？</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> datas = mutableListOf&lt;ExampleEntity&gt;()</span><br><span class="line">datas.add(ExampleEntity())</span><br><span class="line">datas.add(ExampleEntity())</span><br><span class="line">datas.add(ExampleEntity())</span><br><span class="line"><span class="comment">// 是的，有这个重载，可以直接 put 集合</span></span><br><span class="line">exampleStore.put(datas)</span><br><span class="line"><span class="comment">// 同样的，如果循环改数据，不要改完一个提交一个，一起提交比较高效</span></span><br><span class="line"><span class="keyword">for</span>(d <span class="keyword">in</span> datas) &#123;</span><br><span class="line">    <span class="comment">// d.xx = xx</span></span><br><span class="line">&#125;</span><br><span class="line">exampleStore.put(datas)</span><br></pre></td></tr></table></figure>
+
+<p>当然不可能所有的情况都可以用上面的方式解决，比如有时我不先 put 可能会影响我下一次查改的正确性，那么可使用 ObjectBox 提供的 runInTx() 方法，这是一个同步的方法，ObjectBox 也提供了异步的 runInTxAsync() 方法。</p>
+<p>接下来聊回之前的问题，如何解决只有 id 不一样，但是其他数据都一样的问题，实际上这是很常见的，比如你从接口获取数据，原生数据可能没有 id，又或者有唯一 id 但是并不是 long 类型而是 String 类型。那么你第一次请求，将数据存入数据库，第二次请求如果返回同样的数据，但是 ObjectBox 的 id 是自增的，也就是说逻辑上是同样的数据，但是会插入两次，这显然不是我们希望看到的。解决这种问题的方法有两种：</p>
+<ul>
+<li>自己指定 id，但是要保证唯一性</li>
+<li>在插入之前根据其他的唯一标志查询是否已经存在，保证不重复插入</li>
+</ul>
+<p>这里第一种方法经过我的测试，无法适应所有情况，究其原因是因为 long 类型的位数限制（当然也可能是我没找到正确的处理算法），这里用以下的例子说明：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">String s = <span class="string">&quot;5aff4645421aa95f55cab5da&quot;</span>;</span><br><span class="line">buffer = ByteBuffer.allocate(s.length());</span><br><span class="line">buffer.put(s.getBytes(), <span class="number">0</span>, s.getBytes().length);</span><br><span class="line">buffer.flip();</span><br><span class="line">System.out.println(buffer.getLong());</span><br><span class="line"></span><br><span class="line">String s2 = <span class="string">&quot;5aff4645421aa95f55cab5dc&quot;</span>;</span><br><span class="line">ByteBuffer buffer2 = ByteBuffer.allocate(s2.length());</span><br><span class="line">buffer2.put(s2.getBytes(), <span class="number">0</span>, s2.getBytes().length);</span><br><span class="line">buffer2.flip();</span><br><span class="line">System.out.println(buffer2.getLong());</span><br></pre></td></tr></table></figure>
+
+<p>最后的输出结果是：</p>
+<p>3846468145899779125<br>3846468145899779125</p>
+<p>都一样？实际上是因为 long 类型是 64 位，最大值是 9223372036854775807，也就是一个 19 位的值，这里是最后的 a 和 c 不同，是被截掉的后面不同，但是这就无法保证 id 的唯一性了，如果要转换的 String 没那么长，还是可以一用的。那么就只能采用第二种方案了，伪代码如下：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">boxStore.runInTxAsync(&#123;</span><br><span class="line">    <span class="keyword">val</span> dataStore = boxStore.boxFor(Data::<span class="keyword">class</span>.java)</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">data</span> <span class="keyword">in</span> datas) &#123;</span><br><span class="line">        <span class="keyword">val</span> d = dataStore.query().equal(Data_._id, <span class="keyword">data</span>._id).build().findFirst()</span><br><span class="line">        d?.let &#123;</span><br><span class="line">            <span class="keyword">data</span>.id = it.id</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    dataStore.put(datas)</span><br><span class="line">&#125;, &#123; _, _ -&gt;</span><br><span class="line"></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>这里其实是没必要用 runInTxAsync 的，但是偷个懒，先这么写了，Data_ 是 Object 自动生成的代码，包含了可以用于查询的字段，我这里的数据都包含了 _id 这个属性，这是唯一的，所以在插入之前我会首先根据 _id 查询，如果查到了，我会将对象中的 id 属性更新为查询到的 id，再将之插入（事实上是更新）。后面一个大括号主要是用来处理异常的，暂时啥都没干。关于 ObjectBox 的简介暂时就到这了，想了解更多，可以自行查阅资料。接下来说一下我关于结合 ObjectBox 和 接口请求 的思考和实现。</p>
+<h2 id="用-ObjectBox-实现缓存"><a href="#用-ObjectBox-实现缓存" class="headerlink" title="用 ObjectBox 实现缓存"></a>用 ObjectBox 实现缓存</h2><p>首先要弄明白缓存数据的意义在哪，像图片缓存，可以提高加载效率和减少流量消耗。那么数据缓存对于 Android 客户端的意义在哪呢？我个人觉得还是在于提升体验，一些已经请求过的数据，在断网的时候为啥就看不到了？当然了，做缓存其实对于相当依赖网络的应用来说提升体验的幅度有限，而且也会提升开发的复杂度，但是这并不影响我们去学习和思考如何实现数据的缓存。</p>
+<p>那么该如何实现缓存呢？首先要想明白我们想要实现的效果是怎样的，这里并不是真实的项目需求，只是我填坑的时候自己想要的，但是各位可以借鉴一下：我想要实现的效果就是优先加载从接口获取的数据，因为数据可能有更新，接口优先，如果接口数据获取失败，那么加载数据库的数据，而且我希望这是一个线性的过程，即：</p>
+<p><img src="http://xiasuhuei321.com/images/blog/%E7%BC%93%E5%AD%98%E6%B5%81%E7%A8%8B%E5%9B%BE.png" alt="1544982647050"></p>
+<p>当然，这种实现方式在弱网的环境下，是否加载缓存取决于 timeout 的时间，如果 timeout 时间设置的比较长的话，那效果其实也比较差，不过还是那句话，这不妨碍我去了解和思考。根据流程图，我们首先要弄清楚的是接口请求的问题，现在应用的请求一般用的都是 okhttp + retrofit 那一套，我也不例外，正常的流程是请求接口，获取数据，我希望在异常的时候从数据库加载数据，那么要弄清楚的就是在请求接口时会发生哪些异常了。我们平时使用的 Okhttp 到真正请求实际上是 Call 接口中的方法，我比较爱用同步的 execute() 方法，看一下他的注释：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Synchronously send the request and return its response.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@throws</span> IOException if a problem occurred talking to the server.</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@throws</span> RuntimeException (and subclasses) if an unexpected error occurs creating the request</span></span><br><span class="line"><span class="comment"> * or decoding the response.</span></span><br><span class="line"><span class="comment"> */</span></span><br></pre></td></tr></table></figure>
+
+<p>看描述会抛出 IOException 和 RuntimeException，那么在之后的异常处理中就很好解决了，我使用了 Kotlin 的协程，如果你不熟悉协程和 Kotlin 的高阶函数也不要紧，我会尽量解释代码的意思：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="type">&lt;T&gt;</span> <span class="title">gankService</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">        context: <span class="type">Context</span>? = <span class="literal">null</span>,</span></span></span><br><span class="line"><span class="params"><span class="function">        doSomethingInThread: (<span class="type">Response</span>&lt;<span class="type">GankData</span>&lt;<span class="type">T</span>&gt;&gt;) -&gt; <span class="type">Unit</span> = &#123;&#125;,</span></span></span><br><span class="line"><span class="params"><span class="function">        request: <span class="type">GankService</span>.() -&gt; <span class="type">Call</span>&lt;<span class="type">GankData</span>&lt;<span class="type">T</span>&gt;&gt;</span></span></span><br><span class="line"><span class="params"><span class="function">)</span></span> = bg&lt;Response&lt;GankData&lt;T&gt;&gt;&gt; &#123;</span><br><span class="line">    <span class="keyword">val</span> call = request(GankService)</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">val</span> res = call.execute()</span><br><span class="line">        doSomethingInThread(res)</span><br><span class="line">        <span class="keyword">return</span><span class="symbol">@bg</span> res</span><br><span class="line">    &#125; <span class="keyword">catch</span> (e: Exception) &#123;</span><br><span class="line">        XLog.i(<span class="string">&quot;http&quot;</span>, e.toString())</span><br><span class="line">        <span class="keyword">val</span> error = <span class="keyword">when</span> (e) &#123;</span><br><span class="line">            <span class="keyword">is</span> IOException -&gt; Response.error&lt;GankData&lt;T&gt;&gt;(GankService.TIMEOUT_ERROR, ResponseBody.create(<span class="literal">null</span>, <span class="string">&quot;IOException 可能是读写超时&quot;</span>))</span><br><span class="line">            <span class="keyword">is</span> UnknownHostException -&gt; Response.error&lt;GankData&lt;T&gt;&gt;(GankService.NETWORK_ERROR, ResponseBody.create(<span class="literal">null</span>, <span class="string">&quot;UnknownHostException 可能是网络断开&quot;</span>))</span><br><span class="line">            <span class="keyword">else</span> -&gt; Response.error&lt;GankData&lt;T&gt;&gt;(<span class="number">1001</span>, ResponseBody.create(<span class="literal">null</span>, <span class="string">&quot;未处理的错误：<span class="variable">$e</span>&quot;</span>))</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        doSomethingInThread(error)</span><br><span class="line">        <span class="keyword">return</span><span class="symbol">@bg</span> error</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里定义了一个高阶函数，前两个参数是有默认值，可以不穿的，最后一个是给 GankService 扩展了一个返回 Call&lt;GankData<T>&gt; 类型的函数，这个 GankService 可以理解为我们平时使用的 retrofit.create(ApiService::class.java)，而 bg&lt;Response&lt;GankData<T>&gt;&gt; 则表明新开了一个协程，返回类型为 Response&lt;GankData<T>&gt;，代码第一行拿到了 Call&lt;GankData<T>&gt;，之后则是调用 execute() 来调用接口，doSomethingInThread，主要是为了如果有啥耗时的操作也想在这个线程里干，就传入这个参数，之后会在线程中调用，当然了，项目里前两个参数都没用上，可以忽略。如果执行成功，则会返回接口数据，如果失败，则会被 try {} catch() 捕获到异常，然后返回错误的 Response<GankData>（此时 GankData 实际上是 null），在之后的代码里我则可以根据 Response 来先判断接口是否调用成功，这里关于异常处理暂时比较粗糙，因为实际上后面暂时也没针对不同的异常做出不同的处理。</p>
+<p>OK，关于调用接口的处理到这里告一段落，接下来是异常从数据库读取数据，关于数据的存和读的代码一并放上：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DataManager</span> </span>&#123;</span><br><span class="line">    <span class="keyword">lateinit</span> <span class="keyword">var</span> boxStore: BoxStore</span><br><span class="line">    <span class="keyword">val</span> storeMap = HashMap&lt;String, Box&lt;Any&gt;&gt;()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">initStore</span><span class="params">()</span></span> &#123;</span><br><span class="line">        boxStore = MyObjectBox.builder().androidContext(Global.context).build()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="type">&lt;T&gt;</span> <span class="title">getBoxFor</span><span class="params">(clz: <span class="type">Class</span>&lt;<span class="type">T</span>&gt;)</span></span>: Box&lt;T&gt; &#123;</span><br><span class="line">        <span class="keyword">return</span> boxStore.boxFor(clz)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">addOrUpdateData</span><span class="params">(datas: <span class="type">List</span>&lt;<span class="type">Data</span>&gt;)</span></span> &#123;</span><br><span class="line">        boxStore.runInTxAsync(&#123;</span><br><span class="line">            <span class="keyword">val</span> dataStore = boxStore.boxFor(Data::<span class="keyword">class</span>.java)</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">data</span> <span class="keyword">in</span> datas) &#123;</span><br><span class="line">                <span class="keyword">val</span> d = dataStore.query().equal(Data_._id, <span class="keyword">data</span>._id).build().findFirst()</span><br><span class="line">                d?.let &#123;</span><br><span class="line">                    <span class="keyword">data</span>.id = it.id</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            dataStore.put(datas)</span><br><span class="line">        &#125;, &#123; _, _ -&gt;</span><br><span class="line"></span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 查询 [start] 到 [end] 之间的数据，左边界 [start] 包含在内，右边界 [end] 不包含在内</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">queryData</span><span class="params">(start: <span class="type">Int</span>, end: <span class="type">Int</span>)</span></span>: List&lt;Data&gt; &#123;</span><br><span class="line">        <span class="keyword">val</span> q = query(Data::<span class="keyword">class</span>.java).build()</span><br><span class="line">        <span class="keyword">if</span> (start &gt; q.count()) <span class="keyword">return</span> mutableListOf()</span><br><span class="line">        <span class="keyword">val</span> result = q.find()</span><br><span class="line">        <span class="keyword">if</span> (end &gt; result.size) <span class="keyword">return</span> result.subList(start, result.size)</span><br><span class="line">        <span class="keyword">return</span> result.subList(start, end)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="type">&lt;T&gt;</span> <span class="title">query</span><span class="params">(clz: <span class="type">Class</span>&lt;<span class="type">T</span>&gt;)</span></span> = boxStore.boxFor(clz).query()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里的代码比较简单，不多做解释了，接下来是代码的整合，写出来比我想象的要简单很多：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">object</span> GankDataStore &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">val</span> dataManager = DataManager()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">initStore</span><span class="params">()</span></span> &#123;</span><br><span class="line">        dataManager.initStore()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">suspend</span> <span class="function"><span class="keyword">fun</span> <span class="title">requestWelfareData</span><span class="params">(pageIndex: <span class="type">Int</span>)</span></span>: List&lt;Data&gt;? &#123;</span><br><span class="line">        gankService &#123; getWelfare(pageIndex) &#125;.await().apply &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">if</span> (isSuccessful) &#123;</span><br><span class="line">                <span class="keyword">this</span>.body().results?.apply &#123; dataManager.addOrUpdateData(<span class="keyword">this</span>) &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">val</span> start = pageIndex * <span class="number">10</span> - <span class="number">10</span></span><br><span class="line">                dataManager.queryData(start, start + <span class="number">10</span>)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> mutableListOf()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>主要解释一下 requestWelfareData 函数，前面加了suspend 表示挂起函数，也就是说执行这个函数的时候即使有异步的代码，但整体表现仍然是顺序的，我的表述可能不太对，那就描述一下现象。这里 gankService { getWelfare(pageIndex) } 相信大家还有印象，实际上就是前面写的全局函数，是用来请求接口的，很明显是一个异步的代码，但是执行到 await() 的时候，函数被挂起，直到 gankService { getWelfare(pageIndex) } 返回结果，之后的代码会在结果返回之后执行，如果是一般的异步代码，那可能表现就是后面的代码执行在结果返回之前。继续解释代码，在拿到结果时候（这里拿到的是 Response），首先判断接口调用是否成功，如果成功，再取出我们的数据类，这样做是很安全的，因为如果接口调用失败，直接取出数据会是空的。接口调用成功，取出数据并将之插入数据库，如果调用失败，则从数据库查找数据，如果这两个操作都失败了，最后会返回一个空的集合。到此整个流程结束了，代码我也测过，没啥问题。</p>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>上面的实现实际上也没达到最终完成的程度，比如如果数据库中也没有数据了，这里没有处理，比如缓存管理等。但也不可能事先就把所有可能发生的问题都考虑到，而且在不同的阶段会面临不同的问题，但是作为思路写到这已经够了�</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/c1a802ff1f884b4c086e7f2d0fa3e393/" rel="prev" title="Android 增量更新（使用CMake编译）">
+      <i class="fa fa-chevron-left"></i> Android 增量更新（使用CMake编译）
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/c2766b9b6422a07df25d586690ff493b/" rel="next" title="小结">
+      小结 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%95%E5%85%A5"><span class="nav-number">2.</span> <span class="nav-text">引入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E7%9A%84%E5%B0%81%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8"><span class="nav-number">3.</span> <span class="nav-text">简单的封装和使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%A8-ObjectBox-%E5%AE%9E%E7%8E%B0%E7%BC%93%E5%AD%98"><span class="nav-number">4.</span> <span class="nav-text">用 ObjectBox 实现缓存</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%8E%E8%AE%B0"><span class="nav-number">5.</span> <span class="nav-text">后记</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="LJ"
+      src="/images/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">LJ</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">82</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">38</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ForgetAll" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ForgetAll" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://blankj.com/" title="https:&#x2F;&#x2F;blankj.com&#x2F;" rel="noopener" target="_blank">blankj-开源达人</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LJ</span>
+</div>
+  <div class="powered-by">书山有路勤为径
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '76eeb7f12824012f27fe',
+      clientSecret: '41159510cb271785627f9c3d29ca6c6b43f4cdaf',
+      repo        : 'ForgetAll.github.io',
+      owner       : 'ForgetAll',
+      admin       : ['ForgetAll'],
+      id          : '31e569eef4aeb784ba8b0266275df30d',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>

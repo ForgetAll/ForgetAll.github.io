@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/avatar.jpeg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/avatar.jpeg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/avatar.jpeg">
+  <link rel="mask-icon" href="/images/avatar.jpeg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"forgetall.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":null,"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="最近想研究一波插件化，在简书上看到这个感觉还不错，就按照这个顺序看下去了。不过得小记一下，省的以后我还得去上面提到的文里去找链接。我这里记得就是自己操作的一遍流程。。其实我也是根据他的文来操作的，属于HelloWorld级别吧。 操作本来还想介绍一下概念，想了想，算了，不误人子弟了。感兴趣自己搜。 1.新建工程没什么好说的，打开Android Studio新建一个工程都会吧。我这里新建了一个名为f">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android动态加载dex初试">
+<meta property="og:url" content="https://forgetall.github.io/805e1382fff2550a32364654d2584f99/index.html">
+<meta property="og:site_name" content="LJ的Blog">
+<meta property="og:description" content="最近想研究一波插件化，在简书上看到这个感觉还不错，就按照这个顺序看下去了。不过得小记一下，省的以后我还得去上面提到的文里去找链接。我这里记得就是自己操作的一遍流程。。其实我也是根据他的文来操作的，属于HelloWorld级别吧。 操作本来还想介绍一下概念，想了想，算了，不误人子弟了。感兴趣自己搜。 1.新建工程没什么好说的，打开Android Studio新建一个工程都会吧。我这里新建了一个名为f">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1976147-aef471d904e8105e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1976147-ef25936dd973afc6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1976147-968fd01f98ee0da5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="article:published_time" content="2017-08-06T15:39:23.000Z">
+<meta property="article:modified_time" content="2022-03-09T08:44:27.485Z">
+<meta property="article:author" content="LJ">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="动态加载dex">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/1976147-aef471d904e8105e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+<link rel="canonical" href="https://forgetall.github.io/805e1382fff2550a32364654d2584f99/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Android动态加载dex初试 | LJ的Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">LJ的Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">学海无涯苦做舟</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/805e1382fff2550a32364654d2584f99/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="LJ">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LJ的Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android动态加载dex初试
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-08-06 23:39:23" itemprop="dateCreated datePublished" datetime="2017-08-06T23:39:23+08:00">2017-08-06</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-03-09 16:44:27" itemprop="dateModified" datetime="2022-03-09T16:44:27+08:00">2022-03-09</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>最近想研究一波插件化，在简书上看到<a target="_blank" rel="noopener" href="http://www.jianshu.com/p/353514d315a7">这个</a>感觉还不错，就按照这个顺序看下去了。不过得小记一下，省的以后我还得去上面提到的文里去找链接。我这里记得就是自己操作的一遍流程。。其实我也是根据他的文来操作的，属于HelloWorld级别吧。</p>
+<h2 id="操作"><a href="#操作" class="headerlink" title="操作"></a>操作</h2><p>本来还想介绍一下概念，想了想，算了，不误人子弟了。感兴趣自己搜。</p>
+<h3 id="1-新建工程"><a href="#1-新建工程" class="headerlink" title="1.新建工程"></a>1.新建工程</h3><p>没什么好说的，打开Android Studio新建一个工程都会吧。我这里新建了一个名为fordex的项目，包名为com.xiasuhuei321.firstpro。</p>
+<h3 id="2-新建一个接口和一个类"><a href="#2-新建一个接口和一个类" class="headerlink" title="2.新建一个接口和一个类"></a>2.新建一个接口和一个类</h3><span id="more"></span>
+<p>接口和类非常简单，类是接口的实现类，主要功能就是弹一个Toast。接口：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">IShowToast</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">showToast</span><span class="params">(Context context)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>实现类：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ShowToastImpl</span> <span class="keyword">implements</span> <span class="title">IShowToast</span> </span>&#123;  </span><br><span class="line">  </span><br><span class="line">    <span class="meta">@Override</span>  </span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getToast</span><span class="params">()</span> </span>&#123;  </span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;我来自另一个dex文件&quot;</span>;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;  </span><br></pre></td></tr></table></figure>
+
+<h3 id="3-利用Android-Studio的build-gradle生成jar包"><a href="#3-利用Android-Studio的build-gradle生成jar包" class="headerlink" title="3.利用Android Studio的build.gradle生成jar包"></a>3.利用Android Studio的build.gradle生成jar包</h3><p>eclipse生成jar包是非常简单的，在Android Studio里面可以利用build.gradle生成jar包，记得在app下的build.gradle中输入下面的代码：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">task clearJar(<span class="attr">type:</span> Delete)&#123;</span><br><span class="line">    delete(<span class="string">&#x27;libs/dynamic.jar&#x27;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//打包任务</span></span><br><span class="line">task makeJar(<span class="attr">type:</span>org.gradle.api.tasks.bundling.Jar) &#123;</span><br><span class="line">    <span class="comment">//指定生成的jar名</span></span><br><span class="line">    baseName <span class="string">&#x27;dynamic&#x27;</span></span><br><span class="line">    <span class="comment">//从哪里打包class文件</span></span><br><span class="line">    from(<span class="string">&#x27;build/intermediates/classes/debug/com/xiasuhuei321/firstpro/&#x27;</span>)</span><br><span class="line">    <span class="comment">//打包到jar后的目录结构</span></span><br><span class="line"><span class="comment">//    into(&#x27;src/main/java/com/xiasuhuei/firstpro/&#x27;)</span></span><br><span class="line">    into(<span class="string">&#x27;com/xiasuhuei321/firstpro/&#x27;</span>)</span><br><span class="line">    <span class="comment">//去掉不需要打包的目录和文件</span></span><br><span class="line">    exclude(<span class="string">&#x27;test/&#x27;</span>, <span class="string">&#x27;IShowToast.class&#x27;</span>, <span class="string">&#x27;BuildConfig.class&#x27;</span>, <span class="string">&#x27;R.class&#x27;</span>)</span><br><span class="line">    <span class="comment">//去掉R$开头的文件</span></span><br><span class="line">    exclude&#123; it.name.startsWith(<span class="string">&#x27;R$&#x27;</span>);&#125;</span><br><span class="line">&#125;</span><br><span class="line">makeJar.dependsOn(clearJar, build)</span><br></pre></td></tr></table></figure>
+<p>生成的jar包在app&#x2F;build&#x2F;libs中</p>
+<h3 id="4-利用dx工具生成dex"><a href="#4-利用dx工具生成dex" class="headerlink" title="4.利用dx工具生成dex"></a>4.利用dx工具生成dex</h3><p>dx工具在sdk下的build-tools中，我这里将dx的目录配置到.bash.profile中了，可以直接用dx命令。windows可以像我一样配置系统变量即可，也可以切换到build-tools目录中执行dx命令。mac或者linux也可以切换到该目录，然后.&#x2F;dx执行。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dx --dex --output=/Users/lj/Desktop/duijie/dynamic_dex.jar /Users/lj/Desktop/duijie/dynamic.jar </span><br></pre></td></tr></table></figure>
+<p>前一个是dex输出位置，后一个是当前jar包位置（我这里把jar拷贝出来了）。生成新的jar之后解压看一下里面有啥：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1976147-aef471d904e8105e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="有啥"><br>原来dex就在这个jar里面。</p>
+<h3 id="5-通过生成dex加载实现类"><a href="#5-通过生成dex加载实现类" class="headerlink" title="5.通过生成dex加载实现类"></a>5.通过生成dex加载实现类</h3><p>因为这个3.0的预览版点了个支持kotlin，就用kotlin写了一小段，不过个人觉得并不影响阅读，毕竟没什么难的代码。首先将生成的jar拷贝到项目的assets目录中。首先是文件拷贝操作：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> Context.<span class="title">copyFiles</span><span class="params">(fileName: <span class="type">String</span>, desFile: <span class="type">File</span>)</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> input = assets.<span class="keyword">open</span>(fileName)</span><br><span class="line">    <span class="keyword">val</span> output = FileOutputStream(desFile.absoluteFile)</span><br><span class="line">    <span class="keyword">val</span> <span class="keyword">data</span>: ByteArray = kotlin.ByteArray(<span class="number">1024</span>)</span><br><span class="line">    <span class="keyword">var</span> i: <span class="built_in">Int</span></span><br><span class="line">    <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">        i = input.read(<span class="keyword">data</span>)</span><br><span class="line">        <span class="keyword">if</span> (i == -<span class="number">1</span>) <span class="keyword">break</span></span><br><span class="line">        output.write(<span class="keyword">data</span>, <span class="number">0</span>, i)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    input.close()</span><br><span class="line">    output.close()</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>给Context简单的扩展一个复制文件的方法，kotlin的特性，挺好使。</p>
+<p>当然原项目中的接口实现类可以删了，目前目录底下是这些东西：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1976147-ef25936dd973afc6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="目录"></p>
+<p>MainActivity：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> : <span class="type">AppCompatActivity</span></span>() &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstanceState: <span class="type">Bundle</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState)</span><br><span class="line">        setContentView(R.layout.activity_main)</span><br><span class="line">        loadDexClass()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">loadDexClass</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">var</span> cacheFile = externalCacheDir</span><br><span class="line">        <span class="keyword">var</span> internalPath = cacheFile.absolutePath+ File.separator+<span class="string">&quot;dynamic_dex.jar&quot;</span></span><br><span class="line">        <span class="keyword">var</span> desFile = File(internalPath)</span><br><span class="line">        <span class="keyword">if</span>(!desFile.exists())&#123;</span><br><span class="line">            desFile.createNewFile()</span><br><span class="line">            copyFiles(<span class="string">&quot;dynamic_dex.jar&quot;</span>,desFile)</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 开始加载dex class</span></span><br><span class="line">        <span class="keyword">val</span> dexClassLoader = DexClassLoader(internalPath,cacheFile.absolutePath,<span class="literal">null</span>,classLoader)</span><br><span class="line">        <span class="keyword">val</span> libClazz = dexClassLoader.loadClass(<span class="string">&quot;com.xiasuhuei321.firstpro.ShowToastImpl&quot;</span>)</span><br><span class="line">        <span class="keyword">val</span> impl = libClazz.newInstance() <span class="keyword">as</span> IShowToast</span><br><span class="line">        impl.showToast(<span class="keyword">this</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>最后的执行结果：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1976147-968fd01f98ee0da5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="结果"></p>
+<p>整个流程比较简单，不需要赘述了。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"># Android</a>
+              <a href="/tags/%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BDdex/" rel="tag"># 动态加载dex</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/3d97c89fb253e733d7f2dc9784fa9627/" rel="prev" title="Kotlin委托 & 扩展 & 高阶函数">
+      <i class="fa fa-chevron-left"></i> Kotlin委托 & 扩展 & 高阶函数
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/64efbc6ec48718455b4fc8751e4c77e9/" rel="next" title="Android加载未安装apk中的资源">
+      Android加载未安装apk中的资源 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C"><span class="nav-number">1.</span> <span class="nav-text">操作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%96%B0%E5%BB%BA%E5%B7%A5%E7%A8%8B"><span class="nav-number">1.1.</span> <span class="nav-text">1.新建工程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%96%B0%E5%BB%BA%E4%B8%80%E4%B8%AA%E6%8E%A5%E5%8F%A3%E5%92%8C%E4%B8%80%E4%B8%AA%E7%B1%BB"><span class="nav-number">1.2.</span> <span class="nav-text">2.新建一个接口和一个类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%88%A9%E7%94%A8Android-Studio%E7%9A%84build-gradle%E7%94%9F%E6%88%90jar%E5%8C%85"><span class="nav-number">1.3.</span> <span class="nav-text">3.利用Android Studio的build.gradle生成jar包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%88%A9%E7%94%A8dx%E5%B7%A5%E5%85%B7%E7%94%9F%E6%88%90dex"><span class="nav-number">1.4.</span> <span class="nav-text">4.利用dx工具生成dex</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E9%80%9A%E8%BF%87%E7%94%9F%E6%88%90dex%E5%8A%A0%E8%BD%BD%E5%AE%9E%E7%8E%B0%E7%B1%BB"><span class="nav-number">1.5.</span> <span class="nav-text">5.通过生成dex加载实现类</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="LJ"
+      src="/images/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">LJ</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">82</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">38</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ForgetAll" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ForgetAll" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://blankj.com/" title="https:&#x2F;&#x2F;blankj.com&#x2F;" rel="noopener" target="_blank">blankj-开源达人</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LJ</span>
+</div>
+  <div class="powered-by">书山有路勤为径
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '76eeb7f12824012f27fe',
+      clientSecret: '41159510cb271785627f9c3d29ca6c6b43f4cdaf',
+      repo        : 'ForgetAll.github.io',
+      owner       : 'ForgetAll',
+      admin       : ['ForgetAll'],
+      id          : '4ada279fc2e30dcb5e37cfc8e71b60e2',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>

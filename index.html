@@ -148,7 +148,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2022/02/26/%E4%BD%BF%E7%94%A8%20redis%20%E5%AE%9E%E7%8E%B0%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/">
+    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/ab33cbb7b9150fdf89d0595c081a7a96/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpeg">
@@ -162,7 +162,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2022/02/26/%E4%BD%BF%E7%94%A8%20redis%20%E5%AE%9E%E7%8E%B0%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/" class="post-title-link" itemprop="url">使用 redis 实现分布式锁</a>
+            <a href="/ab33cbb7b9150fdf89d0595c081a7a96/" class="post-title-link" itemprop="url">使用 redis 实现分布式锁</a>
         </h2>
 
         <div class="post-meta">
@@ -179,7 +179,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-02-28 11:04:43" itemprop="dateModified" datetime="2022-02-28T11:04:43+08:00">2022-02-28</time>
+                <time title="修改时间：2022-03-09 16:44:27" itemprop="dateModified" datetime="2022-03-09T16:44:27+08:00">2022-03-09</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -209,7 +209,7 @@
           <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>在项目中某些场景需要先读取值，然后修改再保存，在这个过程中如果有并发请求，可能会突破程序设置的边界：在库存为 1 的情况下，同时有两个请求下单购买，如果不加处理，库存和订单总要异常一个。在单体服务中使用语言提供的锁就可以解决这一问题，但是在集群环境下，多节点的无状态服务，并发请求可能会通过负载均衡分发到不同的节点上，这时候就需要一个能在这种环境下也能生效的分布式锁了。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2022/02/26/%E4%BD%BF%E7%94%A8%20redis%20%E5%AE%9E%E7%8E%B0%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/#more" rel="contents">
+              <a class="btn" href="/ab33cbb7b9150fdf89d0595c081a7a96/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -233,7 +233,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2021/11/27/%E5%9C%A8%20Go%201.13%20%E4%B8%AD%E5%A4%84%E7%90%86%E9%94%99%E8%AF%AF%EF%BC%88%E7%BF%BB%E8%AF%91%EF%BC%89/">
+    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/b4f6998287a647e5e1427601efb45e98/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpeg">
@@ -247,7 +247,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/11/27/%E5%9C%A8%20Go%201.13%20%E4%B8%AD%E5%A4%84%E7%90%86%E9%94%99%E8%AF%AF%EF%BC%88%E7%BF%BB%E8%AF%91%EF%BC%89/" class="post-title-link" itemprop="url">在 Go 1.13 中处理错误（翻译）</a>
+            <a href="/b4f6998287a647e5e1427601efb45e98/" class="post-title-link" itemprop="url">在 Go 1.13 中处理错误（翻译）</a>
         </h2>
 
         <div class="post-meta">
@@ -256,10 +256,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2021-11-27 00:00:44 / 修改时间：09:02:58" itemprop="dateCreated datePublished" datetime="2021-11-27T00:00:44+08:00">2021-11-27</time>
+              <time title="创建时间：2021-11-27 00:00:44" itemprop="dateCreated datePublished" datetime="2021-11-27T00:00:44+08:00">2021-11-27</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-03-09 16:44:27" itemprop="dateModified" datetime="2022-03-09T16:44:27+08:00">2022-03-09</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -292,7 +298,7 @@
 <p>像这样的 Error 类型无处不在，而且他们存储的信息千差万别，从时间戳到文件名到服务器地址。通常，该信息包括另一个较低级的 error 以提供额外的上下文。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2021/11/27/%E5%9C%A8%20Go%201.13%20%E4%B8%AD%E5%A4%84%E7%90%86%E9%94%99%E8%AF%AF%EF%BC%88%E7%BF%BB%E8%AF%91%EF%BC%89/#more" rel="contents">
+              <a class="btn" href="/b4f6998287a647e5e1427601efb45e98/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -316,7 +322,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2021/11/21/%E9%94%99%E8%AF%AF%E6%98%AF%E5%80%BC%EF%BC%88%E7%BF%BB%E8%AF%91%EF%BC%89/">
+    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/77f3cda670b39b41572498909d454d9b/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpeg">
@@ -330,7 +336,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/11/21/%E9%94%99%E8%AF%AF%E6%98%AF%E5%80%BC%EF%BC%88%E7%BF%BB%E8%AF%91%EF%BC%89/" class="post-title-link" itemprop="url">Errors are values（翻译）</a>
+            <a href="/77f3cda670b39b41572498909d454d9b/" class="post-title-link" itemprop="url">Errors are values（翻译）</a>
         </h2>
 
         <div class="post-meta">
@@ -339,10 +345,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2021-11-21 18:19:27 / 修改时间：18:21:03" itemprop="dateCreated datePublished" datetime="2021-11-21T18:19:27+08:00">2021-11-21</time>
+              <time title="创建时间：2021-11-21 18:19:27" itemprop="dateCreated datePublished" datetime="2021-11-21T18:19:27+08:00">2021-11-21</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-03-09 16:44:27" itemprop="dateModified" datetime="2022-03-09T16:44:27+08:00">2022-03-09</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -374,7 +386,7 @@
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> err</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2021/11/21/%E9%94%99%E8%AF%AF%E6%98%AF%E5%80%BC%EF%BC%88%E7%BF%BB%E8%AF%91%EF%BC%89/#more" rel="contents">
+              <a class="btn" href="/77f3cda670b39b41572498909d454d9b/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -398,7 +410,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2021/11/21/%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86%E4%B8%8E%20Go%EF%BC%88%E7%BF%BB%E8%AF%91%EF%BC%89/">
+    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/df1bcc6a46b48cf46c32be97764f026e/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpeg">
@@ -412,7 +424,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/11/21/%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86%E4%B8%8E%20Go%EF%BC%88%E7%BF%BB%E8%AF%91%EF%BC%89/" class="post-title-link" itemprop="url">错误处理与 Go（翻译）</a>
+            <a href="/df1bcc6a46b48cf46c32be97764f026e/" class="post-title-link" itemprop="url">错误处理与 Go（翻译）</a>
         </h2>
 
         <div class="post-meta">
@@ -421,10 +433,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2021-11-21 11:36:40 / 修改时间：14:51:12" itemprop="dateCreated datePublished" datetime="2021-11-21T11:36:40+08:00">2021-11-21</time>
+              <time title="创建时间：2021-11-21 11:36:40" itemprop="dateCreated datePublished" datetime="2021-11-21T11:36:40+08:00">2021-11-21</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-03-09 16:44:27" itemprop="dateModified" datetime="2022-03-09T16:44:27+08:00">2022-03-09</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -462,7 +480,7 @@
 <p>你可以在 Go 中用知道的关于这个 error 类型来完成很多工作，但是本文我们会仔细看看 error 和讨论在 Go 中错误处理的一些良好实践。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2021/11/21/%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86%E4%B8%8E%20Go%EF%BC%88%E7%BF%BB%E8%AF%91%EF%BC%89/#more" rel="contents">
+              <a class="btn" href="/df1bcc6a46b48cf46c32be97764f026e/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -486,7 +504,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2021/11/20/Raft%EF%BC%88%E7%BF%BB%E8%AF%91%EF%BC%89/">
+    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/5c0f66dd967815b74decf6133654833b/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpeg">
@@ -500,7 +518,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/11/20/Raft%EF%BC%88%E7%BF%BB%E8%AF%91%EF%BC%89/" class="post-title-link" itemprop="url">Raft（翻译）</a>
+            <a href="/5c0f66dd967815b74decf6133654833b/" class="post-title-link" itemprop="url">Raft（翻译）</a>
         </h2>
 
         <div class="post-meta">
@@ -517,7 +535,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-11-26 09:51:35" itemprop="dateModified" datetime="2021-11-26T09:51:35+08:00">2021-11-26</time>
+                <time title="修改时间：2022-03-09 16:44:27" itemprop="dateModified" datetime="2022-03-09T16:44:27+08:00">2022-03-09</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -551,7 +569,7 @@
 <p><strong>这就是分布式共识的问题</strong></p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2021/11/20/Raft%EF%BC%88%E7%BF%BB%E8%AF%91%EF%BC%89/#more" rel="contents">
+              <a class="btn" href="/5c0f66dd967815b74decf6133654833b/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -575,7 +593,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2021/11/19/%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E8%87%AA%E5%B7%B1%E7%BF%BB%E8%AF%91%E6%96%87%E7%AB%A0%EF%BC%9F/">
+    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/dddaf9b075d1126bdbf6152e92bceab9/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpeg">
@@ -589,7 +607,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/11/19/%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E8%87%AA%E5%B7%B1%E7%BF%BB%E8%AF%91%E6%96%87%E7%AB%A0%EF%BC%9F/" class="post-title-link" itemprop="url">为什么要自己翻译文章？</a>
+            <a href="/dddaf9b075d1126bdbf6152e92bceab9/" class="post-title-link" itemprop="url">为什么要自己翻译文章？</a>
         </h2>
 
         <div class="post-meta">
@@ -598,10 +616,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2021-11-19 18:59:47 / 修改时间：19:27:10" itemprop="dateCreated datePublished" datetime="2021-11-19T18:59:47+08:00">2021-11-19</time>
+              <time title="创建时间：2021-11-19 18:59:47" itemprop="dateCreated datePublished" datetime="2021-11-19T18:59:47+08:00">2021-11-19</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-03-09 16:44:27" itemprop="dateModified" datetime="2022-03-09T16:44:27+08:00">2022-03-09</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -650,7 +674,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2021/11/14/Go%20%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%EF%BC%88%E7%BF%BB%E8%AF%91%EF%BC%89/">
+    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/ec108bf44c713e72e640ebd88450d43f/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpeg">
@@ -664,7 +688,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/11/14/Go%20%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%EF%BC%88%E7%BF%BB%E8%AF%91%EF%BC%89/" class="post-title-link" itemprop="url">Go 内存模型（翻译）</a>
+            <a href="/ec108bf44c713e72e640ebd88450d43f/" class="post-title-link" itemprop="url">Go 内存模型（翻译）</a>
         </h2>
 
         <div class="post-meta">
@@ -673,10 +697,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2021-11-14 11:46:57 / 修改时间：16:40:15" itemprop="dateCreated datePublished" datetime="2021-11-14T11:46:57+08:00">2021-11-14</time>
+              <time title="创建时间：2021-11-14 11:46:57" itemprop="dateCreated datePublished" datetime="2021-11-14T11:46:57+08:00">2021-11-14</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-03-09 16:44:27" itemprop="dateModified" datetime="2022-03-09T16:44:27+08:00">2022-03-09</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -711,12 +741,12 @@
 </ul>
 <h3 id="The-Go-Memory-Model"><a href="#The-Go-Memory-Model" class="headerlink" title="The Go Memory Model"></a>The Go Memory Model</h3><h4 id="2014年3月的版本"><a href="#2014年3月的版本" class="headerlink" title="2014年3月的版本"></a>2014年3月的版本</h4><h4 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h4><p>Go 内存模型指定了以下情形可以被保证：在一个协程中读取一个变量可以观察到由不同协程写入同一个变量所产生的值。</p>
 <h4 id="建议"><a href="#建议" class="headerlink" title="建议"></a>建议</h4><p>由多个协程同时修改数据的程序必须串行（ta：serialize，个人理解应该是串行而不是序列化）这种访问。</p>
-<p>为了串行访问，使用 channel 操作或者其他同步原语（例如在 sync 和 sync/atomic 包中的）保护数据。</p>
+<p>为了串行访问，使用 channel 操作或者其他同步原语（例如在 sync 和 sync&#x2F;atomic 包中的）保护数据。</p>
 <p>如果您为了理解您的程序行为（ta: 协程并发行为）一定要阅读此文档的剩余部分，那您真的是太明智了。</p>
 <p>不要耍小聪明（Don’t be clever）。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2021/11/14/Go%20%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%EF%BC%88%E7%BF%BB%E8%AF%91%EF%BC%89/#more" rel="contents">
+              <a class="btn" href="/ec108bf44c713e72e640ebd88450d43f/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -740,7 +770,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2021/11/04/%E7%94%A8%E5%88%B0%E7%9A%84%E5%91%BD%E4%BB%A4%EF%BC%8C%E9%98%B2%E5%BF%98/">
+    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2ab7e2e96f7c89ab9c426a200b92a003/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpeg">
@@ -754,7 +784,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/11/04/%E7%94%A8%E5%88%B0%E7%9A%84%E5%91%BD%E4%BB%A4%EF%BC%8C%E9%98%B2%E5%BF%98/" class="post-title-link" itemprop="url">用到的命令，防忘</a>
+            <a href="/2ab7e2e96f7c89ab9c426a200b92a003/" class="post-title-link" itemprop="url">用到的命令，防忘</a>
         </h2>
 
         <div class="post-meta">
@@ -771,7 +801,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-01-04 16:10:11" itemprop="dateModified" datetime="2022-01-04T16:10:11+08:00">2022-01-04</time>
+                <time title="修改时间：2022-03-09 16:44:27" itemprop="dateModified" datetime="2022-03-09T16:44:27+08:00">2022-03-09</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -799,7 +829,8 @@
 <li><p>将本地端口映射到 k8s 对应 pod：kubectl -n namespace port-forward authsv-7cfc56d85d-v24pb 9999:9090，-n  命名空间，9999 本地端口，9090 远程端口</p>
 </li>
 <li><p>实时打印 pod 日志：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl -n namespace logs authsv-6f5f544d75-qgw6g authsv --tail 10 -f</span><br></pre></td></tr></table></figure></li>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl -n namespace logs authsv-6f5f544d75-qgw6g authsv --tail 10 -f</span><br></pre></td></tr></table></figure>
+</li>
 <li><p>获取定时任务列表：kubectl -n namespace get cronjob</p>
 </li>
 <li><p>删除节点：kubectl -n namespace delete xxx</p>
@@ -812,7 +843,7 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># ┌───────────── 分钟 (0 - 59)</span><br><span class="line"># │ ┌───────────── 小时 (0 - 23)</span><br><span class="line"># │ │ ┌───────────── 月的某天 (1 - 31)</span><br><span class="line"># │ │ │ ┌───────────── 月份 (1 - 12)</span><br><span class="line"># │ │ │ │ ┌───────────── 周的某天 (0 - 6) （周日到周一；在某些系统上，7 也是星期日）</span><br><span class="line"># │ │ │ │ │                                   </span><br><span class="line"># │ │ │ │ │</span><br><span class="line"># │ │ │ │ │</span><br><span class="line"># * * * * *</span><br></pre></td></tr></table></figure>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2021/11/04/%E7%94%A8%E5%88%B0%E7%9A%84%E5%91%BD%E4%BB%A4%EF%BC%8C%E9%98%B2%E5%BF%98/#more" rel="contents">
+              <a class="btn" href="/2ab7e2e96f7c89ab9c426a200b92a003/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -836,7 +867,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2021/11/01/%E6%9C%89%E8%B6%A3%E7%9A%84%E5%90%AF%E5%8A%A8Vim%E7%9A%84%E6%96%B9%E5%BC%8F/">
+    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/0f4076b4c48e8caa9a13d749b2ff0cf9/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpeg">
@@ -850,7 +881,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/11/01/%E6%9C%89%E8%B6%A3%E7%9A%84%E5%90%AF%E5%8A%A8Vim%E7%9A%84%E6%96%B9%E5%BC%8F/" class="post-title-link" itemprop="url">有趣的启动Vim的方式</a>
+            <a href="/0f4076b4c48e8caa9a13d749b2ff0cf9/" class="post-title-link" itemprop="url">有趣的启动Vim的方式</a>
         </h2>
 
         <div class="post-meta">
@@ -867,7 +898,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-11-21 08:39:56" itemprop="dateModified" datetime="2021-11-21T08:39:56+08:00">2021-11-21</time>
+                <time title="修改时间：2022-03-09 16:44:27" itemprop="dateModified" datetime="2022-03-09T16:44:27+08:00">2022-03-09</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -895,7 +926,7 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">alias v=av</span><br><span class="line">alias nv=av</span><br><span class="line">alias vim=av</span><br><span class="line"></span><br><span class="line">function av() &#123;</span><br><span class="line"><span class="meta">#</span><span class="bash">  res=`curl --connect-timeout 2 https://v1.jinrishici.com/rensheng.txt`</span></span><br><span class="line"><span class="meta">#</span><span class="bash">  <span class="built_in">echo</span> -e <span class="string">&quot;\033[31m <span class="variable">$res</span>&quot;</span></span></span><br><span class="line">  fortune -e tang300</span><br><span class="line">  sleep 0.7</span><br><span class="line">  if [[ $1 == *.java ]]</span><br><span class="line">  then /opt/homebrew/bin/vim $1</span><br><span class="line">  else nvim $1</span><br><span class="line">  fi</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2021/11/01/%E6%9C%89%E8%B6%A3%E7%9A%84%E5%90%AF%E5%8A%A8Vim%E7%9A%84%E6%96%B9%E5%BC%8F/#more" rel="contents">
+              <a class="btn" href="/0f4076b4c48e8caa9a13d749b2ff0cf9/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -919,7 +950,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2021/10/28/%E5%B0%8F%E7%BB%93/">
+    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/c2766b9b6422a07df25d586690ff493b/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpeg">
@@ -933,7 +964,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/10/28/%E5%B0%8F%E7%BB%93/" class="post-title-link" itemprop="url">小结</a>
+            <a href="/c2766b9b6422a07df25d586690ff493b/" class="post-title-link" itemprop="url">小结</a>
         </h2>
 
         <div class="post-meta">
@@ -942,10 +973,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2021-10-28 09:03:30 / 修改时间：09:05:12" itemprop="dateCreated datePublished" datetime="2021-10-28T09:03:30+08:00">2021-10-28</time>
+              <time title="创建时间：2021-10-28 09:03:30" itemprop="dateCreated datePublished" datetime="2021-10-28T09:03:30+08:00">2021-10-28</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-03-09 16:44:27" itemprop="dateModified" datetime="2022-03-09T16:44:27+08:00">2022-03-09</time>
+              </span>
 
           
 

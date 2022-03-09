@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/avatar.jpeg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/avatar.jpeg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/avatar.jpeg">
+  <link rel="mask-icon" href="/images/avatar.jpeg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"forgetall.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":null,"activeClass":"gitalk"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="写在前面这个项目很久之前就从** android-architecture ** 这个仓库clone了这个MVP架构的todoapp，源码也读过，不过没有整理过。最近整理资料准备毕设了，再读一遍源码，感受和以前又不同了。先放上项目地址，各位可以自己去clone或者下载：https:&#x2F;&#x2F;github.com&#x2F;googlesamples&#x2F;android-architecture&#x2F;tree&#x2F;todo-m">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Google官方MVP示例代码阅读笔记">
+<meta property="og:url" content="https://forgetall.github.io/9b5aa2ff174224df219564247a0b656e/index.html">
+<meta property="og:site_name" content="LJ的Blog">
+<meta property="og:description" content="写在前面这个项目很久之前就从** android-architecture ** 这个仓库clone了这个MVP架构的todoapp，源码也读过，不过没有整理过。最近整理资料准备毕设了，再读一遍源码，感受和以前又不同了。先放上项目地址，各位可以自己去clone或者下载：https:&#x2F;&#x2F;github.com&#x2F;googlesamples&#x2F;android-architecture&#x2F;tree&#x2F;todo-m">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1976147-36bd2e6026613e10.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1976147-5cb6b83cb11b3d1d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1976147-b7d20296321ae1a9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1976147-4b8023fc2b7b0cc2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1976147-dcbc0edad7bb3f5d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1976147-0eaed218cd8949e4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1976147-8a715f83b7302547.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1976147-3826269414c2153c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="article:published_time" content="2017-02-19T14:53:51.000Z">
+<meta property="article:modified_time" content="2022-03-09T08:44:27.493Z">
+<meta property="article:author" content="LJ">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="入门学习">
+<meta property="article:tag" content="架构">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/1976147-36bd2e6026613e10.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+<link rel="canonical" href="https://forgetall.github.io/9b5aa2ff174224df219564247a0b656e/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Google官方MVP示例代码阅读笔记 | LJ的Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">LJ的Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">学海无涯苦做舟</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/9b5aa2ff174224df219564247a0b656e/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="LJ">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LJ的Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Google官方MVP示例代码阅读笔记
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-02-19 22:53:51" itemprop="dateCreated datePublished" datetime="2017-02-19T22:53:51+08:00">2017-02-19</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-03-09 16:44:27" itemprop="dateModified" datetime="2022-03-09T16:44:27+08:00">2022-03-09</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>这个项目很久之前就从** <a target="_blank" rel="noopener" href="https://github.com/googlesamples/android-architecture">android-architecture</a> ** 这个仓库clone了这个MVP架构的todoapp，源码也读过，不过没有整理过。最近整理资料准备毕设了，再读一遍源码，感受和以前又不同了。先放上项目地址，各位可以自己去clone或者下载：<a target="_blank" rel="noopener" href="https://github.com/googlesamples/android-architecture/tree/todo-mvp">https://github.com/googlesamples/android-architecture/tree/todo-mvp</a></p>
+<p>如果各位对MVP模式不是很熟悉，可以看我之前的一篇文：<br><a target="_blank" rel="noopener" href="http://www.jianshu.com/p/6d42bf4efe16">Android之MVP初尝试</a>，简单易懂。下文的view一般是指MVP中的view。</p>
+<h2 id="剥丝抽茧，理清项目结构"><a href="#剥丝抽茧，理清项目结构" class="headerlink" title="剥丝抽茧，理清项目结构"></a>剥丝抽茧，理清项目结构</h2><p>国际惯例，上项目结构图：</p>
+<span id="more"></span>
+<p><img src="http://upload-images.jianshu.io/upload_images/1976147-36bd2e6026613e10.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="结构"></p>
+<p>从包名上很容易分辨出功能：addedittask是添加任务，data是数据管理，statistics是统计，taskdetail是任务详情，tasks是任务浏览之类的。事实上这个项目的关键也就是：** Tasks <strong>、</strong> TaskDetail <strong>、</strong> AddEditTask <strong>、</strong> Statistics **。</p>
+<p>这四个关键的地方都有相同之处：</p>
+<ul>
+<li>定义了view和presenter的契约</li>
+<li>Activity负责fragment和presenter的创建</li>
+<li>Fragment实现了view接口</li>
+<li>presenter实现了presenter接口</li>
+</ul>
+<p>也就是说，几个功能每一个都是MVP的模式，只不过Model层是公用的。而且这个项目里View层都是Fragment，果然google推荐用Fragment自己的项目里也给我们做个示范……其实关于到底是不是要用Fragment，还是有些争议的，<a target="_blank" rel="noopener" href="http://www.jcodecraeer.com/a/anzhuokaifa/androidkaifa/2015/0427/2806.html">我为什么不主张使用Fragment</a>，这篇文关于Fragment讲的比较到位了。那么到底要不要用呢？我觉得对于个体而言，不管你喜不喜欢，都要用一用，试一试，因为人要成长，必须踩坑。对于正式项目而言，则需要综合考量，使用Fragment的利是否大于弊。</p>
+<p>扯远了，接下来看一下他代码仓库给的一张结构图：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1976147-5cb6b83cb11b3d1d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="结构图"></p>
+<p>可以看出来左边是数据管理，典型的Model层。而右边呢，你可能认为Activity是Presenter，事实上并不是，Presenter在Activity内，Fragment是View无疑。到这，我觉得关于这个项目结构的简介已经足够了，接下来看代码。</p>
+<p>我觉得看一个Android项目的正确姿势应该是先把玩一下app，看一下功能。贴几张app的图：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1976147-b7d20296321ae1a9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="首页"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1976147-4b8023fc2b7b0cc2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="添加任务"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1976147-dcbc0edad7bb3f5d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="统计"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1976147-0eaed218cd8949e4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="任务详情"></p>
+<p>接着就该上入口的Activity看一下了，这个项目的入口Activity是TasksActivity，所在的包是tasks，看一下有哪些东西：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1976147-8a715f83b7302547.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="tasks"></p>
+<p>第一个是自定义View，第二个就是入口Activity了，第三个即上面所说的“契约”，里面包含了View接口和Presenter接口。TasksFilterType则是一个枚举，里面有三个过滤类型：所有，进行中的，完成的。TasksFragment就是MVP中的View了，TasksPresenter则是MVP中的Presenter了。看一下TasksActivity中的初始化代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.tasks_act);</span><br><span class="line">        Log.e(getClass().getSimpleName(),<span class="string">&quot;onCreate&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Set up the toolbar.</span></span><br><span class="line">        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);</span><br><span class="line">        setSupportActionBar(toolbar);</span><br><span class="line">        ActionBar ab = getSupportActionBar();</span><br><span class="line">        ab.setHomeAsUpIndicator(R.drawable.ic_menu);</span><br><span class="line">        ab.setDisplayHomeAsUpEnabled(<span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * 以下的DrawerLayout暂时不看了</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="comment">// Set up the navigation drawer.</span></span><br><span class="line">        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);</span><br><span class="line">        mDrawerLayout.setStatusBarBackground(R.color.colorPrimaryDark);</span><br><span class="line">        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);</span><br><span class="line">        <span class="keyword">if</span> (navigationView != <span class="keyword">null</span>) &#123;</span><br><span class="line">            setupDrawerContent(navigationView);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 获取fragment并将之添加到视图上</span></span><br><span class="line">        <span class="comment">// 悬浮按钮在这个taksFragment里设置的点击事件</span></span><br><span class="line">        TasksFragment tasksFragment =</span><br><span class="line">                (TasksFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);</span><br><span class="line"><span class="comment">//        getSupportFragmentManager().findFragmentById()</span></span><br><span class="line">        <span class="keyword">if</span> (tasksFragment == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="comment">// Create the fragment</span></span><br><span class="line">            tasksFragment = TasksFragment.newInstance();</span><br><span class="line">            <span class="comment">// 提供方法帮助activity加载ui</span></span><br><span class="line">            <span class="comment">// 这个方法其实就是拿到一个事务，然后把这个fragment add到对应的id上了</span></span><br><span class="line">            ActivityUtils.addFragmentToActivity(</span><br><span class="line">                    getSupportFragmentManager(), tasksFragment, R.id.contentFrame);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Create the presenter</span></span><br><span class="line">        mTasksPresenter = <span class="keyword">new</span> TasksPresenter(</span><br><span class="line">                Injection.provideTasksRepository(getApplicationContext()), tasksFragment);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Load previously saved state, if available.</span></span><br><span class="line">        <span class="keyword">if</span> (savedInstanceState != <span class="keyword">null</span>) &#123;</span><br><span class="line">            TasksFilterType currentFiltering =</span><br><span class="line">                    (TasksFilterType) savedInstanceState.getSerializable(CURRENT_FILTERING_KEY);</span><br><span class="line">            mTasksPresenter.setFiltering(currentFiltering);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>首先是初始化toolbar和侧滑，这里不必深入细节，可以跳过这俩。之后初始化fragment和presenter，初始化Fragment先是尝试通过id寻找可能已经存在的Fragment对象，如果没有，则重新创建一个Fragment对象。下一步则是创建一个presenter，最后则是让应用在横竖屏状态切换的情况下恢复数据。</p>
+<p>接下来看一下View和Presenter的“契约”：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">TasksContract</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">interface</span> <span class="title">View</span> <span class="keyword">extends</span> <span class="title">BaseView</span>&lt;<span class="title">Presenter</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">setLoadingIndicator</span><span class="params">(<span class="keyword">boolean</span> active)</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">showTasks</span><span class="params">(List&lt;Task&gt; tasks)</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">showAddTask</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">showTaskDetailsUi</span><span class="params">(String taskId)</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">showTaskMarkedComplete</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">showTaskMarkedActive</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">showCompletedTasksCleared</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">showLoadingTasksError</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">showNoTasks</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">showActiveFilterLabel</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">showCompletedFilterLabel</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">showAllFilterLabel</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">showNoActiveTasks</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">showNoCompletedTasks</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">showSuccessfullySavedMessage</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">boolean</span> <span class="title">isActive</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">showFilteringPopUpMenu</span><span class="params">()</span></span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">interface</span> <span class="title">Presenter</span> <span class="keyword">extends</span> <span class="title">BasePresenter</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">result</span><span class="params">(<span class="keyword">int</span> requestCode, <span class="keyword">int</span> resultCode)</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">loadTasks</span><span class="params">(<span class="keyword">boolean</span> forceUpdate)</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">addNewTask</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">openTaskDetails</span><span class="params">(<span class="meta">@NonNull</span> Task requestedTask)</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">completeTask</span><span class="params">(<span class="meta">@NonNull</span> Task completedTask)</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">activateTask</span><span class="params">(<span class="meta">@NonNull</span> Task activeTask)</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">clearCompletedTasks</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">setFiltering</span><span class="params">(TasksFilterType requestType)</span></span>;</span><br><span class="line"></span><br><span class="line">        <span class="function">TasksFilterType <span class="title">getFiltering</span><span class="params">()</span></span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个接口里包含了View和Presenter，可以看到View和Presenter里的方法比较多，事实上这是应该的。因为在MVP架构里，View只负责根据Presenter的指示绘制UI，View将所有的用户交互交给Presenter处理。所以Presenter的很多方法可能就是对用户的输入的处理，而有输入必然有输出，View接口定义的各个方法便是给Presenter回调的。Presenter通过回调函数将对用户的输入的处理结果推到View中，View再根据这个结果对UI进行相应的更新。而在此项目中，Fragment就是View，在Fragment的各个点击事件中都调用了Presenter的对应方法，将业务逻辑交给Presenter处理。这看起来比传统的MVC强上很多，因为传统MVC中Activity既可以认为是Controller亦可以认为是View，职责难以分离，写到后面可能一个Activity就有上千行的代码，这会为后续的维护带来不少麻烦。而MVP则将业务逻辑抽取到了Presenter中，作为View的Fragment或者Activity职责更加单一，无疑为后续的开发维护带来了便利。</p>
+<p>接下来详细的看Presenter的初始化，Presenter的创建是在TasksActivity中完成的，查看其构造函数：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">TasksPresenter</span><span class="params">(<span class="meta">@NonNull</span> TasksRepository tasksRepository, <span class="meta">@NonNull</span> TasksContract.View tasksView)</span> </span>&#123;</span><br><span class="line">    mTasksRepository = checkNotNull(tasksRepository, <span class="string">&quot;tasksRepository cannot be null&quot;</span>);</span><br><span class="line">    mTasksView = checkNotNull(tasksView, <span class="string">&quot;tasksView cannot be null!&quot;</span>);</span><br><span class="line"></span><br><span class="line">    mTasksView.setPresenter(<span class="keyword">this</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>前两个检查传入的参数是否为空，接着将其赋值给TasksPresenter内的引用，调用view的setPresenter方法，将自身传入，这样view中就可以使用presenter对象了，比直接从activity中拿看起来要优雅了不少。Presenter具体的逻辑就不看了，都是一些比较简单的代码，回顾一下打开这个app所发生的事件的流程：创建TasksActivity  -&gt;  初始化Toolbar  -&gt;  初始化侧滑  -&gt;  创建TasksFragment对象  -&gt;  创建TaskPresenter对象  -&gt;  给Fragment设置Presenter对象  -&gt;  初始化Fragment布局，这样一套流程下来，整个流程就理清了，接下来只是等待用户的输入了。</p>
+<p>接下来要看的是从本文开始到现在都一直忽略了的Model：TasksRepository。不过在分析TasksRepository之前，安利一下这个项目里的实体类，写的比较优雅，我们平时写实体类时最好也能按照他的套路来写。我为什么说他写的比较优雅呢？因为各个属性或者是带返回值的方法都打上了@Nullable或者@NoNull注解来说明是否可以为空，事实上空指针这个错可以算是平时经常遇到的错了……不过如果你有良好的设计和编码习惯，是可以避免的，带上这两个注解可以在编译期给你相关的提示。不仅如此，这个实体类还复写了equals()、hashCode()和toString()方法，而且实现的方式也符合规范，关于如何复写这三个方法，在《effective java》上有很好的总结，各位可以去读一下。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * Copyright 2016, The Android Open Source Project</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span></span><br><span class="line"><span class="comment"> * you may not use this file except in compliance with the License.</span></span><br><span class="line"><span class="comment"> * You may obtain a copy of the License at</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> *      http://www.apache.org/licenses/LICENSE-2.0</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * Unless required by applicable law or agreed to in writing, software</span></span><br><span class="line"><span class="comment"> * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span></span><br><span class="line"><span class="comment"> * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span></span><br><span class="line"><span class="comment"> * See the License for the specific language governing permissions and</span></span><br><span class="line"><span class="comment"> * limitations under the License.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">package</span> com.example.android.architecture.blueprints.todoapp.data;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.support.annotation.NonNull;</span><br><span class="line"><span class="keyword">import</span> android.support.annotation.Nullable;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.google.common.base.Objects;</span><br><span class="line"><span class="keyword">import</span> com.google.common.base.Strings;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.UUID;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Immutable model class for a Task.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">Task</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@NonNull</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> String mId;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Nullable</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> String mTitle;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Nullable</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> String mDescription;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">boolean</span> mCompleted;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Use this constructor to create a new active Task.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> title       title of the task</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> description description of the task</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Task</span><span class="params">(<span class="meta">@Nullable</span> String title, <span class="meta">@Nullable</span> String description)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>(title, description, UUID.randomUUID().toString(), <span class="keyword">false</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Use this constructor to create an active Task if the Task already has an id (copy of another</span></span><br><span class="line"><span class="comment">     * Task).</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> title       title of the task</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> description description of the task</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> id          id of the task</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Task</span><span class="params">(<span class="meta">@Nullable</span> String title, <span class="meta">@Nullable</span> String description, <span class="meta">@NonNull</span> String id)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>(title, description, id, <span class="keyword">false</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Use this constructor to create a new completed Task.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> title       title of the task</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> description description of the task</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> completed   true if the task is completed, false if it&#x27;s active</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Task</span><span class="params">(<span class="meta">@Nullable</span> String title, <span class="meta">@Nullable</span> String description, <span class="keyword">boolean</span> completed)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>(title, description, UUID.randomUUID().toString(), completed);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Use this constructor to specify a completed Task if the Task already has an id (copy of</span></span><br><span class="line"><span class="comment">     * another Task).</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> title       title of the task</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> description description of the task</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> id          id of the task</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> completed   true if the task is completed, false if it&#x27;s active</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Task</span><span class="params">(<span class="meta">@Nullable</span> String title, <span class="meta">@Nullable</span> String description,</span></span></span><br><span class="line"><span class="params"><span class="function">                <span class="meta">@NonNull</span> String id, <span class="keyword">boolean</span> completed)</span> </span>&#123;</span><br><span class="line">        mId = id;</span><br><span class="line">        mTitle = title;</span><br><span class="line">        mDescription = description;</span><br><span class="line">        mCompleted = completed;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@NonNull</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getId</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> mId;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Nullable</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getTitle</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> mTitle;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Nullable</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getTitleForList</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (!Strings.isNullOrEmpty(mTitle)) &#123;</span><br><span class="line">            <span class="keyword">return</span> mTitle;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> mDescription;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Nullable</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getDescription</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> mDescription;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isCompleted</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> mCompleted;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isActive</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> !mCompleted;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isEmpty</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> Strings.isNullOrEmpty(mTitle) &amp;&amp;</span><br><span class="line">               Strings.isNullOrEmpty(mDescription);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object o)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span> == o) <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        <span class="keyword">if</span> (o == <span class="keyword">null</span> || getClass() != o.getClass()) <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        Task task = (Task) o;</span><br><span class="line">        <span class="keyword">return</span> Objects.equal(mId, task.mId) &amp;&amp;</span><br><span class="line">               Objects.equal(mTitle, task.mTitle) &amp;&amp;</span><br><span class="line">               Objects.equal(mDescription, task.mDescription);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">hashCode</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> Objects.hashCode(mId, mTitle, mDescription);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Task with title &quot;</span> + mTitle;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>先看一下TasksRepository所在的包的结构：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1976147-3826269414c2153c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="data"></p>
+<p>可以从包名上看出local是从本地读取数据，remote是远程读取，当然了，这里只是模拟远程读取。本地采用了数据库存取的方式。在TasksRepository（下文简称TR）内部有两个TasksDataSource的引用：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> TasksDataSource mTasksRemoteDataSource;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> TasksDataSource mTasksLocalDataSource;</span><br></pre></td></tr></table></figure>
+<p>TasksDataSource是data包内的一个接口，使用接口引用，无非是想解耦，就算以后需求变更，不想采用数据库的方式存储数据，只要实现了这个接口，TR内部的代码也无需变更。TR用了单例，实现方式并不是线程安全的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Returns the single instance of this class, creating it if necessary.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> tasksRemoteDataSource the backend data source</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> tasksLocalDataSource  the device storage data source</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> the &#123;<span class="doctag">@link</span> TasksRepository&#125; instance</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> TasksRepository <span class="title">getInstance</span><span class="params">(TasksDataSource tasksRemoteDataSource,</span></span></span><br><span class="line"><span class="params"><span class="function">                                          TasksDataSource tasksLocalDataSource)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (INSTANCE == <span class="keyword">null</span>) &#123;</span><br><span class="line">        INSTANCE = <span class="keyword">new</span> TasksRepository(tasksRemoteDataSource, tasksLocalDataSource);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> INSTANCE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>说到底，他根本没有线程安全的必要，至少在这个app里，没有并发创建这个对象的场景，所以够用就行了。在TR内部使用了一个LinkedHashMap作为容器来保存Tasks，主要看一下两个方法，首先是存储：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">saveTask</span><span class="params">(<span class="meta">@NonNull</span> Task task)</span> </span>&#123;</span><br><span class="line">    checkNotNull(task);</span><br><span class="line">    mTasksRemoteDataSource.saveTask(task);</span><br><span class="line">    mTasksLocalDataSource.saveTask(task);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Do in memory cache update to keep the app UI up to date</span></span><br><span class="line">    <span class="keyword">if</span> (mCachedTasks == <span class="keyword">null</span>) &#123;</span><br><span class="line">        mCachedTasks = <span class="keyword">new</span> LinkedHashMap&lt;&gt;();</span><br><span class="line">    &#125;</span><br><span class="line">    mCachedTasks.put(task.getId(), task);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>会将传入的task存储到远程数据源和本地数据源（本地数据库）中，然后将这个task传到mCachedTasks（LinkedHashMap）中。代码比较简单，不做更多的分析，接下来看一下读取Task：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getTasks</span><span class="params">(<span class="meta">@NonNull</span> <span class="keyword">final</span> LoadTasksCallback callback)</span> </span>&#123;</span><br><span class="line">    checkNotNull(callback);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Respond immediately with cache if available and not dirty</span></span><br><span class="line">    <span class="keyword">if</span> (mCachedTasks != <span class="keyword">null</span> &amp;&amp; !mCacheIsDirty) &#123;</span><br><span class="line">        callback.onTasksLoaded(<span class="keyword">new</span> ArrayList&lt;&gt;(mCachedTasks.values()));</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (mCacheIsDirty) &#123;</span><br><span class="line">        <span class="comment">// If the cache is dirty we need to fetch new data from the network.</span></span><br><span class="line">        getTasksFromRemoteDataSource(callback);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// Query the local storage if available. If not, query the network.</span></span><br><span class="line">        mTasksLocalDataSource.getTasks(<span class="keyword">new</span> LoadTasksCallback() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onTasksLoaded</span><span class="params">(List&lt;Task&gt; tasks)</span> </span>&#123;</span><br><span class="line">                refreshCache(tasks);</span><br><span class="line">                callback.onTasksLoaded(<span class="keyword">new</span> ArrayList&lt;&gt;(mCachedTasks.values()));</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onDataNotAvailable</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                getTasksFromRemoteDataSource(callback);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个taskId是需要获取Task的id，也是唯一标识，GetTaskCallback则是负责传递数据的接口回调。首先是从内存中读取数据，getTaskWithId方法就是，看一下代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> Task <span class="title">getTaskWithId</span><span class="params">(<span class="meta">@NonNull</span> String id)</span> </span>&#123;</span><br><span class="line">    checkNotNull(id);</span><br><span class="line">    <span class="keyword">if</span> (mCachedTasks == <span class="keyword">null</span> || mCachedTasks.isEmpty()) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> mCachedTasks.get(id);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>就从保存task的LinkedHashMap中读取数据。如果这个过程读取不到数据那么接着从本地数据源中读取数据，如果本地数据源也没有拿到这个数据，那么最终就从远程数据源中读取数据。</p>
+<p>至此，我们简单的过了一遍这个项目。</p>
+<h2 id="总结-amp-再谈MVP"><a href="#总结-amp-再谈MVP" class="headerlink" title="总结 &amp; 再谈MVP"></a>总结 &amp; 再谈MVP</h2><p>Google这个示例项目，架构非常的清晰，也是很标准的MVP模式，项目中解耦做的也非常好。但是相对于一个功能简单的应用来说，代码量还是比较多的。当然，因为这只是一个小例子而已，可能会让人觉得反而不如普通的MVC来开发方便，但是人无远虑必有近忧。我们做东西的时候要尽量做长远的打算，不然以后可能就会被淹没在频繁的需求变更里了。Google的这个项目有非常多值得我们学习的地方，比如我们写MVP的时候也可以用一个Contract类来将View和Presenter放入其中，方便我们管理（改代码）。</p>
+<p>我们都知道MVP与MVC的主要区别是View和Model不直接交互，而是通过Presenter来完成交互，这样可以修改View而不影响Model，实现了Model和View真正的完全分离。而MVP中将业务逻辑抽取放到Presenter中，使各个模块的职责更加清晰，层次明了。而且还有很关键的一点，使用MVP架构使得应用能更加方便的进行单元测试。Android中虽然有很多测试框架，但是讲实话，你不研究个一段时间很难使用那些框架进行有效的测试。而且很多测试是难以进行的，因为有的需要依赖Android环境或者UI环境。而如果使用了MVP架构，View层因为是用接口定义的，所以完全可以自己建一个View模拟视图对象，这样就可以使得我们的测试不必依赖UI环境。这样最大的好处就是我们不必花费太多的时间去研究那些测试框架，也能写出有效的单元测试，保证我们代码的质量。</p>
+<p>相较于MVP的优点，其缺点也是非常明显的，从Google的这个示例代码也能看出来，代码量比较大，小型Android应用的开发用这个反而麻烦。Presenter既负责业务逻辑，又负责Model和View的交互，到后期也难免会膨胀、臃肿，最终造成这玩意可能维护起来也不简单。</p>
+<p>虽然MVP还是有不足的地方，但是相较于MVC，还是更容易的写出易维护、测试的代码的，所以各位不妨都阅读一下Google的这个代码~</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"># Android</a>
+              <a href="/tags/%E5%85%A5%E9%97%A8%E5%AD%A6%E4%B9%A0/" rel="tag"># 入门学习</a>
+              <a href="/tags/%E6%9E%B6%E6%9E%84/" rel="tag"># 架构</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/e6e96048b48b7464111c66aa8d2332ec/" rel="prev" title="Android测试">
+      <i class="fa fa-chevron-left"></i> Android测试
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/fead125a09d198ef48c5d1a1edac1fbe/" rel="next" title="Glide源码阅读（一）">
+      Glide源码阅读（一） <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2"><span class="nav-number">1.</span> <span class="nav-text">写在前面</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%A5%E4%B8%9D%E6%8A%BD%E8%8C%A7%EF%BC%8C%E7%90%86%E6%B8%85%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84"><span class="nav-number">2.</span> <span class="nav-text">剥丝抽茧，理清项目结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93-amp-%E5%86%8D%E8%B0%88MVP"><span class="nav-number">3.</span> <span class="nav-text">总结 &amp; 再谈MVP</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="LJ"
+      src="/images/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">LJ</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">82</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">38</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ForgetAll" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ForgetAll" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://blankj.com/" title="https:&#x2F;&#x2F;blankj.com&#x2F;" rel="noopener" target="_blank">blankj-开源达人</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LJ</span>
+</div>
+  <div class="powered-by">书山有路勤为径
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '76eeb7f12824012f27fe',
+      clientSecret: '41159510cb271785627f9c3d29ca6c6b43f4cdaf',
+      repo        : 'ForgetAll.github.io',
+      owner       : 'ForgetAll',
+      admin       : ['ForgetAll'],
+      id          : 'eb7c7bbdebc57c33381b2aba089a231a',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>
