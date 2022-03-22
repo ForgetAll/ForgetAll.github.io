@@ -3970,6 +3970,10 @@ public ArrayList() &#123;
 <li>然后就可使用 google asdfxx，来搜索你想要搜索的内容了。好景不长，经测试，google 后跟英文可以成功打开 chrome google 搜索，但是中文不行。用别人的电脑试了一下可以，查看 websearch 实现发现也是使用 open 命令打开相应的搜索使用 url + 拼接想要搜索的东西，直接用 open 命令也无法打开浏览器跳转到指定页，英文就可以。略醉……</li>
 </ul>
 </li>
+<li>ffmpeg -i xxx.jpeg -q 10 xxx_compress.jpeg：帮对象处理图片，上传证件照片之类的限制图片大小，可以使用 ffmpeg 压缩 -q 之后跟随的是压缩等级<ul>
+<li>安装：brew install ffmpeg（ffmpeg 依赖的库非常多，所以网不好安装失败的可能很大。。。多试几次就好了）</li>
+</ul>
+</li>
 </ul>
 ]]></content>
       <categories>
