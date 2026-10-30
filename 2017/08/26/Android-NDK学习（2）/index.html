@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css" integrity="sha256-4Lad8m4ZWW1Lgb9+sMVLYEfnIh7BjV1NQMEe79Pviks=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"forgetall.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.29.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="写在前面本文需要一些CMake 和 JNI的基础知识，对于CMake的使用推荐Android官网的NDK入门。CMake是Android Studio 2.2以上新增的支持原生编程的工具，CMake是一个跨平台的编译工具，可以用简单的语句描述所有平台的编译过程。恩，暂时先记一下吧，本文现处于自嗨状态，不适合作为各位将之作为NDK的学习资料。 环境配置在创建项目时勾选include c++，在项目创">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android-NDK学习（2）">
+<meta property="og:url" content="https://forgetall.github.io/2017/08/26/Android-NDK%E5%AD%A6%E4%B9%A0%EF%BC%882%EF%BC%89/index.html">
+<meta property="og:site_name" content="LJ的Blog">
+<meta property="og:description" content="写在前面本文需要一些CMake 和 JNI的基础知识，对于CMake的使用推荐Android官网的NDK入门。CMake是Android Studio 2.2以上新增的支持原生编程的工具，CMake是一个跨平台的编译工具，可以用简单的语句描述所有平台的编译过程。恩，暂时先记一下吧，本文现处于自嗨状态，不适合作为各位将之作为NDK的学习资料。 环境配置在创建项目时勾选include c++，在项目创">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1976147-16587b93a2ceca12.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="article:published_time" content="2017-08-26T14:35:26.000Z">
+<meta property="article:modified_time" content="2026-10-30T06:13:40.590Z">
+<meta property="article:author" content="LJ">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="NDK学习">
+<meta property="article:tag" content="入门学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/1976147-16587b93a2ceca12.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+<link rel="canonical" href="https://forgetall.github.io/2017/08/26/Android-NDK%E5%AD%A6%E4%B9%A0%EF%BC%882%EF%BC%89/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://forgetall.github.io/2017/08/26/Android-NDK%E5%AD%A6%E4%B9%A0%EF%BC%882%EF%BC%89/","path":"2017/08/26/Android-NDK学习（2）/","title":"Android-NDK学习（2）"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Android-NDK学习（2） | LJ的Blog</title>
+  
+
+
+
+
+
+
+
+
+  
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-search popup-trigger" aria-label="搜索" role="button">
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">LJ的Blog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">学海无涯苦做舟</p>
+  </div>
+
+  <div class="site-nav-toggle" aria-label="切换导航栏" role="button">
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2"><span class="nav-number">1.</span> <span class="nav-text">写在前面</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE"><span class="nav-number">2.</span> <span class="nav-text">环境配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hello-cpp%E5%AE%8C%E6%95%B4%E4%BB%A3%E7%A0%81"><span class="nav-number">3.</span> <span class="nav-text">hello.cpp完整代码</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">LJ</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">82</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">38</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://forgetall.github.io/2017/08/26/Android-NDK%E5%AD%A6%E4%B9%A0%EF%BC%882%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="LJ">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LJ的Blog">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Android-NDK学习（2） | LJ的Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android-NDK学习（2）
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2017-08-26 22:35:26" itemprop="dateCreated datePublished" datetime="2017-08-26T22:35:26+08:00">2017-08-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-10-30 14:13:40" itemprop="dateModified" datetime="2026-10-30T14:13:40+08:00">2026-10-30</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>本文需要一些<code>CMake</code> 和 <code>JNI</code>的基础知识，对于CMake的使用推荐Android官网的<a target="_blank" rel="noopener" href="https://developer.android.com/ndk/guides/index.html?hl=zh-cn">NDK入门</a>。CMake是Android Studio 2.2以上新增的支持原生编程的工具，CMake是一个跨平台的编译工具，可以用简单的语句描述所有平台的编译过程。恩，暂时先记一下吧，本文现处于自嗨状态，不适合作为各位将之作为NDK的学习资料。</p>
+<h2 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h2><p>在创建项目时勾选include c++，在项目创建完毕，文件目录如下：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1976147-16587b93a2ceca12.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="目录结构"><br>可以看到，可以看到app目录下有一个CMakeLists.txt，我在这个txt里加了一些注释</p>
+<span id="more"></span>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"># For more information about using CMake with Android Studio, read the</span><br><span class="line"># documentation: https://d.android.com/studio/projects/add-native-code.html</span><br><span class="line"></span><br><span class="line"># Sets the minimum version of CMake required to build the native library.</span><br><span class="line"></span><br><span class="line">cmake_minimum_required(VERSION 3.4.1)</span><br><span class="line"></span><br><span class="line"># Creates and names a library, sets it as either STATIC</span><br><span class="line"># or SHARED, and provides the relative paths to its source code.</span><br><span class="line"># You can define multiple libraries, and CMake builds them for you.</span><br><span class="line"># Gradle automatically packages shared libraries with your APK.</span><br><span class="line"># 增加cpp动态共享库</span><br><span class="line">add_library( # Sets the name of the library.</span><br><span class="line">             hello</span><br><span class="line"></span><br><span class="line">             # Sets the library as a shared library.</span><br><span class="line">             SHARED</span><br><span class="line"></span><br><span class="line">             # Provides a relative path to your source file(s).</span><br><span class="line">             src/main/cpp/hello.cpp )</span><br><span class="line"></span><br><span class="line"># Searches for a specified prebuilt library and stores the path as a</span><br><span class="line"># variable. Because CMake includes system libraries in the search path by</span><br><span class="line"># default, you only need to specify the name of the public NDK library</span><br><span class="line"># you want to add. CMake verifies that the library exists before</span><br><span class="line"># completing its build.</span><br><span class="line"></span><br><span class="line">find_library( # Sets the name of the path variable.</span><br><span class="line">              log-lib</span><br><span class="line"></span><br><span class="line">              # Specifies the name of the NDK library that</span><br><span class="line">              # you want CMake to locate.</span><br><span class="line">              log )</span><br><span class="line"></span><br><span class="line"># Specifies libraries CMake should link to your target library. You</span><br><span class="line"># can link multiple libraries, such as libraries you define in this</span><br><span class="line"># build script, prebuilt third-party libraries, or system libraries.</span><br><span class="line"></span><br><span class="line"># 生成链接动态库</span><br><span class="line">target_link_libraries( # Specifies the target library.</span><br><span class="line">                       hello</span><br><span class="line"></span><br><span class="line">                       # Links the target library to the log library</span><br><span class="line">                       # included in the NDK.</span><br><span class="line">                       $&#123;log-lib&#125; )</span><br></pre></td></tr></table></figure>
+<p>如果你有多个cpp动态共享库，可以再添加一个add_library。在app的build.gradle中也有相关的配置：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">externalNativeBuild &#123;</span><br><span class="line">    cmake &#123;</span><br><span class="line">        path <span class="string">&quot;CMakeLists.txt&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>关于CMake更详细的配置参见：<a target="_blank" rel="noopener" href="https://developer.android.com/ndk/guides/cmake.html?hl=zh-cn">https://developer.android.com/ndk/guides/cmake.html?hl=zh-cn</a></p>
+<p>可以看到我的CMake文件中添加的动态库为hello，这里在Java文件中创建一个JNI入口类，叫做JNIEntry：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.xiasuhuei321.forjni.entry;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.util.Log;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Created by xiasuhuei321 on 2017/8/26.</span></span><br><span class="line"><span class="comment"> * author:luo</span></span><br><span class="line"><span class="comment"> * e-mail:xiasuhuei321@163.com</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">JNIEntry</span> &#123;</span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        System.loadLibrary(<span class="string">&quot;hello&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 实例域</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">String</span> <span class="variable">TAG1</span> <span class="operator">=</span> <span class="string">&quot;JNIEntry_INSTANCE&quot;</span>;</span><br><span class="line">    <span class="comment">// 静态域</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">TAG2</span> <span class="operator">=</span> <span class="string">&quot;JNIEntry_STATIC&quot;</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">TAG</span> <span class="operator">=</span> <span class="string">&quot;JNIEntry&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">testStaticMethod</span><span class="params">()</span>&#123;</span><br><span class="line">        Log.e(TAG,<span class="string">&quot;静态测试方法被调用了&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">testInstanceMethod</span><span class="params">()</span>&#123;</span><br><span class="line">        Log.e(TAG,<span class="string">&quot;实例测试方法被调用了&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 从C++获取字符串</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 字符串</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">native</span> String <span class="title function_">stringFromJNI</span><span class="params">()</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 将大写字符串转成小写</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 小写字符串</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">native</span> String <span class="title function_">toLowCase</span><span class="params">(String str)</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title function_">changeArray</span><span class="params">(<span class="type">int</span>[] array)</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title function_">accessField</span><span class="params">(Object obj)</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title function_">accessMethod</span><span class="params">(Object obj)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="hello-cpp完整代码"><a href="#hello-cpp完整代码" class="headerlink" title="hello.cpp完整代码"></a>hello.cpp完整代码</h2><p>这里再记一下c++源码，方便以后自己查阅<br>cpp源码：hello.cpp</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// Created by xiasuhuei321 on 2017/8/25.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;jni.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;android/log.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">extern</span> <span class="string">&quot;C&quot;</span></span><br><span class="line">&#123;</span><br><span class="line">JNIEXPORT jstring JNICALL</span><br><span class="line"><span class="title function_">Java_com_xiasuhuei321_forjni_entry_JNIEntry_stringFromJNI</span><span class="params">(JNIEnv *env, jobject instance)</span> &#123;</span><br><span class="line">    <span class="comment">// 用c字符串创建Java字符串</span></span><br><span class="line">    __android_log_print(ANDROID_LOG_DEBUG, <span class="string">&quot;jni&quot;</span>, <span class="string">&quot;Hello World&quot;</span>);</span><br><span class="line">    <span class="comment">// 在内存溢出的情况下，返回NULL</span></span><br><span class="line">    <span class="keyword">return</span> env-&gt;NewStringUTF(<span class="string">&quot;Hello World&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">JNIEXPORT jstring JNICALL</span><br><span class="line"><span class="title function_">Java_com_xiasuhuei321_forjni_entry_JNIEntry_toLowCase</span><span class="params">(JNIEnv *env, jclass type, jstring str_)</span> &#123;</span><br><span class="line">    <span class="comment">// 为了在原生代码中使用Java字符串，需要先将Java字符串转换成C字符串</span></span><br><span class="line">    <span class="comment">// 这个函数可以将Unicode格式的Java字符串转换成C字符串</span></span><br><span class="line">    <span class="comment">// 第二个参数指定了是指向堆内原有对象还是拷贝一份新的对象</span></span><br><span class="line">    <span class="comment">// 这种获取的字符串只读</span></span><br><span class="line">    <span class="type">const</span> <span class="type">char</span> *str = env-&gt;GetStringUTFChars(str_, JNI_FALSE);</span><br><span class="line">    <span class="comment">// 获取字符串长度</span></span><br><span class="line">    jint length = env-&gt;GetStringLength(str_);</span><br><span class="line">    <span class="type">char</span> strs[length];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 这里必须要这么复制，自己手动改会有一个特殊字符（猜测是结尾的符号），</span></span><br><span class="line">    <span class="comment">// 在生成UTF字符串的时候会报错</span></span><br><span class="line">    <span class="built_in">strcpy</span>(strs, str);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; length; i++) &#123;</span><br><span class="line">        <span class="type">char</span> c = str[i];</span><br><span class="line">        <span class="keyword">if</span> (c &gt;= <span class="string">&#x27;A&#x27;</span> &amp;&amp; c &lt;= <span class="string">&#x27;Z&#x27;</span>) &#123;</span><br><span class="line">            strs[i] = (<span class="type">char</span>) (c + <span class="number">32</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            strs[i] = c;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    __android_log_print(ANDROID_LOG_DEBUG, <span class="string">&quot;jni&quot;</span>, <span class="string">&quot;%s&quot;</span>, strs);</span><br><span class="line">    <span class="comment">// 释放JNI函数返回的C字符串</span></span><br><span class="line">    env-&gt;ReleaseStringUTFChars(str_, str);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> env-&gt;NewStringUTF(strs);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">JNIEXPORT <span class="type">void</span> JNICALL</span><br><span class="line"><span class="title function_">Java_com_xiasuhuei321_forjni_entry_JNIEntry_changeArray</span><span class="params">(JNIEnv *env, jclass type,</span></span><br><span class="line"><span class="params">                                                        jintArray array_)</span> &#123;</span><br><span class="line">    <span class="comment">// 将Java数组复制到C数组中</span></span><br><span class="line"><span class="comment">//    env-&gt;GetIntArrayRegion()</span></span><br><span class="line">    <span class="comment">// 从C数组向Java数组提交所做的修改</span></span><br><span class="line"><span class="comment">//    env-&gt;SetIntArrayRegion()</span></span><br><span class="line">    <span class="comment">// 获取指向数组元素的直接指针</span></span><br><span class="line">    jint *value = env-&gt;GetIntArrayElements(array_, <span class="literal">NULL</span>);</span><br><span class="line">    jint length = env-&gt;GetArrayLength(array_);</span><br><span class="line">    <span class="comment">// 这里对每个元素做+1操作</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; length; i++) &#123;</span><br><span class="line">        value[i] += <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    env-&gt;ReleaseIntArrayElements(array_, value, <span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">JNIEXPORT <span class="type">void</span> JNICALL</span><br><span class="line"><span class="title function_">Java_com_xiasuhuei321_forjni_entry_JNIEntry_accessField</span><span class="params">(JNIEnv *env, jclass type,</span></span><br><span class="line"><span class="params">                                                        jobject instance)</span> &#123;</span><br><span class="line">    jclass clazz = env-&gt;GetObjectClass(instance);</span><br><span class="line">    <span class="comment">// JNI提供了用域ID访问两类域的方法，可以通过给定实例的class对象获取域ID</span></span><br><span class="line">    <span class="comment">// 用GetObjectClass函数可以获得class对象</span></span><br><span class="line">    <span class="comment">// 获取id</span></span><br><span class="line">    jfieldID instanceFieldId = env-&gt;GetFieldID(clazz, <span class="string">&quot;TAG1&quot;</span>, <span class="string">&quot;Ljava/lang/String;&quot;</span>);</span><br><span class="line">    <span class="comment">// 获取属性值</span></span><br><span class="line">    jstring jstr_value = (jstring) env-&gt;GetObjectField(instance, instanceFieldId);</span><br><span class="line">    <span class="type">const</span> <span class="type">char</span> *ch_value = env-&gt;GetStringUTFChars(jstr_value, <span class="literal">NULL</span>);</span><br><span class="line"></span><br><span class="line">    __android_log_print(ANDROID_LOG_DEBUG, <span class="string">&quot;jni&quot;</span>, <span class="string">&quot;%s&quot;</span>, ch_value);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获取id</span></span><br><span class="line">    jfieldID staticFieldId = env-&gt;GetStaticFieldID(clazz, <span class="string">&quot;TAG2&quot;</span>, <span class="string">&quot;Ljava/lang/String;&quot;</span>);</span><br><span class="line">    <span class="comment">// 获取属性值</span></span><br><span class="line">    jstring static_value = (jstring) env-&gt;GetStaticObjectField(clazz, staticFieldId);</span><br><span class="line">    <span class="type">const</span> <span class="type">char</span> *st_value = env-&gt;GetStringUTFChars(static_value, <span class="literal">NULL</span>);</span><br><span class="line">    __android_log_print(ANDROID_LOG_DEBUG, <span class="string">&quot;jni&quot;</span>, <span class="string">&quot;%s&quot;</span>, st_value);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">JNIEXPORT <span class="type">void</span> JNICALL</span><br><span class="line"><span class="title function_">Java_com_xiasuhuei321_forjni_entry_JNIEntry_accessMethod</span><span class="params">(JNIEnv *env, jclass type,</span></span><br><span class="line"><span class="params">                                                         jobject obj)</span> &#123;</span><br><span class="line">    <span class="comment">// 获取class对象</span></span><br><span class="line">    jclass clazz = env-&gt;GetObjectClass(obj);</span><br><span class="line">    <span class="comment">// 获取方法id</span></span><br><span class="line">    jmethodID i_id = env-&gt;GetMethodID(clazz, <span class="string">&quot;testInstanceMethod&quot;</span>, <span class="string">&quot;()V&quot;</span>);</span><br><span class="line">    jmethodID s_id = env-&gt;GetStaticMethodID(clazz, <span class="string">&quot;testStaticMethod&quot;</span>, <span class="string">&quot;()V&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 调用实例方法</span></span><br><span class="line">    env-&gt;CallVoidMethod(obj, i_id);</span><br><span class="line">    <span class="comment">// 调用静态方法</span></span><br><span class="line">    env-&gt;CallStaticVoidMethod(clazz,s_id);</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>凑个字数</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"># Android</a>
+              <a href="/tags/NDK%E5%AD%A6%E4%B9%A0/" rel="tag"># NDK学习</a>
+              <a href="/tags/%E5%85%A5%E9%97%A8%E5%AD%A6%E4%B9%A0/" rel="tag"># 入门学习</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2017/08/26/Android%20CMake%20%E4%B8%8D%E7%94%9F%E6%88%90%E5%A4%B4%E6%96%87%E4%BB%B6%E6%8A%A5%E9%94%99/" rel="prev" title="Android CMake 不生成头文件报错">
+                  <i class="fa fa-angle-left"></i> Android CMake 不生成头文件报错
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2017/08/29/%E5%9C%A8%E8%87%AA%E5%AE%9A%E4%B9%89View%E6%97%B6%E7%A2%B0%E5%88%B0%E7%9A%84%E5%A5%87%E6%80%AA%E9%97%AE%E9%A2%98/" rel="next" title="在自定义View时碰到的奇怪问题">
+                  在自定义View时碰到的奇怪问题 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">LJ</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
